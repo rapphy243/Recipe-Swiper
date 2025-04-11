@@ -5,17 +5,18 @@
 //  Created by Raphael Abano on 4/11/25.
 //
 
+// https://www.hackingwithswift.com/quick-start/swiftui/adding-tabview-and-tabitem
+
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            MainView() // View to go to
+                .tabItem {
+                    Label("Home", systemImage: "house") // Icon on tab
+            }
         }
-        .padding()
     }
 }
 
