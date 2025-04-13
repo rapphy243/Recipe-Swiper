@@ -28,3 +28,4 @@ fastlane/test_output
 *.DS_Store
 
 *.zip
+Recipe Swiper/Environment/Secrets.xcconfig

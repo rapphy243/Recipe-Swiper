@@ -15,8 +15,8 @@ struct MainView: View {
                 Text("Hello, World!")
                 .padding()
                 Text("This is the Main Screen")
-                    .navigationTitle("Home")
             }
+            .navigationTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu(content: {

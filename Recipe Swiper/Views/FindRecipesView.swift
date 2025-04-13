@@ -14,6 +14,7 @@ struct FindRecipesView: View {
                 .padding()
             Text("This is the Find Recipes Screen")
                 .navigationTitle("Find Recipes")
+            Text("The API Key is \(Secrets.apiKey)")
         }
     }
 }
