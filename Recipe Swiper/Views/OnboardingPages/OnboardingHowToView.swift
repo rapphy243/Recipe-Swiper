@@ -14,6 +14,7 @@ struct OnboardingHowToView: View {
                 .padding()
             Text("This view explains how to use the app.")
             // This basically will be an example recipe
+            // Requires Recipe Card to be done
             
         }
     }

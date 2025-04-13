@@ -25,9 +25,7 @@ struct OnboardingAboutView: View {
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
 
-                Text(
-                    "Swipe right on recipes you love, swipe left on those you don't. It's the easiest way to build your personal cookbook!"
-                )
+                Text("Swipe right on recipes you love, swipe left on those you don't. It's the easiest way to build your personal cookbook!")
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)

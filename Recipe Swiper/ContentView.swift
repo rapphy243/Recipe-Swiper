@@ -13,10 +13,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selction = 1  // Show MainView
+    @State private var selection = 1  // Show MainView
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
-        TabView(selection: $selction) {
+        TabView(selection: $selection) {
             Group {
                 FindRecipesView()  // View to go to
                     .tabItem {

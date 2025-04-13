@@ -12,22 +12,23 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-                    .padding()
+                Text("Hello, World!")
+                .padding()
                 Text("This is the Main Screen")
                     .navigationTitle("Home")
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu(content: {
-                        Button("Restart Onboarding", systemImage: "gear") {
-                            isOnboarding = true
-                        }
-                    }, label: {
-                        Image(systemName: "ellipsis")
-                    })
+                            Button("Restart Onboarding", systemImage: "gear") {
+                                isOnboarding = true
+                            }
+                        },
+                        label: {
+                            Image(systemName: "ellipsis")
+                        })
                 }
-        }
+            }
         }
     }
 }
