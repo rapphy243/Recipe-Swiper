@@ -5,10 +5,11 @@
 //  Created by Raphael Abano on 4/14/25.
 //
 
+//  Query decoded with Gemini 2.5 Pro
+
 import Foundation
 
 // MARK: - RecipeResponse
-// Represents the top-level JSON structure containing an array of recipes.
 struct RecipeResponse: Codable {
     let recipes: [Recipe]
 }
@@ -29,14 +30,14 @@ struct Recipe: Codable {
     let dairyFree: Bool
     let veryHealthy: Bool
     let cheap: Bool
-    let veryPopular: Bool
-    let sustainable: Bool
-    let lowFodmap: Bool
-    let weightWatcherSmartPoints: Int
-    let gaps: String
+    //let veryPopular: Bool
+    //let sustainable: Bool
+    //let lowFodmap: Bool
+    //let weightWatcherSmartPoints: Int
+    //let gaps: String
     let preparationMinutes: Int?
     let cookingMinutes: Int?
-    let aggregateLikes: Int
+    //let aggregateLikes: Int
     let healthScore: Int // Consider Double if fractional scores are possible
     let creditsText: String
     let license: String?
@@ -114,8 +115,8 @@ struct AnalyzedInstruction: Codable {
 struct InstructionStep: Codable {
     let number: Int
     let step: String
-    let ingredients: [InstructionComponent] // Renamed for clarity
-    let equipment: [InstructionComponent]   // Renamed for clarity
+    let ingredients: [InstructionComponent]
+    let equipment: [InstructionComponent]
     let length: InstructionLength?
 }
 
@@ -135,31 +136,3 @@ struct InstructionLength: Codable {
     let number: Int
     let unit: String
 }
-
-// Example Usage (Decoding):
-/*
- func decodeRecipes(jsonData: Data) -> RecipeResponse? {
-     let decoder = JSONDecoder()
-     do {
-         let recipeResponse = try decoder.decode(RecipeResponse.self, from: jsonData)
-         return recipeResponse
-     } catch {
-         print("Error decoding JSON: \(error)")
-         return nil
-     }
- }
-
- // Assuming you have the JSON string in a variable called jsonString
- if let jsonData = jsonString.data(using: .utf8) {
-     if let response = decodeRecipes(jsonData: jsonData) {
-         print("Successfully decoded \(response.recipes.count) recipes.")
-         if let firstRecipe = response.recipes.first {
-             print("First recipe title: \(firstRecipe.title)")
-             // Access other properties as needed
-         }
-     }
- }
- */
-
-
-
