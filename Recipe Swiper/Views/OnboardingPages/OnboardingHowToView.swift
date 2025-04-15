@@ -15,12 +15,13 @@ struct OnboardingHowToView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            Spacer()
             Text(instructionText)
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .padding()
             
-            RecipeCardView(recipe: recipe!) {
+            SmallRecipeCardView(recipe: recipe!) {
                 if step == 0, let url = URL(string: (recipe?.sourceUrl!)!) {
                     UIApplication.shared.open(url)
                     step += 1
@@ -31,15 +32,15 @@ struct OnboardingHowToView: View {
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
-                        if step >= 2 {
+                        if step >= 2 && step < 4 {
                             offset = gesture.translation
                         }
                     }
                     .onEnded { _ in
-                        if step == 2 && offset.width < -100 {
+                        if step == 2 && offset.width < 0 {
                             cardRemoved = true
                             step += 1
-                        } else if step == 3 && offset.width > 100 {
+                        } else if step >= 3 && offset.width > 0 {
                             cardRemoved = true
                             step += 1
                         } else {
