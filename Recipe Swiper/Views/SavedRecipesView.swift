@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct SavedRecipesView: View {
+    var savedRecipes: [String]
+
     var body: some View {
         NavigationStack {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-                .padding()
-            Text("This is the Saved Recipes Screen")
-                .navigationTitle("Saved Recipes")
+            List(savedRecipes, id: \.self) { recipe in
+                Text(recipe)
+            }
+            .navigationTitle("Saved Recipes")
         }
     }
 }
 
 #Preview {
-    SavedRecipesView()
+    SavedRecipesView(savedRecipes: ["Sushi", "Tacos"])
 }

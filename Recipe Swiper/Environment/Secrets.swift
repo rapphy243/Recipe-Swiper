@@ -11,7 +11,7 @@ import Foundation
 struct Secrets {
     // Define an enum for keys to avoid typos
     private enum Keys: String {
-        case apiKey = "ApiKey" // Matches the key in Info.plist
+        case apiKey = "3939d6a64e164fa591ca7873112ce119" // Matches the key in Info.plist
     }
 
     // Private function to retrieve value from Info.plist
