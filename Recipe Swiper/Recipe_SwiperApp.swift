@@ -11,7 +11,7 @@ import SwiftUI
 struct Recipe_SwiperApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RecipeTestView()
         }
     }
 }

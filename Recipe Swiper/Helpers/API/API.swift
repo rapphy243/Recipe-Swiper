@@ -32,7 +32,7 @@ enum RecipeError: Error, LocalizedError {
 }
 
 func fetchRandomRecipe() async throws -> Recipe {
-    let urlString = "https://api.spoonacular.com/recipes/random?apiKey=" + Secrets.apiKey + "&"
+    let urlString = "https://api.spoonacular.com/recipes/random?apiKey=" + Secrets.apiKey
     guard let url = URL(string: urlString) else {
         throw RecipeError.invalidURL
     }

@@ -8,6 +8,16 @@
 
 import SwiftUI
 
+//
+//
+//
+// Xcode 14.3/IOS 18.4 currently has a problem with URLSession which causes fetching to never respond.
+// Preview window in this Xcode version and IOS version will just forever load and eventually error.
+// Soulution: Redownload IOS 18.3.1 and build everytime you want to test API calls.
+//
+//
+//
+
 struct RecipeTestView: View {
     // State variables to hold the fetched data, loading status, and error message
     @State private var fetchedRecipe: Recipe? = nil
