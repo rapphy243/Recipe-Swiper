@@ -63,7 +63,5 @@ struct SmallRecipeCardView: View {
 }
 
 #Preview {
-    let loader = RecipeLoader.shared
-    let cakeRecipe = loader.cake
-    SmallRecipeCardView(recipe: cakeRecipe!)
+    SmallRecipeCardView(recipe: loadCakeRecipe())
 }

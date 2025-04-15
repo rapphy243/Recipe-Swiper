@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingHowToView: View {
-    @State private var recipe: Recipe? = RecipeLoader.shared.cake
+    @State private var recipe: Recipe = loadCakeRecipe()
     @State private var offset: CGSize = .zero
     @State private var step = 0
     @State private var isAnimatingReset = false // To disable gesture during reset
@@ -23,9 +23,9 @@ struct OnboardingHowToView: View {
                 .id(step) // Add ID to force text update animation if desired
 
             // Use the non-optional recipe directly
-            SmallRecipeCardView(recipe: recipe!) {
+            SmallRecipeCardView(recipe: recipe) {
                 // Only allow tapping in the first step
-                if step == 0, let urlString = recipe?.sourceUrl, let url = URL(
+                if step == 0, let urlString = recipe.sourceUrl, let url = URL(
                     string: urlString
                 ) {
                     UIApplication.shared.open(url)
