@@ -12,7 +12,7 @@ struct OnboardingAboutView: View {
     var body: some View {
         VStack(spacing: 30) {
             Spacer()
-            // This will probably be replaced with the app icon
+            // This will parobably be replaced with the app icon
             Image(systemName: "fork.knife.circle.fill")
                 .resizable()
                 .scaledToFit()
