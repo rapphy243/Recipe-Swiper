@@ -13,6 +13,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var savedRecipes: [String] = []
     @State private var selection = 1  // Show MainView
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
@@ -23,12 +24,12 @@ struct ContentView: View {
                         Label("Find Recipes", systemImage: "sparkles")  // Icon & Label on tab
                     }
                     .tag(0)
-                MainView()
+                MainView(savedRecipes: $savedRecipes)
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
                     .tag(1)
-                SavedRecipesView()
+                SavedRecipesView(savedRecipes: savedRecipes)
                     .tabItem {
                         Label("Saved Recipes", systemImage: "fork.knife")
                     }
