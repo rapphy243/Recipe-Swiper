@@ -11,16 +11,14 @@ import SwiftUI
 struct RecipeCardView: View {
     let recipe: Recipe
     var onTap: (() -> Void)? = nil
-
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(.orange.opacity(0.2))
                 .frame(height: 300)
                 .shadow(radius: 5)
-
             VStack(spacing: 10) {
-                AsyncImage(url: URL(string: recipe.image)) { image in
+                AsyncImage(url: URL(string: recipe.image!)) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -45,4 +43,10 @@ struct RecipeCardView: View {
         }
         .padding(.horizontal)
     }
+}
+
+#Preview {
+    let loader = RecipeLoader.shared
+    let cakeRecipe = loader.cake
+    RecipeCardView(recipe: cakeRecipe!)
 }
