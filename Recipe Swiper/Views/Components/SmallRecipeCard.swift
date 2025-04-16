@@ -5,22 +5,18 @@
 //  Created by Zane Matarieh on 4/15/25.
 //
 
-import Foundation
 import SwiftUI
 
-struct SmallRecipeCardView: View {
-    let recipe: Recipe
-    var onTap: (() -> Void)? = nil
-
+struct SmallRecipeCard: View {
+    @State var recipe: Recipe
+    @State var onTap: (() -> Void)? = nil
     var body: some View {
         VStack(spacing: 10) {
             Text(recipe.title)
                 .font(.title)
                 .bold()
                 .multilineTextAlignment(.center)
-
             Divider()
-
             HStack {
                 AsyncImage(url: URL(string: recipe.image ?? "")) { image in
                     image
@@ -34,14 +30,13 @@ struct SmallRecipeCardView: View {
                         .fill(Color.gray.opacity(0.3))
                         .frame(width: 160, height: 200)
                 }
-
                 Spacer()
-
                 VStack(alignment: .leading) {
-                    Text("Ready in \(recipe.readyInMinutes) minutes")
+                    Text("Ready in \(recipe.readyInMinutes)")
                         .font(.headline)
                     Text("Serves \(recipe.servings)")
                         .font(.headline)
+                    Spacer()
                 }
                 .padding(.vertical)
                 .frame(maxHeight: 200)
@@ -63,5 +58,5 @@ struct SmallRecipeCardView: View {
 }
 
 #Preview {
-    SmallRecipeCardView(recipe: loadCakeRecipe())
+    SmallRecipeCard(recipe: loadCakeRecipe())
 }

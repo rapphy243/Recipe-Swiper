@@ -7,14 +7,10 @@ func loadCakeRecipe() -> Recipe {
     return loadRecipeFromFile(named: "Cake") ?? Recipe.empty
 }
 
-/// Loads and returns the Curry recipe from "Curry.json".
-/// - Returns: A `Recipe` object if loading and decoding are successful, otherwise `nil`.
 func loadCurryRecipe() -> Recipe {
     return loadRecipeFromFile(named: "Curry") ?? Recipe.empty
 }
 
-/// Loads and returns the Salad recipe from "Salad.json".
-/// - Returns: A `Recipe` object if loading and decoding are successful, otherwise `nil`.
 func loadSaladRecipe() -> Recipe {
     return loadRecipeFromFile(named: "Salad") ?? Recipe.empty
 }

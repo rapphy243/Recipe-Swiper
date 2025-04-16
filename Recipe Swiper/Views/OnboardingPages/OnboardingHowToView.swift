@@ -11,7 +11,8 @@ struct OnboardingHowToView: View {
     @State private var recipe: Recipe = loadCakeRecipe()
     @State private var offset: CGSize = .zero
     @State private var step = 0
-    @State private var isAnimatingReset = false // To disable gesture during reset
+    @State private var isAnimatingReset = false  // To disable gesture during reset
+    @Binding var selectedTab: Int
 
     var body: some View {
         VStack(spacing: 20) {
@@ -20,14 +21,16 @@ struct OnboardingHowToView: View {
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .padding()
-                .id(step) // Add ID to force text update animation if desired
+                .id(step)  // Add ID to force text update animation if desired
 
             // Use the non-optional recipe directly
-            SmallRecipeCardView(recipe: recipe) {
+            SmallRecipeCard(recipe: recipe) {
                 // Only allow tapping in the first step
-                if step == 0, let urlString = recipe.sourceUrl, let url = URL(
-                    string: urlString
-                ) {
+                if step == 0, let urlString = recipe.sourceUrl,
+                    let url = URL(
+                        string: urlString
+                    )
+                {
                     UIApplication.shared.open(url)
                     // Move to next step immediately after tap action is initiated
                     step += 1
@@ -51,11 +54,11 @@ struct OnboardingHowToView: View {
                         guard !isAnimatingReset else { return }
 
                         let screenWidth = UIScreen.main.bounds.width
-                        let swipeThreshold: CGFloat = 50 // Min distance for a swipe
+                        let swipeThreshold: CGFloat = 50  // Min distance for a swipe
 
                         if step == 2 && offset.width < -swipeThreshold {
                             // Swipe Left Success
-                            isAnimatingReset = true // Disable gesture
+                            isAnimatingReset = true  // Disable gesture
                             withAnimation(.spring()) {
                                 // Animate far off-screen left
                                 offset = CGSize(width: -screenWidth, height: 0)
@@ -63,14 +66,14 @@ struct OnboardingHowToView: View {
                             // Schedule reset after 1 second
                             DispatchQueue.main
                                 .asyncAfter(deadline: .now() + 1.0) {
-                                    step += 1 // Move to next instruction
+                                    step += 1  // Move to next instruction
                                     // Reset offset (will animate back due to .animation modifier)
                                     offset = .zero
-                                    isAnimatingReset = false // Re-enable gesture
+                                    isAnimatingReset = false  // Re-enable gesture
                                 }
                         } else if step == 3 && offset.width > swipeThreshold {
                             // Swipe Right Success
-                            isAnimatingReset = true // Disable gesture
+                            isAnimatingReset = true  // Disable gesture
                             withAnimation(.spring()) {
                                 // Animate far off-screen right
                                 offset = CGSize(width: screenWidth, height: 0)
@@ -78,10 +81,10 @@ struct OnboardingHowToView: View {
                             // Schedule reset after 1 second
                             DispatchQueue.main
                                 .asyncAfter(deadline: .now() + 1.0) {
-                                    step += 1 // Move to next instruction
+                                    step += 1  // Move to next instruction
                                     // Reset offset (will animate back)
                                     offset = .zero
-                                    isAnimatingReset = false // Re-enable gesture
+                                    isAnimatingReset = false  // Re-enable gesture
                                 }
                         } else {
                             // If swipe wasn't decisive or wrong direction for the step,
@@ -104,30 +107,26 @@ struct OnboardingHowToView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.top)
-                .transition(.scale.combined(with: .opacity)) // Add transition
+                .transition(.scale.combined(with: .opacity))  // Add transition
             }
 
             Spacer()
-
-            // Show completion text only for step 4
-            if step == 4 {
-                Text("You're all set! Start discovering recipes!")
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .transition(
-                        .scale.combined(with: .opacity)
-                    ) // Add transition
-            }
         }
         .padding()
         .navigationTitle("How It Works")
         .animation(.easeInOut, value: step)
+        .onChange(of: step) { _, newStep in
+            if newStep == 4 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        selectedTab = 2 // Move to next tab in Onboarding
+                }
+            }
+        }
     }
 
     var instructionText: String {
         switch step {
-        case 0: return "Tap the recipe card to open its source." // Updated text slightly
+        case 0: return "Tap the recipe card to open its source."  // Updated text slightly
         case 1: return "Great! Now tap 'Next' to continue."
         case 2: return "Swipe left on the card to discard the recipe."
         case 3: return "Good! Now swipe right to save it to your cookbook!"
@@ -136,7 +135,7 @@ struct OnboardingHowToView: View {
     }
 }
 
-
 #Preview {
-    OnboardingHowToView()
+    @Previewable @State var selectedTab: Int = 1
+    OnboardingHowToView(selectedTab: $selectedTab)
 }
