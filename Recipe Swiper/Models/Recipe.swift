@@ -69,6 +69,45 @@ struct Recipe: Codable {
     //     case spoonacularScore
     //     case spoonacularSourceUrl = "spoonacularSourceUrl" // Example if needed
     // }
+    static let empty = Recipe(
+            id: -1, // Use -1 or 0 to indicate invalid/empty
+            image: nil,
+            imageType: "",
+            title: "Not Found",
+            readyInMinutes: 0,
+            servings: 0,
+            sourceUrl: nil,
+            vegetarian: false,
+            vegan: false,
+            glutenFree: false,
+            dairyFree: false,
+            veryHealthy: false,
+            cheap: false,
+//            veryPopular: false,
+//            sustainable: false,
+//            lowFodmap: false,
+//            weightWatcherSmartPoints: 0,
+//            gaps: "",
+            preparationMinutes: nil,
+            cookingMinutes: nil,
+//            aggregateLikes: 0,
+            healthScore: 0,
+            creditsText: "",
+            license: nil,
+            sourceName: "",
+            pricePerServing: 0.0,
+            extendedIngredients: [], // Empty array
+            summary: "Recipe data could not be loaded.", // Or ""
+            cuisines: [],
+            dishTypes: [],
+            diets: [],
+            occasions: [],
+            instructions: nil,
+            analyzedInstructions: [], // Empty array
+            originalId: nil,
+            spoonacularScore: 0.0,
+            spoonacularSourceUrl: nil
+        )
 }
 
 // MARK: - ExtendedIngredient
