@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "SnackSwipe logo.png",
+      "filename" : "AppIcon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "SnackSwipe logo 1.png",
+      "filename" : "AppIcon Dark.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "SnackSwipe logo 2.png",
+      "filename" : "AppIcon Tinted.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
