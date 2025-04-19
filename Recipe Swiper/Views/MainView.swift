@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @AppStorage("isOnboarding") var isOnboarding: Bool?
-    @Binding var savedRecipes: [String]
+    @Binding var savedRecipes: [Recipe]
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
     @State private var currentRecipe: Recipe = Recipe.empty
@@ -103,7 +103,7 @@ struct MainView: View {
     
     private func saveCurrentRecipe() {
         if !shownRecipes.contains(currentRecipe.title) {
-            savedRecipes.append(currentRecipe.title)
+            savedRecipes.append(currentRecipe)
             shownRecipes.append(currentRecipe.title)
         }
         

@@ -16,7 +16,7 @@ struct RecipeResponse: Codable {
 
 // MARK: - Recipe
 // Represents a single recipe with its details.
-struct Recipe: Codable {
+struct Recipe: Codable, Hashable, Equatable {
     let id: Int
     let image: String? // Changed to String as per JSON, consider URL if needed
     let imageType: String?
@@ -108,6 +108,19 @@ struct Recipe: Codable {
             spoonacularScore: 0.0,
             spoonacularSourceUrl: nil
         )
+    
+    // https://www.hackingwithswift.com/example-code/language/how-to-conform-to-the-hashable-protocol
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+        hasher.combine(self.title)
+        hasher.combine(self.readyInMinutes)
+        hasher.combine(self.servings)
+    }
+    
+    // https://www.hackingwithswift.com/example-code/language/how-to-conform-to-the-equatable-protocol
+    static func ==(lhs: Recipe, rhs: Recipe) -> Bool {
+        return lhs.title == rhs.title && lhs.id == rhs.id
+    }
 }
 
 // MARK: - ExtendedIngredient

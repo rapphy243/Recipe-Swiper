@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct SavedRecipesView: View {
-    var savedRecipes: [String]
+    var savedRecipes: [Recipe]
 
     var body: some View {
         NavigationStack {
             List(savedRecipes, id: \.self) { recipe in
-                Text(recipe)
+                Text(recipe.title)
             }
             .navigationTitle("Saved Recipes")
         }
@@ -21,5 +21,6 @@ struct SavedRecipesView: View {
 }
 
 #Preview {
-    SavedRecipesView(savedRecipes: ["Sushi", "Tacos"])
+    @Previewable @State var savedRecipes: [Recipe] = [ loadCakeRecipe(), loadCurryRecipe(), loadSaladRecipe()]
+    SavedRecipesView(savedRecipes: savedRecipes)
 }
