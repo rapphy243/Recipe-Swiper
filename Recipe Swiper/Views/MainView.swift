@@ -12,7 +12,7 @@ struct MainView: View {
     @Binding var savedRecipes: [Recipe]
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
-    @State private var currentRecipe: Recipe = Recipe.empty
+    @State private var currentRecipe: Recipe = loadCurryRecipe()
     @State private var shownRecipes: [String] = []
     @State private var isLoading = false
     
@@ -64,7 +64,7 @@ struct MainView: View {
                 }
                 Spacer(minLength: 300)
             }
-            //.navigationTitle("Home")
+            .navigationTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -150,16 +150,17 @@ struct MainView: View {
     }
     
     private func fetchNewRecipe() async {
-        do {
-            let newRecipe = try await fetchRandomRecipe()
-            if !shownRecipes.contains(newRecipe.title) {
-                currentRecipe = newRecipe
-            } else {
-                await fetchNewRecipe() // Try again if recipe was already shown
+        for _ in 0..<1 { // Only try and fetch a Recipe 1 times per call
+            do {
+                let newRecipe = try await fetchRandomRecipe()
+                if !shownRecipes.contains(newRecipe.title) {
+                    currentRecipe = newRecipe
+                    break
+                }
+            } catch {
+                print("Error fetching recipe: \(error)")
+                currentRecipe = Recipe.empty
             }
-        } catch {
-            print("Error fetching recipe: \(error)")
-            currentRecipe = Recipe.empty
         }
     }
 }
