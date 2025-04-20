@@ -16,6 +16,7 @@ struct SmallRecipeCard: View {
                 .font(.title)
                 .bold()
                 .multilineTextAlignment(.center)
+                .frame(width: 340)
             Divider()
             HStack {
                 AsyncImage(url: URL(string: recipe.image ?? "")) { image in
@@ -40,7 +41,7 @@ struct SmallRecipeCard: View {
                             .font(.caption2)
                             .padding()
                     }
-                    .frame(maxHeight: 175)
+                    .frame(minHeight: 175, maxHeight: 175)
                 }
                 Spacer()
             }

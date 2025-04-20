@@ -111,6 +111,8 @@ func getPrefixBefore(phrase: String, in originalString: String) -> String {
 }
 
 func simplifySummary(_ summary: String) -> String {
-    let strippedSummary = removeHTMLTagsRegex(from: summary)
-    return getPrefixBefore(phrase: "It is brought to ", in: strippedSummary)
+    var strippedSummary = removeHTMLTagsRegex(from: summary)
+    strippedSummary = getPrefixBefore(phrase: "It is brought to ", in: strippedSummary)
+    strippedSummary = getPrefixBefore(phrase: "If you like this ", in: strippedSummary)
+    return strippedSummary
 }
