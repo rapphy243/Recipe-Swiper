@@ -71,3 +71,46 @@ func fetchRandomRecipe() async throws -> Recipe {
         throw RecipeError.unknown(error)
     }
 }
+
+// Recipe.summary sometime has html tags, so we should get rid of them
+func removeHTMLTagsRegex(from htmlString: String) -> String {
+    // The regular expression pattern "<.*?>" matches:
+    // <   : The opening angle bracket
+    // .   : Any character (except newline)
+    // *   : Zero or more times
+    // ?   : Makes the '*' non-greedy (matches the shortest possible sequence)
+    // >   : The closing angle bracket
+    let pattern = "<.*?>"
+
+    // Use String's built-in method for replacing regex matches
+    return htmlString.replacingOccurrences(
+        of: pattern,
+        with: "",
+        options: [.regularExpression],
+        range: nil // Apply to the entire string
+    )
+}
+
+func getPrefixBefore(phrase: String, in originalString: String) -> String {
+    // Handle empty phrase: return the original string as there's nothing to stop at.
+    guard !phrase.isEmpty else {
+        return originalString
+    }
+
+    // Find the range (location) of the first occurrence of the phrase.
+    // This is case-sensitive by default.
+    if let range = originalString.range(of: phrase) {
+        // If the phrase is found, get the part of the string *before*
+        // the phrase starts (up to its lowerBound).
+        let prefix = originalString[..<range.lowerBound]
+        return String(prefix) // Convert the Substring slice back to a String
+    } else {
+        // If the phrase is not found, return the whole original string.
+        return originalString
+    }
+}
+
+func simplifySummary(_ summary: String) -> String {
+    let strippedSummary = removeHTMLTagsRegex(from: summary)
+    return getPrefixBefore(phrase: "It is brought to ", in: strippedSummary)
+}
