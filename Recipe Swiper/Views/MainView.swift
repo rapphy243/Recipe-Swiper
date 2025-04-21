@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     @AppStorage("isOnboarding") var isOnboarding: Bool?
     @Binding var savedRecipes: [Recipe]
+    @Binding var discardedRecipes: [Recipe]
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
     @State private var currentRecipe: Recipe = loadCurryRecipe()
@@ -122,6 +123,7 @@ struct MainView: View {
     
     private func skipCurrentRecipe() {
         if !shownRecipes.contains(currentRecipe.title) {
+            discardedRecipes.append(currentRecipe)
             shownRecipes.append(currentRecipe.title)
         }
         
@@ -164,5 +166,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(savedRecipes: .constant([]))
+    MainView(savedRecipes: .constant([]), discardedRecipes: .constant([]))
 }
