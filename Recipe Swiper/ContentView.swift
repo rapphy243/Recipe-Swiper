@@ -14,17 +14,18 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var savedRecipes: [Recipe] = []
+    @State private var discardedRecipes: [Recipe] = []
     @State private var selection = 1  // Show MainView
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
         TabView(selection: $selection) {
             Group {
-                FindRecipesView()  // View to go to
+                DiscardedRecipesView(discardedRecipes: $discardedRecipes)  // View to go to
                     .tabItem {
-                        Label("Find Recipes", systemImage: "sparkles")  // Icon & Label on tab
+                        Label("Discarded Recipes", systemImage: "magnifyingglass")  // Icon & Label on tab
                     }
                     .tag(0)
-                MainView(savedRecipes: $savedRecipes)
+                MainView(savedRecipes: $savedRecipes, discardedRecipes: $discardedRecipes)
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
