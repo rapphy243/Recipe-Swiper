@@ -112,7 +112,6 @@ struct OnboardingHowToView: View {
 
             Spacer()
         }
-        .padding()
         .navigationTitle("How It Works")
         .animation(.easeInOut, value: step)
         .onChange(of: step) { _, newStep in

@@ -10,9 +10,22 @@
 		DA10D0D32DAC3D4D00CC8D10 /* Recipe Swiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recipe Swiper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9A341E6A2DB14A4200F4AA61 /* Exceptions for "Recipe Swiper" folder in "Recipe Swiper" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Environment/SecretsExample.xcconfig,
+			);
+			target = D93E0B742DA9781500F72C0A /* Recipe Swiper */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D93E0B772DA9781500F72C0A /* Recipe Swiper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9A341E6A2DB14A4200F4AA61 /* Exceptions for "Recipe Swiper" folder in "Recipe Swiper" target */,
+			);
 			path = "Recipe Swiper";
 			sourceTree = "<group>";
 		};
@@ -70,7 +83,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					D93E0B742DA9781500F72C0A = {
 						CreatedOnToolsVersion = 16.2;
@@ -154,6 +167,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7M252RQ64K;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -219,6 +233,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7M252RQ64K;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -250,7 +265,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Recipe Swiper/Preview Content\"";
-				DEVELOPMENT_TEAM = 7M252RQ64K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Recipe-Swiper-Info.plist";
@@ -283,7 +297,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Recipe Swiper/Preview Content\"";
-				DEVELOPMENT_TEAM = 7M252RQ64K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Recipe-Swiper-Info.plist";

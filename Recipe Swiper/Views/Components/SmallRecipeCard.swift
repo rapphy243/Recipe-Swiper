@@ -16,30 +16,33 @@ struct SmallRecipeCard: View {
                 .font(.title)
                 .bold()
                 .multilineTextAlignment(.center)
+                .frame(width: 340)
             Divider()
             HStack {
                 AsyncImage(url: URL(string: recipe.image ?? "")) { image in
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 160, height: 200)
+                        .frame(width: 160, height: 260)
                         .clipped()
                         .cornerRadius(10)
                 } placeholder: {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.gray.opacity(0.3))
-                        .frame(width: 160, height: 200)
+                        .frame(width: 160, height: 260)
                 }
                 Spacer()
-                VStack(alignment: .leading) {
-                    Text("Ready in \(recipe.readyInMinutes)")
-                        .font(.headline)
-                    Text("Serves \(recipe.servings)")
-                        .font(.headline)
-                    Spacer()
+                VStack {
+                    CardDetails(recipe: recipe)
+                    Divider()
+                        .frame(width: 130)
+                    ScrollView {
+                        Text("\(simplifySummary(recipe.summary))")
+                            .font(.caption2)
+                            .padding()
+                    }
+                    .frame(minHeight: 175, maxHeight: 175)
                 }
-                .padding(.vertical)
-                .frame(maxHeight: 200)
                 Spacer()
             }
         }

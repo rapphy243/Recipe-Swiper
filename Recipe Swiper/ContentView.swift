@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var savedRecipes: [String] = []
+    @State private var savedRecipes: [Recipe] = []
     @State private var selection = 1  // Show MainView
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
