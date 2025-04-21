@@ -22,7 +22,6 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Spacer()
                 if isLoading {
                     ProgressView()
                         .scaleEffect(1.5)
@@ -62,7 +61,6 @@ struct MainView: View {
                         }
                         .animation(.spring(response: 0.3), value: cardOffset)
                 }
-                Spacer(minLength: 300)
             }
             .navigationTitle("Home")
             .toolbar {
