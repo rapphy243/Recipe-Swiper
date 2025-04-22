@@ -18,32 +18,32 @@ struct ContentView: View {
     @State private var selection = 1  // Show MainView
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
-        TabView(selection: $selection) {
-            Group {
-                DiscardedRecipesView(discardedRecipes: $discardedRecipes)  // View to go to
-                    .tabItem {
-                        Label("Discarded Recipes", systemImage: "magnifyingglass")  // Icon & Label on tab
-                    }
-                    .tag(0)
-                MainView(savedRecipes: $savedRecipes, discardedRecipes: $discardedRecipes)
-                    .tabItem {
-                        Label("Home", systemImage: "house")
-                    }
-                    .tag(1)
-                SavedRecipesView(savedRecipes: savedRecipes)
-                    .tabItem {
-                        Label("Saved Recipes", systemImage: "fork.knife")
-                    }
-                    .tag(3)
+            TabView(selection: $selection) {
+                Group {
+                    DiscardedRecipesView(discardedRecipes: $discardedRecipes)  // View to go to
+                        .tabItem {
+                            Label("Discarded Recipes", systemImage: "trash")  // Icon & Label on tab
+                        }
+                        .tag(0)
+                    MainView(savedRecipes: $savedRecipes, discardedRecipes: $discardedRecipes)
+                        .tabItem {
+                            Label("Home", systemImage: "house")
+                        }
+                        .tag(1)
+                    SavedRecipesView(savedRecipes: savedRecipes)
+                        .tabItem {
+                            Label("Saved Recipes", systemImage: "fork.knife")
+                        }
+                        .tag(3)
+                }
+                // Temp Colors
+                .toolbarBackground(.indigo, for: .tabBar)
+                .toolbarBackground(.visible, for: .tabBar)
+                .toolbarColorScheme(.dark, for: .tabBar)
             }
-            // Temp Colors
-            .toolbarBackground(.indigo, for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
-            .toolbarColorScheme(.dark, for: .tabBar)
-        }
-        .fullScreenCover(isPresented: $isOnboarding) {
-            OnboardingView()
-        }
+            .fullScreenCover(isPresented: $isOnboarding) {
+                OnboardingView()
+            }
     }
 }
 
