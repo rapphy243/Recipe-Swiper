@@ -14,7 +14,6 @@ struct DiscardedRecipesView: View {
             List(discardedRecipes, id: \.self) { recipe in
                 Text(recipe.title)
             }
-            .navigationTitle("Discarded Recipes")
         }
     }
 }

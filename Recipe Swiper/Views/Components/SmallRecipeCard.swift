@@ -49,7 +49,7 @@ struct SmallRecipeCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(.orange.opacity(0.2))
+                .fill(.white.opacity(0.8))
                 .shadow(radius: 5)
         )
         .contentShape(Rectangle())

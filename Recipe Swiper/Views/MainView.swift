@@ -22,6 +22,13 @@ struct MainView: View {
     
     var body: some View {
         NavigationStack {
+            ZStack {
+                Image("Background")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+                    .zIndex(-1)
+            
             VStack {
                 if isLoading {
                     ProgressView()
@@ -63,7 +70,6 @@ struct MainView: View {
                         .animation(.spring(response: 0.3), value: cardOffset)
                 }
             }
-            .navigationTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -79,6 +85,7 @@ struct MainView: View {
                 if currentRecipe.id == -1 {
                     await fetchNewRecipe()
                 }
+            }
             }
         }
     }
