@@ -31,8 +31,14 @@ struct CardDetails: View {
             HStack(spacing: 10) {
                 HStack {
                     Image(systemName: "book.closed.fill")
-                    Text("\(getHostURL(recipe.sourceUrl!))")
-                        .font(.footnote)
+                    if let hosturl = recipe.sourceUrl {
+                        Text("\(getHostURL(hosturl))")
+                            .font(.footnote)
+                    }
+                    else {
+                        Text("No Source")
+                            .font(.footnote)
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ struct MainView: View {
     @State private var currentRecipe: Recipe = loadCurryRecipe()
     @State private var shownRecipes: [String] = []
     @State private var isLoading = false
+    @State private var showSettings = false
     
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
@@ -75,17 +76,24 @@ struct MainView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button("Restart Onboarding", systemImage: "gear") {
-                            isOnboarding = true
+                            showSettings = true
                         }
                     } label: {
                         Image(systemName: "ellipsis")
+                            .foregroundStyle(.white)
                     }
                 }
             }
+            .toolbarBackground(.indigo, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarTitleDisplayMode(.inline)
             .task {
                 if currentRecipe.id == -1 {
                     await fetchNewRecipe()
                 }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
             }
             }
         }
