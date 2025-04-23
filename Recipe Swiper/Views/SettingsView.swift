@@ -11,26 +11,27 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("isOnboarding") var isOnboarding: Bool?
     @State private var apiKey: String = Secrets.apiKey
+    
+    let foodTypes = ["No Peanuts",]
     var body: some View {
-        //Generate a long rounded save button
         List {
+            Section(header: Text("Other Settings")) {
+                HStack {
+                    Text("Spoonacular API Key:")
+                        .lineLimit(1)
+                        .fixedSize()
+                    Spacer()
+                    TextField(Secrets.apiKey, text: $apiKey)
+                        .onChange(of: apiKey) {
+                            Secrets.setApiKey(apiKey)
+                    }
+                }
+            }
             Button("Restart Onboarding") {
                 isOnboarding = true
             }
             .font(.headline)
             .frame(maxWidth: .infinity, alignment: .center)
-            Section(header: Text("Food Prefrences")) {
-            }
-            Section(header: Text("Backend Settings")) {
-                HStack {
-                    Text("API Key:")
-                    Spacer()
-                    TextField(Secrets.apiKey, text: $apiKey)
-                        .onChange(of: apiKey) {
-                            Secrets.setApiKey(apiKey)
-                        }
-                }
-            }
         }
     }
 }

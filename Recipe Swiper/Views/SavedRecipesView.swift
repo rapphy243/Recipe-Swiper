@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SavedRecipesView: View {
     var savedRecipes: [Recipe]
-
     var body: some View {
         NavigationStack {
             List(savedRecipes, id: \.self) { recipe in
