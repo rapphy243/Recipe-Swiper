@@ -30,7 +30,7 @@ struct ContentView: View {
                         Label("Home", systemImage: "house")
                     }
                     .tag(1)
-                SavedRecipesView(savedRecipes: savedRecipes)
+                SettingsView()
                     .tabItem {
                         Label("Saved Recipes", systemImage: "fork.knife")
                     }
