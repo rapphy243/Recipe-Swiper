@@ -68,6 +68,7 @@ struct MainView: View {
                             }
                         }
                         .animation(.spring(response: 0.3), value: cardOffset)
+                    QuoteView()
                 }
             }
             .toolbar {
