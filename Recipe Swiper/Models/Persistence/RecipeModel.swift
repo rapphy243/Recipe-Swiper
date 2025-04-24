@@ -11,6 +11,10 @@ import SwiftData
 
 @Model
 final class RecipeModel {
+    // Used for sorting
+    var isDiscarded: Bool // if saved show in savedItems, if not show in discardedItems
+    var dateModified: Date // sort by date added/modified
+    //
     var id: Int
     var image: String?
     var imageType: String?
@@ -43,7 +47,11 @@ final class RecipeModel {
     var spoonacularScore: Double
     var spoonacularSourceUrl: String?
     
-    init(from recipe: Recipe) {
+    init(from recipe: Recipe, isDiscarded: Bool = false) {
+        //
+        self.isDiscarded = isDiscarded
+        self.dateModified = Date()
+        //
         self.id = recipe.id
         self.image = recipe.image
         self.imageType = recipe.imageType
