@@ -14,5 +14,6 @@ struct Recipe_SwiperApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [RecipeModel.self])
     }
 }
