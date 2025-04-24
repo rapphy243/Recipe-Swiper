@@ -12,25 +12,26 @@ struct SavedRecipesView: View {
     var body: some View {
         NavigationStack {
             List(savedRecipes, id: \.self) { recipe in
-                HStack {
-                    AsyncImage(url: URL(string: recipe.image ?? "")) { image in
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 60, height: 60)
-                            .clipped()
-                            .cornerRadius(10)
-                    } placeholder: {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 60, height: 60)
+                NavigationLink(destination: FullRecipe(recipe: recipe)) {
+                    HStack {
+                        AsyncImage(url: URL(string: recipe.image ?? "")) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 60, height: 60)
+                                .clipped()
+                                .cornerRadius(10)
+                        } placeholder: {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(width: 60, height: 60)
+                        }
+                        Text(recipe.title)
+                            .font(.headline)
+                        Spacer()
                     }
-                    Text(recipe.title)
-                        .font(.headline)
-                    Spacer()
-                    Image(systemName: "chevron.right")
+                    .contentShape(Rectangle())
                 }
-                .contentShape(Rectangle())
             }
         }
         .overlay {

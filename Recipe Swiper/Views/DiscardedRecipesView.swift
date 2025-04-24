@@ -15,6 +15,15 @@ struct DiscardedRecipesView: View {
                 Text(recipe.title)
             }
         }
+        .overlay {
+            if discardedRecipes.isEmpty {
+                ContentUnavailableView(label: {
+                Label("No discarded recipes", systemImage: "trash")
+                }, description : {
+                    Text("Only the last 10 discarded recipes will be saved here.")
+                })
+            }
+        }
     }
 }
 
