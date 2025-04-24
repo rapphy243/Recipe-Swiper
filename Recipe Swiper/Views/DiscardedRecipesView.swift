@@ -12,7 +12,26 @@ struct DiscardedRecipesView: View {
     var body: some View {
         NavigationStack {
             List(discardedRecipes, id: \.self) { recipe in
-                Text(recipe.title)
+                NavigationLink(destination: FullRecipe(recipe: recipe)) {
+                    HStack {
+                        AsyncImage(url: URL(string: recipe.image ?? "")) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 60, height: 60)
+                                .clipped()
+                                .cornerRadius(10)
+                        } placeholder: {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(width: 60, height: 60)
+                        }
+                        Text(recipe.title)
+                            .font(.headline)
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                }
             }
         }
         .overlay {
