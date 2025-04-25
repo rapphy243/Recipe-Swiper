@@ -17,6 +17,9 @@ struct MainView: View {
     @State private var shownRecipes: [String] = []
     @State private var isLoading = false
     @State private var showSettings = false
+    @State private var showFilterSheet = false
+    @ObservedObject var filterModel: FilterModel
+
     
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
@@ -73,7 +76,14 @@ struct MainView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button {
+                        showFilterSheet = true
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .foregroundStyle(.white)
+                    }
+
                     Menu {
                         Button("Settings", systemImage: "gear") {
                             showSettings = true
@@ -84,6 +94,7 @@ struct MainView: View {
                     }
                 }
             }
+
             .toolbarBackground(.indigo, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
@@ -95,6 +106,10 @@ struct MainView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
+            .sheet(isPresented: $showFilterSheet) {
+                FilterSheet(model: filterModel)
+            }
+
             }
         }
     }
@@ -168,7 +183,7 @@ struct MainView: View {
     private func fetchNewRecipe() async {
         for _ in 0..<1 { // Only try and fetch a Recipe 1 times per call
             do {
-                let newRecipe = try await fetchRandomRecipe()
+                let newRecipe = try await fetchRandomRecipe(using: filterModel)
                 if !shownRecipes.contains(newRecipe.title) {
                     currentRecipe = newRecipe
                     break
@@ -182,5 +197,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(savedRecipes: .constant([]), discardedRecipes: .constant([]))
+    MainView(savedRecipes: .constant([]), discardedRecipes: .constant([]), filterModel: FilterModel())
 }
