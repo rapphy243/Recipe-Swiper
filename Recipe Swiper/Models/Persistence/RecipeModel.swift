@@ -15,6 +15,7 @@ final class RecipeModel {
     var isDiscarded: Bool // if saved show in savedItems, if not show in discardedItems
     var dateModified: Date // sort by date added/modified
     //
+    @Attribute(.unique)
     var id: Int
     var image: String?
     var imageType: String?
@@ -35,6 +36,7 @@ final class RecipeModel {
     var license: String?
     var sourceName: String
     var pricePerServing: Double
+    @Relationship(deleteRule: .cascade)
     var extendedIngredients: [ExtendedIngredientModel]
     var summary: String
     var cuisines: [String]
@@ -42,6 +44,7 @@ final class RecipeModel {
     var diets: [String]
     var occasions: [String]
     var instructions: String?
+    @Relationship(deleteRule: .cascade)
     var analyzedInstructions: [AnalyzedInstructionModel]
     var originalId: Int?
     var spoonacularScore: Double
