@@ -75,7 +75,7 @@ struct MainView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Button("Restart Onboarding", systemImage: "gear") {
+                        Button("Settings", systemImage: "gear") {
                             showSettings = true
                         }
                     } label: {

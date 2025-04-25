@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SmallCardDetails: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State var recipe: Recipe
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -32,10 +33,12 @@ struct SmallCardDetails: View {
                 HStack {
                     Image(systemName: "book.closed.fill")
                     if let hosturl = recipe.sourceUrl {
-                        Text("\(getHostURL(hosturl))")
-                            .font(.footnote)
-                    }
-                    else {
+                        Link(destination: URL(string: hosturl)!) {
+                            Text("\(getHostURL(hosturl))")
+                                .font(.footnote)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                        }
+                    } else {
                         Text("No Source")
                             .font(.footnote)
                     }
@@ -79,4 +82,3 @@ struct SmallCardDetails: View {
 #Preview {
     SmallCardDetails(recipe: loadCakeRecipe())
 }
-
