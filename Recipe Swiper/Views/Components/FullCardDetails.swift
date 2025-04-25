@@ -9,7 +9,9 @@ import SwiftUI
 
 struct FullCardDetails: View {
     @Environment(\.colorScheme) private var colorScheme
-    @State var recipe: Recipe
+    @Binding var recipe: Recipe
+    //@State private var selectedRating: Int? = nil
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 10) {
@@ -45,44 +47,51 @@ struct FullCardDetails: View {
                     Text("\(recipe.servings)")
                         .font(.footnote)
                 }
-                
             }
+            
+            Divider()
+            
+            Text("Rate this Recipe")
+                .font(.title2)
+                .bold()
+                .padding(.top)
+
+            HStack {
+                ForEach(1...5, id: \.self) { star in
+                    Image(systemName: star <= ( recipe.rating ?? 0) ? "star.fill" : "star")
+                        .foregroundColor(.yellow)
+                        .onTapGesture {
+                            //selectedRating = star
+                            recipe.rating = star
+                        }
+                }
+            }
+            .padding(.top)
         }
         .padding()
-        .cornerRadius(8)  // Optional: Add rounded corners
-        // Optional: Add a border or shadow if desired
-        //         .overlay(
-        //             RoundedRectangle(cornerRadius: 8)
-        //                 .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-        //         )
+        .cornerRadius(8)
     }
 
-    // Takes a URL and returns the host of it (www.google.com -> google.com)
     private func getHostURL(_ urlString: String) -> String {
         guard let url = URL(string: urlString), let host = url.host,
             !host.isEmpty
         else {
-            return "No Source"  // Invalid URL or no host
+            return "No Source"
         }
 
-        //Sometimes the url has www.*, so we want to remove it
         let components = host.split(separator: ".")
-
-        // Handle different numbers of components
         if components.count >= 2 {
-            // If 2 or more parts, take the last two and join them
             return components.suffix(2).joined(separator: ".")
         } else if components.count == 1 {
-            // If only 1 part (like "localhost"), return it directly
             return String(components[0])
         } else {
-            // Should not happen if host is not empty, but handle defensively
             return "No Source"
         }
     }
 }
 
 #Preview {
-    FullCardDetails(recipe: loadCakeRecipe())
+    @Previewable @State var recipe = loadCurryRecipe()
+    FullCardDetails(recipe: $recipe)
 }
 

@@ -87,6 +87,7 @@ struct MainView: View {
             .toolbarBackground(.indigo, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Recipe Swiper")
             .task {
                 if currentRecipe.id == -1 {
                     await fetchNewRecipe()

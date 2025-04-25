@@ -44,7 +44,7 @@ struct FullRecipe: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                     
-                    FullCardDetails(recipe: recipe)
+                    FullCardDetails(recipe: $recipe)
                     
                     Divider()
                     
