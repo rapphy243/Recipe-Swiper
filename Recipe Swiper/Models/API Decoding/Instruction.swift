@@ -11,14 +11,14 @@ import Foundation
 
 // MARK: - AnalyzedInstruction
 // Represents a step-by-step breakdown of the instructions.
-struct AnalyzedInstruction: Codable {
+struct AnalyzedInstruction: Codable, Hashable {
     let name: String
     let steps: [InstructionStep]
 }
 
 // MARK: - InstructionStep
 // Represents a single step in the recipe instructions.
-struct InstructionStep: Codable {
+struct InstructionStep: Codable, Hashable  {
     let number: Int
     let step: String
     let ingredients: [InstructionComponent]
@@ -29,7 +29,7 @@ struct InstructionStep: Codable {
 // MARK: - InstructionComponent
 // Represents either an ingredient or equipment used in a step.
 // Using a shared struct as ingredient/equipment have the same fields here.
-struct InstructionComponent: Codable {
+struct InstructionComponent: Codable, Hashable  {
     let id: Int
     let name: String
     let localizedName: String
@@ -38,7 +38,7 @@ struct InstructionComponent: Codable {
 
 // MARK: - InstructionLength
 // Represents the duration of an instruction step.
-struct InstructionLength: Codable {
+struct InstructionLength: Codable, Hashable  {
     let number: Int
     let unit: String
 }
