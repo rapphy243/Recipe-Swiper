@@ -43,6 +43,7 @@ struct QuoteView: View {
         "The secret ingredient is always love. – Unknown"
     ]
     @State private var quoteIndex = Int.random(in: 0..<QuoteView.quotes.count)
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         Text(QuoteView.quotes[quoteIndex])
             .font(.title2)
@@ -50,9 +51,13 @@ struct QuoteView: View {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white.opacity(0.8))
-                    .shadow(radius: 5)
+                    .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.8) : .white.opacity(0.8))
+                    .shadow(
+                        color: colorScheme == .dark ? .black.opacity(0.3) : .gray.opacity(0.3),
+                        radius: 5
+                    )
             )
+            .foregroundStyle(colorScheme == .dark ? .white : .black)
             .padding(.horizontal)
     }
 }

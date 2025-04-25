@@ -7,12 +7,28 @@
 
 import SwiftUI
 
-struct CardDetails: View {
+struct FullCardDetails: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State var recipe: Recipe
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 10) {
-                HStack(spacing: 5) {
+                HStack {
+                    Image(systemName: "book.closed.fill")
+                    if let hosturl = recipe.sourceUrl {
+                        Link(destination: URL(string: hosturl)!) {
+                            Text("\(getHostURL(hosturl))")
+                                .font(.footnote)
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                        }
+                    } else {
+                        Text("No Source")
+                            .font(.footnote)
+                    }
+                }
+                Divider()
+                    .frame(maxHeight: 30)
+                HStack {
                     Image(systemName: "timer")
                     VStack(alignment: .leading, spacing: 0) {
                         Text("\(recipe.readyInMinutes)min")
@@ -22,24 +38,14 @@ struct CardDetails: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                HStack(spacing: 2) {
+                Divider()
+                    .frame(maxHeight: 30)
+                HStack {
                     Image(systemName: "person.2.fill")
                     Text("\(recipe.servings)")
                         .font(.footnote)
                 }
-            }
-            HStack(spacing: 10) {
-                HStack {
-                    Image(systemName: "book.closed.fill")
-                    if let hosturl = recipe.sourceUrl {
-                        Text("\(getHostURL(hosturl))")
-                            .font(.footnote)
-                    }
-                    else {
-                        Text("No Source")
-                            .font(.footnote)
-                    }
-                }
+                
             }
         }
         .padding()
@@ -77,5 +83,6 @@ struct CardDetails: View {
 }
 
 #Preview {
-    CardDetails(recipe: loadCakeRecipe())
+    FullCardDetails(recipe: loadCakeRecipe())
 }
+
