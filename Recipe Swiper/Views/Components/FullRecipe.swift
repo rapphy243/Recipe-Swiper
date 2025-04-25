@@ -44,7 +44,7 @@ struct FullRecipe: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                     
-                    CardDetails(recipe: recipe)
+                    FullCardDetails(recipe: recipe)
                     
                     Divider()
                     
@@ -57,6 +57,16 @@ struct FullRecipe: View {
                     Text(simplifySummary(recipe.summary))
                         .font(.body)
                         .padding(.bottom)
+                    
+                    Divider()
+                    
+                    IngredientsList(recipe: $recipe)
+                    
+                    Divider()
+                    
+                    InstructionsSteps(recipe: $recipe)
+                    
+                    Divider()
                 }
                 .padding()
             }

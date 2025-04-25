@@ -33,7 +33,7 @@ struct SmallRecipeCard: View {
                 }
                 Spacer()
                 VStack {
-                    CardDetails(recipe: recipe)
+                    SmallCardDetails(recipe: recipe)
                     Divider()
                         .frame(width: 130)
                     ScrollView {

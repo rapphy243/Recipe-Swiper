@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CardDetails: View {
+struct SmallCardDetails: View {
     @State var recipe: Recipe
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -77,5 +77,6 @@ struct CardDetails: View {
 }
 
 #Preview {
-    CardDetails(recipe: loadCakeRecipe())
+    SmallCardDetails(recipe: loadCakeRecipe())
 }
+
