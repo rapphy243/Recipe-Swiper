@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SmallRecipeCard: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State var recipe: Recipe
     @State var onTap: (() -> Void)? = nil
     var body: some View {
@@ -49,9 +50,13 @@ struct SmallRecipeCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(.white.opacity(0.8))
-                .shadow(radius: 5)
+                .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.8) : .white.opacity(0.8))
+                .shadow(
+                    color: colorScheme == .dark ? .black.opacity(0.3) : .gray.opacity(0.3),
+                    radius: 5
+                )
         )
+        .foregroundStyle(colorScheme == .dark ? .white : .black)
         .contentShape(Rectangle())
         .onTapGesture {
             onTap?()
