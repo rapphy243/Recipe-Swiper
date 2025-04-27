@@ -8,36 +8,49 @@
 import Foundation
 import SwiftUI
 
-struct FilterSheet: View {
+struct FilterSheetView: View {
     @ObservedObject var model: FilterModel
     @Environment(\.dismiss) var dismiss
-
+    
+    let mealTypes = ["", "main course", "side dish", "dessert", "appetizer", "salad", "bread", "breakfast", "soup", "beverage", "sauce", "marinade", "fingerfood", "snack", "drink"]
+    let diets = ["", "gluten free", "ketogenic", "vegetarian", "Lacto-Vegetarian", "Ovo-Vegetarian", "vegan", "pescetarian", "paleo", "primal", "low fodmap", "whole30"]
+    let cuisines = ["", "African", "Asian", "American", "British", "Cajun", "Caribbean", "Chinese", "Eastern European", "European", "French", "German", "Greek", "Indian", "Irish", "Italian", "Japanese", "Jewish", "Korean", "Latin American", "Mediterranean", "Mexican", "Middle Eastern", "Nordic", "Southern", "Spanish", "Thai", "Vietnamese"]
+    let intolerances = ["", "Dairy", "Egg", "Gluten", "Grain", "Peanut", "Seafood", "Sesame", "Shellfish", "Soy", "Sulfite", "Tree Nut", "Wheat"]
     var body: some View {
         NavigationView {
             Form {
                 Section("Cuisine") {
-                    Picker("Cuisine", selection: $model.cuisine) {
-                        ForEach(["", "Italian", "Mexican", "Chinese", "Indian", "Korean"], id: \.self) {
+                    Picker("Cuisine", selection: $model.includeCuisine) {
+                        ForEach(cuisines, id: \.self) {
                             Text($0.capitalized)
                         }
                     }
                 }
 
-                Section("Diet / Allergies") {
-                    Picker("Diet", selection: $model.diet) {
-                        ForEach(["", "gluten free", "dairy free", "vegan", "vegetarian", "paleo"], id: \.self) {
+                Section("Diet") {
+                    Picker("Diet", selection: $model.includeDiet) {
+                        ForEach(diets, id: \.self) {
                             Text($0.capitalized)
                         }
                     }
                 }
 
+                Section("Intolerances") {
+                    Picker("Intolerances", selection: $model.includeIntolerance) {
+                        ForEach(intolerances, id: \.self) {
+                            Text($0.capitalized)
+                        }
+                    }
+                }
+                
                 Section("Meal Type") {
-                    Picker("Meal Type", selection: $model.mealType) {
-                        ForEach(["", "main course", "dessert", "breakfast", "snack", "soup"], id: \.self) {
+                    Picker("Meal Type", selection: $model.includeMealType) {
+                        ForEach(mealTypes, id: \.self) {
                             Text($0.capitalized)
                         }
                     }
                 }
+                
             }
             .navigationTitle("Filters")
             .toolbar {
@@ -54,4 +67,8 @@ struct FilterSheet: View {
             }
         }
     }
+}
+
+#Preview {
+    FilterSheetView(model: FilterModel())
 }

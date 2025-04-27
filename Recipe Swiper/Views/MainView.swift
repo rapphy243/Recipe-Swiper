@@ -107,7 +107,7 @@ struct MainView: View {
                 SettingsView()
             }
             .sheet(isPresented: $showFilterSheet) {
-                FilterSheet(model: filterModel)
+                FilterSheetView(model: filterModel)
             }
 
             }
