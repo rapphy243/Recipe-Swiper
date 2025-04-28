@@ -31,9 +31,11 @@ enum RecipeError: Error, LocalizedError {
     }
 }
 
-func fetchRandomRecipe() async throws -> Recipe {
-    let urlString = "https://api.spoonacular.com/recipes/random?apiKey=" + Secrets.apiKey
-    guard let url = URL(string: urlString) else {
+func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
+
+    var components = URLComponents(string: "https://api.spoonacular.com/recipes/random")!
+    components.queryItems = filterModel.queryItems(apiKey: Secrets.apiKey)
+    guard let url = components.url else {
         throw RecipeError.invalidURL
     }
     print("Fetching recipe from: \(url.absoluteString)") // Debugging
