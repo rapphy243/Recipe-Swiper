@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InstructionsSteps: View {
+struct InstructionsStepsComponent: View {
     @Binding var recipe: Recipe
     @State private var isExpanded: Bool = false
 
@@ -65,5 +65,5 @@ struct InstructionsSteps: View {
 
 #Preview {
     @Previewable @State var recipe = loadCurryRecipe()
-    InstructionsSteps(recipe: $recipe)
+    InstructionsStepsComponent(recipe: $recipe)
 }

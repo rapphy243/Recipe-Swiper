@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct QuoteView: View {
+struct QuoteViewComponent: View {
     static let quotes = [
         "Cooking is like love. It should be entered into with abandon or not at all. – Harriet Van Horne",
         "Food is symbolic of love when words are inadequate. – Alan D. Wolfelt",
@@ -42,10 +42,10 @@ struct QuoteView: View {
         "Cooking is all about people. Food is maybe the only universal thing that really has the power to bring everyone together. No matter what culture, everywhere around the world, people get together to eat. – Guy Fieri",
         "The secret ingredient is always love. – Unknown"
     ]
-    @State private var quoteIndex = Int.random(in: 0..<QuoteView.quotes.count)
+    @State private var quoteIndex = Int.random(in: 0..<QuoteViewComponent.quotes.count)
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
-        Text(QuoteView.quotes[quoteIndex])
+        Text(QuoteViewComponent.quotes[quoteIndex])
             .font(.title2)
             .padding()
             .frame(maxWidth: .infinity)
@@ -63,5 +63,5 @@ struct QuoteView: View {
 }
 
 #Preview {
-    QuoteView()
+    QuoteViewComponent()
 }

@@ -48,6 +48,10 @@ struct FullRecipe: View {
                     
                     Divider()
                     
+                    RatingComponent(rating: $recipe.rating)
+                        
+                    Divider()
+                    
                     Text("Summary")
                         .font(.title2)
                         .bold()
@@ -60,11 +64,11 @@ struct FullRecipe: View {
                     
                     Divider()
                     
-                    IngredientsList(recipe: $recipe)
+                    IngredientsListComponent(recipe: $recipe)
                     
                     Divider()
                     
-                    InstructionsSteps(recipe: $recipe)
+                    InstructionsStepsComponent(recipe: $recipe)
                     
                     Divider()
                 }

@@ -10,7 +10,6 @@ import SwiftUI
 struct FullCardDetails: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var recipe: Recipe
-    //@State private var selectedRating: Int? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -48,25 +47,6 @@ struct FullCardDetails: View {
                         .font(.footnote)
                 }
             }
-            
-            Divider()
-            
-            Text("Rate this Recipe")
-                .font(.title2)
-                .bold()
-                .padding(.top)
-
-            HStack {
-                ForEach(1...5, id: \.self) { star in
-                    Image(systemName: star <= ( recipe.rating ?? 0) ? "star.fill" : "star")
-                        .foregroundColor(.yellow)
-                        .onTapGesture {
-                            //selectedRating = star
-                            recipe.rating = star
-                        }
-                }
-            }
-            .padding(.top)
         }
         .padding()
         .cornerRadius(8)
