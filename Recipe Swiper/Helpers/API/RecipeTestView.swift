@@ -127,7 +127,7 @@ struct RecipeTestView: View {
 
         do {
             print("Attempting to fetch recipe from View...")
-            let fetchedRecipe = try await fetchRandomRecipe() // Call your API function
+            let fetchedRecipe = try await fetchRandomRecipe(using: FilterModel())
             self.fetchedRecipe = fetchedRecipe // Update state on the main thread
             print("Successfully updated recipe state in View.")
         } catch {
