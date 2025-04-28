@@ -16,6 +16,7 @@ final class RecipeModel {
     var isDiscarded: Bool // if saved show in savedItems, if not show in discardedItems
     var dateModified: Date // sort by date added/modified
     //
+    var rating: Int
     @Attribute(.unique)
     var id: Int
     @Attribute(.externalStorage)
@@ -57,6 +58,7 @@ final class RecipeModel {
         self.isDiscarded = isDiscarded
         self.dateModified = Date()
         //
+        self.rating = 0
         self.id = recipe.id
         self.image = imageData
         self.imageType = recipe.imageType
