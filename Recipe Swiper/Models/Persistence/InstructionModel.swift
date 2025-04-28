@@ -12,6 +12,7 @@ import SwiftData
 @Model
 final class AnalyzedInstructionModel {
     var name: String
+    @Relationship(deleteRule: .cascade)
     var steps: [InstructionStepModel]
     
     init(from instruction: AnalyzedInstruction) {
@@ -24,8 +25,11 @@ final class AnalyzedInstructionModel {
 final class InstructionStepModel {
     var number: Int
     var step: String
+    @Relationship(deleteRule: .cascade)
     var ingredients: [InstructionComponentModel]
+    @Relationship(deleteRule: .cascade)
     var equipment: [InstructionComponentModel]
+    @Relationship(deleteRule: .cascade)
     var length: InstructionLengthModel?
     
     init(from step: InstructionStep) {

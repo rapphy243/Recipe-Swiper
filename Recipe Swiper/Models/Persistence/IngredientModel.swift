@@ -22,6 +22,7 @@ final class ExtendedIngredientModel {
     var amount: Double
     var unit: String
     var meta: [String]?
+    @Relationship(deleteRule: .cascade)
     var measures: MeasuresModel
     
     init(from ingredient: ExtendedIngredient) {

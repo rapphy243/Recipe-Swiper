@@ -11,7 +11,9 @@ import SwiftData
 
 @Model
 final class MeasuresModel {
+    @Relationship(deleteRule: .cascade)
     var us: MeasurementUnitModel
+    @Relationship(deleteRule: .cascade)
     var metric: MeasurementUnitModel
     
     init(from measures: Measures) {
