@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct IngredientsList: View {
+struct IngredientsListComponent: View {
     @Binding var recipe: Recipe
     @State private var isExpanded = false
     
@@ -31,5 +31,5 @@ struct IngredientsList: View {
 
 #Preview {
     @Previewable @State var recipe = loadCurryRecipe()
-    IngredientsList(recipe: $recipe)
+    IngredientsListComponent(recipe: $recipe)
 }

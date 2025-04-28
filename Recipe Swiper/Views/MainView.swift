@@ -69,7 +69,7 @@ struct MainView: View {
                             }
                         }
                         .animation(.spring(response: 0.3), value: cardOffset)
-                    QuoteView()
+                    QuoteViewComponent()
                 }
             }
             .toolbar {
@@ -87,6 +87,7 @@ struct MainView: View {
             .toolbarBackground(.indigo, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Recipe Swiper")
             .task {
                 if currentRecipe.id == -1 {
                     await fetchNewRecipe()

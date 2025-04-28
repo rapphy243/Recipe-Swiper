@@ -23,6 +23,7 @@ struct Recipe: Codable, Hashable, Equatable {
     let title: String
     let readyInMinutes: Int
     let servings: Int
+    var rating: Int?
     let sourceUrl: String? // Changed to String as per JSON, consider URL if needed
     let vegetarian: Bool
     let vegan: Bool
