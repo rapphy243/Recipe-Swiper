@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RatingComponent: View {
-    @Binding var rating: Int?
+    @Bindable var recipe: RecipeModel
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             Text("Rate this Recipe")
@@ -18,11 +18,11 @@ struct RatingComponent: View {
             HStack {
                 ForEach(1...5, id: \.self) { star in
                     Image(
-                        systemName: star <= (rating ?? 0) ? "star.fill" : "star"
+                        systemName: star <= (recipe.rating) ? "star.fill" : "star"
                     )
                     .foregroundColor(.yellow)
                     .onTapGesture {
-                        rating = star
+                        recipe.rating = star
                     }
                 }
             }
@@ -31,6 +31,6 @@ struct RatingComponent: View {
 }
 
 #Preview {
-    @Previewable @State var recipe = loadCakeRecipe()
-    RatingComponent(rating: $recipe.rating)
+    @Previewable @State var recipe = RecipeModel(from: loadCakeRecipe())
+    RatingComponent(recipe: recipe)
 }

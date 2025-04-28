@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FullCardDetails: View {
     @Environment(\.colorScheme) private var colorScheme
-    @Binding var recipe: Recipe
+    @Bindable var recipe: RecipeModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -71,7 +71,7 @@ struct FullCardDetails: View {
 }
 
 #Preview {
-    @Previewable @State var recipe = loadCurryRecipe()
-    FullCardDetails(recipe: $recipe)
+    @Previewable @State var recipe =  RecipeModel(from: loadCurryRecipe())
+    FullCardDetails(recipe: recipe)
 }
 

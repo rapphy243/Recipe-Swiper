@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FullRecipe: View {
-    @State var recipe: Recipe
+    @Environment(\.modelContext) private var modelContext
+    @Bindable var recipe: RecipeModel
 
     var body: some View {
         NavigationStack {
@@ -20,23 +22,22 @@ struct FullRecipe: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top)
-                    
-                    if let imageUrl = recipe.image, let url = URL(
-                        string: imageUrl
-                    ) {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(10)
-                                .padding()
-                        } placeholder: {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 300)
-                                .padding()
-                        }
-                    }
+//                    if let imageUrl = recipe.image, let url = URL(
+//                        string: imageUrl
+//                    ) {
+//                        AsyncImage(url: url) { image in
+//                            image
+//                                .resizable()
+//                                .scaledToFit()
+//                                .cornerRadius(10)
+//                                .padding()
+//                        } placeholder: {
+//                            RoundedRectangle(cornerRadius: 10)
+//                                .fill(Color.gray.opacity(0.3))
+//                                .frame(height: 300)
+//                                .padding()
+//                        }
+//                    }
                     
                     Text("Details")
                         .font(.title2)
@@ -44,11 +45,11 @@ struct FullRecipe: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                     
-                    FullCardDetails(recipe: $recipe)
+                    FullCardDetails(recipe: recipe)
                     
                     Divider()
                     
-                    RatingComponent(rating: $recipe.rating)
+                    RatingComponent(recipe: recipe)
                         
                     Divider()
                     
@@ -64,11 +65,11 @@ struct FullRecipe: View {
                     
                     Divider()
                     
-                    IngredientsListComponent(recipe: $recipe)
+                    IngredientsListComponent(recipe: recipe)
                     
                     Divider()
                     
-                    InstructionsStepsComponent(recipe: $recipe)
+                    InstructionsStepsComponent(recipe: recipe)
                     
                     Divider()
                 }
@@ -79,5 +80,5 @@ struct FullRecipe: View {
 }
 
 #Preview {
-    FullRecipe(recipe: loadCakeRecipe())
+    FullRecipe(recipe: RecipeModel(from: loadCakeRecipe()))
 }

@@ -11,28 +11,27 @@
 // https://stackoverflow.com/a/76287539
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    @State private var savedRecipes: [Recipe] = []
-    @State private var discardedRecipes: [Recipe] = []
+    @Environment(\.modelContext) private var modelContext
+    @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     @State private var selection = 1  // Show MainView
     @StateObject private var filterModel = FilterModel()
-
-    @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
             TabView(selection: $selection) {
                 Group {
-                    DiscardedRecipesView(discardedRecipes: $discardedRecipes)  // View to go to
+                    DiscardedRecipesView()  // View to go to
                         .tabItem {
                             Label("Discarded Recipes", systemImage: "trash")  // Icon & Label on tab
                         }
                         .tag(0)
-                    MainView(savedRecipes: $savedRecipes, discardedRecipes: $discardedRecipes, filterModel: filterModel)
+                    MainView(filterModel: filterModel)
                         .tabItem {
                             Label("Home", systemImage: "house")
                         }
                         .tag(1)
-                    SavedRecipesView(savedRecipes: $savedRecipes)
+                    SavedRecipesView()
                         .tabItem {
                             Label("Saved Recipes", systemImage: "fork.knife")
                         }

@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SavedRecipesView: View {
-    @Binding var savedRecipes: [Recipe]
+    @Environment(\.modelContext) private var modelContext
+    @Query(filter: #Predicate<RecipeModel> {!$0.isDiscarded})
+       private var savedRecipes: [RecipeModel]
     var body: some View {
         NavigationStack {
             List(savedRecipes, id: \.self) { recipe in
@@ -43,10 +46,23 @@ struct SavedRecipesView: View {
                 })
             }
         }
+        .onAppear {
+                    print("Saved recipes count: \(savedRecipes.count)")
+                    savedRecipes.forEach { print("Recipe: \($0.title), isDiscarded: \($0.isDiscarded)") }
+            }
     }
 }
 
 #Preview {
-    @Previewable @State var savedRecipes: [Recipe] = [ loadCakeRecipe(), loadCurryRecipe(), loadSaladRecipe()]
-    SavedRecipesView(savedRecipes: $savedRecipes)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: RecipeModel.self, configurations: config)
+    let recipe1 = RecipeModel(from: loadCakeRecipe(), isDiscarded: false)
+    let recipe2 = RecipeModel(from: loadCurryRecipe(), isDiscarded: false)
+    let recipe3 = RecipeModel(from: loadSaladRecipe(), isDiscarded: false)
+    container.mainContext.insert(recipe1)
+    container.mainContext.insert(recipe2)
+    container.mainContext.insert(recipe3)
+    
+    return SavedRecipesView()
+        .modelContainer(container)
 }

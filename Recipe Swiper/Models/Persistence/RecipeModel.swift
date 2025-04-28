@@ -13,14 +13,15 @@ import SwiftUI
 @Model
 final class RecipeModel {
     // Used for sorting
-    var isDiscarded: Bool // if saved show in savedItems, if not show in discardedItems
-    var dateModified: Date // sort by date added/modified
+    var isDiscarded: Bool  // if saved show in savedItems, if not show in discardedItems
+    var dateModified: Date  // sort by date added/modified
     //
     var rating: Int
     @Attribute(.unique)
     var id: Int
     @Attribute(.externalStorage)
-    var image: Data?
+    var image: String?
+    var imageData: Data?
     var imageType: String?
     var title: String
     var readyInMinutes: Int
@@ -52,15 +53,15 @@ final class RecipeModel {
     var originalId: Int?
     var spoonacularScore: Double
     var spoonacularSourceUrl: String?
-    
-    init(from recipe: Recipe, imageData: Data?, isDiscarded: Bool = false) {
+
+    init(from recipe: Recipe, isDiscarded: Bool = false) {
         //
         self.isDiscarded = isDiscarded
         self.dateModified = Date()
         //
         self.rating = 0
         self.id = recipe.id
-        self.image = imageData
+        self.image = recipe.image
         self.imageType = recipe.imageType
         self.title = recipe.title
         self.readyInMinutes = recipe.readyInMinutes
@@ -91,49 +92,35 @@ final class RecipeModel {
         self.spoonacularScore = recipe.spoonacularScore
         self.spoonacularSourceUrl = recipe.spoonacularSourceUrl
     }
-    
-    final func getImage() -> UIImage? { // Decode Image Data to a UIImage that can be displayed
-        if let imageData = self.image {
+
+    final func getImage() async -> UIImage? {  // Decode Image Data to a UIImage that can be displayed
+        if let imageData = self.imageData {
             return UIImage(data: imageData)
-        }
-        return nil
-    }
-    // Async Static Factory Method
-    // Use this method to create instances of RecipeModel
-    static func create(from recipe: Recipe, isDiscarded: Bool = false) async -> RecipeModel {
-        var imageData: Data? = nil
-        
-        // Attempt to download image data if URL exists
-        if let imageUrlString = recipe.image,
-           let imageUrl = URL(string: imageUrlString)
-        {
+        } else if let imageString = self.image {
+            let imageUrl = URL(string: imageString)
             do {
                 // Perform asynchronous download
                 let (data, response) = try await URLSession.shared.data(
-                    from: imageUrl
-                )
-                
+                    from: imageUrl!)
+
                 // Basic check for valid HTTP response
                 if let httpResponse = response as? HTTPURLResponse,
-                   httpResponse.statusCode == 200
+                    httpResponse.statusCode == 200
                 {
-                    imageData = data
+                    self.imageData = data
                 } else {
                     print(
-                        "Warning: Received non-200 response for image URL: \(imageUrlString)"
+                        "Warning: Received non-200 response for image URL: \(imageString)"
                     )
                 }
             } catch {
-                // Handle potential errors during download (network issue, invalid URL after check, etc.)
                 print(
-                    "Error downloading image from \(imageUrlString): \(error.localizedDescription)"
+                    "Error downloading image from \(imageString): \(error.localizedDescription)"
                 )
                 // imageData remains nil
             }
-        } else {
-            print("Warning: Recipe \(recipe.id) has no valid image URL.")
         }
-        
-        return RecipeModel(from: recipe, imageData: imageData, isDiscarded: isDiscarded)
+        print("Warning: Recipe \(self.id) has no valid image URL.")
+        return nil
     }
 }

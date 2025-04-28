@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("isOnboarding") var isOnboarding: Bool?
-    @Binding var savedRecipes: [Recipe]
-    @Binding var discardedRecipes: [Recipe]
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
     @State private var currentRecipe: Recipe = loadCurryRecipe()
@@ -19,7 +19,6 @@ struct MainView: View {
     @State private var showSettings = false
     @State private var showFilterSheet = false
     @ObservedObject var filterModel: FilterModel
-
     
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
@@ -134,7 +133,8 @@ struct MainView: View {
     
     private func saveCurrentRecipe() {
         if !shownRecipes.contains(currentRecipe.title) {
-            savedRecipes.append(currentRecipe)
+            modelContext.insert(RecipeModel(from: currentRecipe))
+            try! modelContext.save()
             shownRecipes.append(currentRecipe.title)
         }
         
@@ -155,7 +155,8 @@ struct MainView: View {
     
     private func skipCurrentRecipe() {
         if !shownRecipes.contains(currentRecipe.title) {
-            discardedRecipes.append(currentRecipe)
+            modelContext.insert(RecipeModel(from: currentRecipe, isDiscarded: true))
+            try! modelContext.save()
             shownRecipes.append(currentRecipe.title)
         }
         
@@ -198,5 +199,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(savedRecipes: .constant([]), discardedRecipes: .constant([]), filterModel: FilterModel())
+    MainView(filterModel: FilterModel())
 }

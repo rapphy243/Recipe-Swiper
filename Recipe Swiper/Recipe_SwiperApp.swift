@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct Recipe_SwiperApp: App {
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
