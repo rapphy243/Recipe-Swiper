@@ -19,7 +19,7 @@ class FilterModel: ObservableObject {
     @Published var excludeMealType = ""
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
-        var items = [URLQueryItem(name: "apiKey", value: apiKey), URLQueryItem(name: "number", value: "1")] // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
+        var items = [URLQueryItem(name: "apiKey", value: apiKey)] // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
         var include: [String] = []
         var exclude: [String] = []
         
