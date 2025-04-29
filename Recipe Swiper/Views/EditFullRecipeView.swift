@@ -30,10 +30,6 @@ struct EditFullRecipeView: View {
                         .keyboardType(.URL)
                         .autocapitalization(.none)
                     }
-                    TextField(
-                        "Image Type (e.g., jpg)",
-                        text: binding(for: $recipe.imageType)
-                    )
                 }
 
                 // Section for timings and servings
@@ -90,8 +86,6 @@ struct EditFullRecipeView: View {
                         .foregroundColor(.secondary)
                     Text("Diets: \(recipe.diets.joined(separator: ", "))")
                         .foregroundColor(.secondary)
-                    Text("Occasions: \(recipe.occasions.joined(separator: ", "))")
-                        .foregroundColor(.secondary)
                 }
 
                 // Section for ingredients and instructions (summary/placeholders)
@@ -104,11 +98,6 @@ struct EditFullRecipeView: View {
                     Text("Instructions:")
                     TextEditor(text: binding(for: $recipe.instructions))
                         .frame(height: 150) // Give TextEditor some default height
-
-                    Text(
-                        "Analyzed Instructions: \(recipe.analyzedInstructions.count) steps"
-                    )
-                    .foregroundColor(.secondary)
                     // NavigationLink("Edit Steps") { /* AnalyzedInstructionListView(...) */ }
                 }
 
@@ -157,7 +146,6 @@ struct EditFullRecipeView: View {
                         .autocapitalization(.none)
                     }
                     TextField("Credits Text", text: $recipe.creditsText)
-                    TextField("License", text: binding(for: $recipe.license))
 
                     HStack {
                         Text("Spoonacular Score")

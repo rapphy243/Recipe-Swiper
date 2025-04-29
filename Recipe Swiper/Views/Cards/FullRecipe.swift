@@ -78,7 +78,7 @@ struct FullRecipe: View {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Menu {
                         Button("Edit Recipe Details", systemImage: "gear") {
-                            
+                            showEditing = true
                         }
                     } label: {
                         Image(systemName: "ellipsis")
@@ -87,7 +87,7 @@ struct FullRecipe: View {
                 }
             }
             .sheet(isPresented: $showEditing) {
-                
+                EditFullRecipeView(recipe: $recipe)
             }
         }
     }
