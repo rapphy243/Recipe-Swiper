@@ -45,10 +45,31 @@ final class RecipeModel {
     var summary: String
     // These String arrays cause "Could not materialize Objective-C class named "Array" from declared attribute value type "Array<String>" of attribute named"
     // SwiftData/CoreData doest not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
-    var cuisines: [String]
-    var dishTypes: [String]
-    var diets: [String]
-    var occasions: [String]
+    @Attribute(.externalStorage)
+    private var cuisinesData: Data?
+    @Attribute(.externalStorage)
+    private var dishTypesData: Data?
+    @Attribute(.externalStorage)
+    private var dietsData: Data?
+    @Attribute(.externalStorage)
+    private var occasionsData: Data?
+    //
+    private var cuisines: [String] {
+        get {getStringArray(from: cuisinesData) ?? []}
+        set {cuisinesData = encodeStringArray(newValue)}
+    }
+    private var dishTypes: [String] {
+        get {getStringArray(from: dishTypesData) ?? []}
+        set {dishTypesData = encodeStringArray(newValue)}
+    }
+    private var diets: [String] {
+        get {getStringArray(from: dietsData) ?? []}
+        set {dietsData = encodeStringArray(newValue)}
+    }
+    private var occasions: [String] {
+        get { getStringArray(from: occasionsData) ?? []}
+        set { occasionsData = encodeStringArray(newValue)}
+    }
     //
     var instructions: String?
     @Relationship(deleteRule: .cascade)
@@ -65,6 +86,7 @@ final class RecipeModel {
         self.rating = 0
         self.id = recipe.id
         self.image = recipe.image
+        self.imageData = nil
         self.imageType = recipe.imageType
         self.title = recipe.title
         self.readyInMinutes = recipe.readyInMinutes
@@ -85,10 +107,10 @@ final class RecipeModel {
         self.pricePerServing = recipe.pricePerServing
         self.extendedIngredients = recipe.extendedIngredients.map(ExtendedIngredientModel.init)
         self.summary = recipe.summary
-        self.cuisines = recipe.cuisines
-        self.dishTypes = recipe.dishTypes
-        self.diets = recipe.diets
-        self.occasions = recipe.occasions
+        self.cuisinesData = try? JSONEncoder().encode(recipe.cuisines)
+        self.dishTypesData = try? JSONEncoder().encode(recipe.dishTypes)
+        self.dietsData = try? JSONEncoder().encode(recipe.diets)
+        self.occasionsData = try? JSONEncoder().encode(recipe.occasions)
         self.instructions = recipe.instructions
         self.analyzedInstructions = recipe.analyzedInstructions.map(AnalyzedInstructionModel.init)
         self.originalId = recipe.originalId
@@ -96,36 +118,44 @@ final class RecipeModel {
         self.spoonacularSourceUrl = recipe.spoonacularSourceUrl
     }
 
-    final func getImage() async -> UIImage? {  // Decode Image Data to a UIImage that can be displayed
+    final func getImage() async -> UIImage? {
+        // Return cached image if available
         if let imageData = self.imageData {
             return UIImage(data: imageData)
         }
-        else if let imageString = self.image {
-            let imageUrl = URL(string: imageString)
-            do {
-                // Perform asynchronous download
-                let (data, response) = try await URLSession.shared.data(
-                    from: imageUrl!)
-
-                // Basic check for valid HTTP response
-                if let httpResponse = response as? HTTPURLResponse,
-                    httpResponse.statusCode == 200
-                {
-                    self.imageData = data
-                    return UIImage(data: data)
-                } else {
-                    print(
-                        "Warning: Received non-200 response for image URL: \(imageString)"
-                    )
-                }
-            } catch {
-                print(
-                    "Error downloading image from \(imageString): \(error.localizedDescription)"
-                )
-                // imageData remains nil
-            }
+        
+        // Download if we have a URL
+        guard let imageString = self.image,
+              let imageUrl = URL(string: imageString) else {
+            return nil
         }
-        print("Warning: Recipe \(self.id) has no valid image URL.")
-        return nil
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: imageUrl)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                print("Error: Invalid response for image URL: \(imageString)")
+                return nil
+            }
+            
+            // Store data in the model
+            self.imageData = data
+            return UIImage(data: data)
+        }
+        catch {
+            print("Error downloading image: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    // Helper methods for conversion
+    private func encodeStringArray(_ array: [String]) -> Data? {
+        try? JSONEncoder().encode(array)
+    }
+    private func getStringArray(from data: Data?) -> [String]? {
+        guard let data = data else {
+            return nil
+        }
+        return try? JSONDecoder().decode([String].self, from: data)
     }
 }

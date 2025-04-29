@@ -35,22 +35,6 @@ struct FullRecipe: View {
                             .frame(height: 300)
                             .padding()
                     }
-//                    if let imageUrl = recipe.image, let url = URL(
-//                        string: imageUrl
-//                    ) {
-//                        AsyncImage(url: url) { image in
-//                            image
-//                                .resizable()
-//                                .scaledToFit()
-//                                .cornerRadius(10)
-//                                .padding()
-//                        } placeholder: {
-//                            RoundedRectangle(cornerRadius: 10)
-//                                .fill(Color.gray.opacity(0.3))
-//                                .frame(height: 300)
-//                                .padding()
-//                        }
-//                    }
                     
                     Text("Details")
                         .font(.title2)

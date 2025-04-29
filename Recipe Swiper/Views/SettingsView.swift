@@ -10,8 +10,6 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("isOnboarding") var isOnboarding: Bool?
     @State private var apiKey: String = Secrets.apiKey
-    
-    let foodTypes = ["No Peanuts",]
     var body: some View {
         NavigationStack {
             List {

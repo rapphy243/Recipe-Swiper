@@ -14,7 +14,6 @@ struct MainView: View {
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
     @State private var currentRecipe: Recipe = loadCurryRecipe()
-    @State private var shownRecipes: [String] = []
     @State private var isLoading = false
     @State private var showSettings = false
     @State private var showFilterSheet = false
@@ -239,11 +238,10 @@ struct MainView: View {
         for _ in 0..<1 {  // Only try and fetch a Recipe 1 times per call
             do {
                 let newRecipe = try await fetchRandomRecipe(using: filterModel)
-                if !shownRecipes.contains(newRecipe.title) {
-                    currentRecipe = newRecipe
-                    break
-                }
-            } catch {
+                currentRecipe = newRecipe
+                break
+            }
+            catch {
                 print("Error fetching recipe: \(error)")
                 currentRecipe = Recipe.empty
             }

@@ -17,17 +17,23 @@ struct SavedRecipesView: View {
             List(savedRecipes, id: \.self) { recipe in
                 NavigationLink(destination: FullRecipe(recipe: recipe)) {
                     HStack {
-                        AsyncImage(url: URL(string: recipe.image ?? "")) { image in
-                            image
+                        if let image = recipe.imageData {
+                            Image(uiImage: UIImage(data: image)!)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 60, height: 60)
                                 .clipped()
                                 .cornerRadius(10)
-                        } placeholder: {
+                        }
+                        else {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.gray.opacity(0.3))
                                 .frame(width: 60, height: 60)
+                                .onAppear {
+                                    Task {
+                                        await recipe.getImage()
+                                    }
+                                }
                         }
                         Text(recipe.title)
                             .font(.headline)
@@ -46,10 +52,6 @@ struct SavedRecipesView: View {
                 })
             }
         }
-        .onAppear {
-                    print("Saved recipes count: \(savedRecipes.count)")
-                    savedRecipes.forEach { print("Recipe: \($0.title), isDiscarded: \($0.isDiscarded)") }
-            }
     }
 }
 

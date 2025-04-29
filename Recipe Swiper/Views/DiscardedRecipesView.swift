@@ -5,30 +5,37 @@
 //  Created by Tyler Berlin on 4/21/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct DiscardedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(filter: #Predicate<RecipeModel> { $0.isDiscarded },
-           sort: \RecipeModel.dateModified, order: .forward)
+    @Query(
+        filter: #Predicate<RecipeModel> { $0.isDiscarded },
+        sort: \RecipeModel.dateModified, order: .forward)
     private var discardedRecipes: [RecipeModel]
     var body: some View {
         NavigationStack {
             List(discardedRecipes) { recipe in
                 NavigationLink(destination: FullRecipe(recipe: recipe)) {
                     HStack {
-                        AsyncImage(url: URL(string: recipe.image ?? "")) { image in
-                            image
+                        if let image = recipe.imageData {
+                            Image(uiImage: UIImage(data: image)!)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 60, height: 60)
                                 .clipped()
                                 .cornerRadius(10)
-                        } placeholder: {
+                        }
+                        else {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.gray.opacity(0.3))
                                 .frame(width: 60, height: 60)
+                                .onAppear {
+                                    Task {
+                                        await recipe.getImage()
+                                    }
+                                }
                         }
                         Text(recipe.title)
                             .font(.headline)
@@ -40,18 +47,17 @@ struct DiscardedRecipesView: View {
         }
         .overlay {
             if discardedRecipes.isEmpty {
-                ContentUnavailableView(label: {
-                Label("No discarded recipes", systemImage: "trash")
-                }, description : {
-                    Text("Only the last 10 discarded recipes will be saved here.")
-                })
+                ContentUnavailableView(
+                    label: {
+                        Label("No discarded recipes", systemImage: "trash")
+                    },
+                    description: {
+                        Text(
+                            "Only the last 10 discarded recipes will be saved here."
+                        )
+                    })
             }
         }
-        .onAppear {
-                    print("Saved recipes count: \(discardedRecipes.count)")
-            discardedRecipes.forEach {
-                print("Recipe: \($0.title), isDiscarded: \($0.isDiscarded)")}
-                }
     }
 }
 
