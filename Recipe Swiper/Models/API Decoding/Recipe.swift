@@ -18,43 +18,43 @@ struct RecipeResponse: Codable {
 // Represents a single recipe with its details.
 struct Recipe: Codable, Hashable, Equatable {
     let id: Int
-    let image: String? // Changed to String as per JSON, consider URL if needed
-    let imageType: String?
-    let title: String
-    let readyInMinutes: Int
-    let servings: Int
+    var image: String? // Changed to String as per JSON, consider URL if needed
+    var imageType: String?
+    var title: String
+    var readyInMinutes: Int
+    var servings: Int
     var rating: Int?
-    let sourceUrl: String? // Changed to String as per JSON, consider URL if needed
-    let vegetarian: Bool
-    let vegan: Bool
-    let glutenFree: Bool
-    let dairyFree: Bool
-    let veryHealthy: Bool
-    let cheap: Bool
+    var sourceUrl: String? // Changed to String as per JSON, consider URL if needed
+    var vegetarian: Bool
+    var vegan: Bool
+    var glutenFree: Bool
+    var dairyFree: Bool
+    var veryHealthy: Bool
+    var cheap: Bool
     //let veryPopular: Bool
     //let sustainable: Bool
     //let lowFodmap: Bool
     //let weightWatcherSmartPoints: Int
     //let gaps: String
-    let preparationMinutes: Int?
-    let cookingMinutes: Int?
+    var preparationMinutes: Int?
+    var cookingMinutes: Int?
     //let aggregateLikes: Int
-    let healthScore: Int // Consider Double if fractional scores are possible
-    let creditsText: String
-    let license: String?
-    let sourceName: String
-    let pricePerServing: Double
-    let extendedIngredients: [ExtendedIngredient]
-    let summary: String
-    let cuisines: [String]
-    let dishTypes: [String]
-    let diets: [String]
-    let occasions: [String]
-    let instructions: String?
-    let analyzedInstructions: [AnalyzedInstruction]
-    let originalId: Int?
-    let spoonacularScore: Double
-    let spoonacularSourceUrl: String? // Changed to String as per JSON
+    var healthScore: Int // Consider Double if fractional scores are possible
+    var creditsText: String
+    var license: String?
+    var sourceName: String
+    var pricePerServing: Double
+    var extendedIngredients: [ExtendedIngredient]
+    var summary: String
+    var cuisines: [String]
+    var dishTypes: [String]
+    var diets: [String]
+    var occasions: [String]
+    var instructions: String?
+    var analyzedInstructions: [AnalyzedInstruction]
+    var originalId: Int?
+    var spoonacularScore: Double
+    var spoonacularSourceUrl: String? // Changed to String as per JSON
 
     // If JSON keys differ significantly from Swift property names,
     // you might need a CodingKeys enum. Example:

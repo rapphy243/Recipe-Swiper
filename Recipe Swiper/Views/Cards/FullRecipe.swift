@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FullRecipe: View {
     @State var recipe: Recipe
-
+    @State var showEditing: Bool = false
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -73,6 +73,21 @@ struct FullRecipe: View {
                     Divider()
                 }
                 .padding()
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Edit Recipe Details", systemImage: "gear") {
+                            
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundStyle(.black)
+                    }
+                }
+            }
+            .sheet(isPresented: $showEditing) {
+                
             }
         }
     }
