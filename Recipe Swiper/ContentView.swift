@@ -51,4 +51,5 @@ struct ContentView: View {
 #Preview {
     @Previewable @AppStorage("isOnboarding") var isOnboarding = false  // To ignore onboarding in preview window
     ContentView()
+        .modelContainer(for: RecipeModel.self, inMemory: true)
 }
