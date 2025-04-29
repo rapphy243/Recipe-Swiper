@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SavedRecipesView: View {
     @Binding var savedRecipes: [Recipe]
+    @Binding var discardedRecipes: [Recipe]
     var body: some View {
         NavigationStack {
             List(savedRecipes, id: \.self) { recipe in
@@ -32,6 +33,18 @@ struct SavedRecipesView: View {
                     }
                     .contentShape(Rectangle())
                 }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        if let index = savedRecipes.firstIndex(of: recipe) {
+                            withAnimation {
+                                let removedRecipe = savedRecipes.remove(at: index)
+                                discardedRecipes.append(removedRecipe)
+                            }
+                        }
+                    } label: {
+                        Label("Discard", systemImage: "trash")
+                    }
+                }
             }
         }
         .overlay {
@@ -47,6 +60,7 @@ struct SavedRecipesView: View {
 }
 
 #Preview {
-    @Previewable @State var savedRecipes: [Recipe] = [ loadCakeRecipe(), loadCurryRecipe(), loadSaladRecipe()]
-    SavedRecipesView(savedRecipes: $savedRecipes)
+    @Previewable @State var savedRecipes: [Recipe] = [loadCakeRecipe(), loadCurryRecipe(), loadSaladRecipe()]
+    @Previewable @State var discardedRecipes: [Recipe] = []
+    SavedRecipesView(savedRecipes: $savedRecipes, discardedRecipes: $discardedRecipes)
 }
