@@ -19,8 +19,8 @@ final class RecipeModel {
     var rating: Int
     @Attribute(.unique)
     var id: Int
-    @Attribute(.externalStorage)
     var image: String?
+    @Attribute(.externalStorage)
     var imageData: Data?
     var imageType: String?
     var title: String
@@ -43,10 +43,13 @@ final class RecipeModel {
     @Relationship(deleteRule: .cascade)
     var extendedIngredients: [ExtendedIngredientModel]
     var summary: String
+    // These String arrays cause "Could not materialize Objective-C class named "Array" from declared attribute value type "Array<String>" of attribute named"
+    // SwiftData/CoreData doest not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
     var cuisines: [String]
     var dishTypes: [String]
     var diets: [String]
     var occasions: [String]
+    //
     var instructions: String?
     @Relationship(deleteRule: .cascade)
     var analyzedInstructions: [AnalyzedInstructionModel]
@@ -96,7 +99,8 @@ final class RecipeModel {
     final func getImage() async -> UIImage? {  // Decode Image Data to a UIImage that can be displayed
         if let imageData = self.imageData {
             return UIImage(data: imageData)
-        } else if let imageString = self.image {
+        }
+        else if let imageString = self.image {
             let imageUrl = URL(string: imageString)
             do {
                 // Perform asynchronous download
@@ -108,6 +112,7 @@ final class RecipeModel {
                     httpResponse.statusCode == 200
                 {
                     self.imageData = data
+                    return UIImage(data: data)
                 } else {
                     print(
                         "Warning: Received non-200 response for image URL: \(imageString)"

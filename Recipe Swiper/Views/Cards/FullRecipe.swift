@@ -11,7 +11,7 @@ import SwiftData
 struct FullRecipe: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var recipe: RecipeModel
-
+    @State var recipeImage: UIImage?
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -22,6 +22,19 @@ struct FullRecipe: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top)
+                    if let image = recipeImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(10)
+                            .padding()
+                    }
+                    else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(height: 300)
+                            .padding()
+                    }
 //                    if let imageUrl = recipe.image, let url = URL(
 //                        string: imageUrl
 //                    ) {
@@ -76,9 +89,14 @@ struct FullRecipe: View {
                 .padding()
             }
         }
+        .task {
+            if recipeImage == nil {
+                await recipeImage = recipe.getImage()
+            }
+        }
     }
 }
 
 #Preview {
-    FullRecipe(recipe: RecipeModel(from: loadCakeRecipe()))
+    FullRecipe(recipe: RecipeModel(from: loadCurryRecipe()))
 }

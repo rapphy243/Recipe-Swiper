@@ -10,7 +10,9 @@ import SwiftData
 
 struct DiscardedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \RecipeModel.dateModified) private var discardedRecipes: [RecipeModel]
+    @Query(filter: #Predicate<RecipeModel> { $0.isDiscarded },
+           sort: \RecipeModel.dateModified, order: .forward)
+    private var discardedRecipes: [RecipeModel]
     var body: some View {
         NavigationStack {
             List(discardedRecipes) { recipe in

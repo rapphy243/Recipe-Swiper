@@ -5,8 +5,8 @@
 //  Created by Raphael Abano on 4/11/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MainView: View {
     @Environment(\.modelContext) private var modelContext
@@ -19,10 +19,10 @@ struct MainView: View {
     @State private var showSettings = false
     @State private var showFilterSheet = false
     @ObservedObject var filterModel: FilterModel
-    
+
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -31,92 +31,105 @@ struct MainView: View {
                     .scaledToFill()
                     .ignoresSafeArea()
                     .zIndex(-1)
-            
-            VStack {
-                if isLoading {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .padding()
-                } else {
-                    SmallRecipeCard(recipe: currentRecipe)
-                        .offset(cardOffset)
-                        .rotationEffect(.degrees(cardRotation))
-                        .gesture(
-                            DragGesture()
-                                .onChanged { gesture in
-                                    cardOffset = gesture.translation
-                                    // Add slight rotation based on horizontal movement
-                                    cardRotation = Double(gesture.translation.width / 15)
-                                }
-                                .onEnded { gesture in
-                                    handleSwipe(gesture)
-                                }
-                        )
-                        .overlay(alignment: .trailing) {
-                            if cardOffset.width > 50 {
-                                Image(systemName: "heart.fill")
-                                    .foregroundColor(.green)
-                                    .font(.largeTitle)
-                                    .padding(.trailing, 30)
-                                    .opacity(Double(cardOffset.width) / swipeThreshold)
-                            }
-                        }
-                        .overlay(alignment: .leading) {
-                            if cardOffset.width < -50 {
-                                Image(systemName: "xmark")
-                                    .foregroundColor(.red)
-                                    .font(.largeTitle)
-                                    .padding(.leading, 30)
-                                    .opacity(Double(-cardOffset.width) / swipeThreshold)
-                            }
-                        }
-                        .animation(.spring(response: 0.3), value: cardOffset)
-                    QuoteViewComponent()
-                }
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button {
-                        showFilterSheet = true
-                    } label: {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                            .foregroundStyle(.white)
-                    }
 
-                    Menu {
-                        Button("Settings", systemImage: "gear") {
-                            showSettings = true
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .foregroundStyle(.white)
+                VStack {
+                    if isLoading {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .padding()
+                    } else {
+                        SmallRecipeCard(recipe: currentRecipe)
+                            .offset(cardOffset)
+                            .rotationEffect(.degrees(cardRotation))
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { gesture in
+                                        cardOffset = gesture.translation
+                                        // Add slight rotation based on horizontal movement
+                                        cardRotation = Double(
+                                            gesture.translation.width / 15
+                                        )
+                                    }
+                                    .onEnded { gesture in
+                                        handleSwipe(gesture)
+                                    }
+                            )
+                            .overlay(alignment: .trailing) {
+                                if cardOffset.width > 50 {
+                                    Image(systemName: "heart.fill")
+                                        .foregroundColor(.green)
+                                        .font(.largeTitle)
+                                        .padding(.trailing, 30)
+                                        .opacity(
+                                            Double(cardOffset.width)
+                                                / swipeThreshold
+                                        )
+                                }
+                            }
+                            .overlay(alignment: .leading) {
+                                if cardOffset.width < -50 {
+                                    Image(systemName: "xmark")
+                                        .foregroundColor(.red)
+                                        .font(.largeTitle)
+                                        .padding(.leading, 30)
+                                        .opacity(
+                                            Double(-cardOffset.width)
+                                                / swipeThreshold
+                                        )
+                                }
+                            }
+                            .animation(
+                                .spring(response: 0.3),
+                                value: cardOffset
+                            )
+                        QuoteViewComponent()
                     }
                 }
-            }
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
+                        Button {
+                            showFilterSheet = true
+                        } label: {
+                            Image(
+                                systemName: "line.3.horizontal.decrease.circle"
+                            )
+                            .foregroundStyle(.white)
+                        }
 
-            .toolbarBackground(.indigo, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Recipe Swiper")
-            .task {
-                if currentRecipe.id == -1 {
-                    await fetchNewRecipe()
+                        Menu {
+                            Button("Settings", systemImage: "gear") {
+                                showSettings = true
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .foregroundStyle(.white)
+                        }
+                    }
                 }
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsView()
-            }
-            .sheet(isPresented: $showFilterSheet) {
-                FilterSheetView(model: filterModel)
-            }
+
+                .toolbarBackground(.indigo, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("Recipe Swiper")
+                .task {
+                    if currentRecipe.id == -1 {
+                        await fetchNewRecipe()
+                    }
+                }
+                .sheet(isPresented: $showSettings) {
+                    SettingsView()
+                }
+                .sheet(isPresented: $showFilterSheet) {
+                    FilterSheetView(model: filterModel)
+                }
 
             }
         }
     }
-    
+
     private func handleSwipe(_ gesture: DragGesture.Value) {
         let horizontalMovement = gesture.translation.width
-        
+
         // Right swipe (save)
         if horizontalMovement > swipeThreshold {
             saveCurrentRecipe()
@@ -130,20 +143,40 @@ struct MainView: View {
             resetCardPosition()
         }
     }
-    
+
     private func saveCurrentRecipe() {
-        if !shownRecipes.contains(currentRecipe.title) {
-            modelContext.insert(RecipeModel(from: currentRecipe))
-            try! modelContext.save()
-            shownRecipes.append(currentRecipe.title)
+        // Check if the recipe already exists in the model container
+        let fetchDescriptor = FetchDescriptor<RecipeModel>(
+            predicate: #Predicate {
+                $0.title == currentRecipe.title
+            }
+        )
+
+        let existingRecipes: [RecipeModel] =
+            try! modelContext.fetch(fetchDescriptor)
+
+        guard existingRecipes.isEmpty else {
+            print("Recipe already exists in container, skipping save.")
+            Task {
+                isLoading = true
+                await fetchNewRecipe()
+                resetCardPosition()
+                isLoading = false
+            }
+            return  // Exit if the recipe exists
         }
-        
+        let savedRecipe = RecipeModel(from: currentRecipe)
+        Task {
+            await savedRecipe.getImage()
+        }
+        modelContext.insert(savedRecipe)
+
         // Animate card off screen
         withAnimation(.easeOut(duration: 0.2)) {
             cardOffset.width = UIScreen.main.bounds.width * 1.5
             cardRotation = 20
         }
-        
+
         // Fetch next recipe
         Task {
             isLoading = true
@@ -152,20 +185,40 @@ struct MainView: View {
             isLoading = false
         }
     }
-    
+
     private func skipCurrentRecipe() {
-        if !shownRecipes.contains(currentRecipe.title) {
-            modelContext.insert(RecipeModel(from: currentRecipe, isDiscarded: true))
-            try! modelContext.save()
-            shownRecipes.append(currentRecipe.title)
+        // Check if the recipe already exists in the model container
+        let fetchDescriptor = FetchDescriptor<RecipeModel>(
+            predicate: #Predicate {
+                $0.title == currentRecipe.title
+            }
+        )
+
+        let existingRecipes: [RecipeModel] =
+            try! modelContext.fetch(fetchDescriptor)
+
+        guard existingRecipes.isEmpty else {
+            print("Recipe already exists in container, skipping skip.")
+            Task {
+                isLoading = true
+                await fetchNewRecipe()
+                resetCardPosition()
+                isLoading = false
+            }
+            return  // Exit if the recipe exists
         }
-        
+        let deletedRecipe = RecipeModel(from: currentRecipe, isDiscarded: true)
+        Task {
+            await deletedRecipe.getImage()
+        }
+        modelContext.insert(deletedRecipe)
+
         // Animate card off screen
         withAnimation(.easeOut(duration: 0.2)) {
             cardOffset.width = -UIScreen.main.bounds.width * 1.5
             cardRotation = -20
         }
-        
+
         // Fetch next recipe
         Task {
             isLoading = true
@@ -174,16 +227,16 @@ struct MainView: View {
             isLoading = false
         }
     }
-    
+
     private func resetCardPosition() {
         withAnimation(.spring(response: 0.3)) {
             cardOffset = .zero
             cardRotation = 0
         }
     }
-    
+
     private func fetchNewRecipe() async {
-        for _ in 0..<1 { // Only try and fetch a Recipe 1 times per call
+        for _ in 0..<1 {  // Only try and fetch a Recipe 1 times per call
             do {
                 let newRecipe = try await fetchRandomRecipe(using: filterModel)
                 if !shownRecipes.contains(newRecipe.title) {
