@@ -14,10 +14,12 @@ struct OnboardingView: View {
         TabView(selection: $selectedTab) {
             OnboardingAboutView()
                 .tag(0)
-            OnboardingHowToView(selectedTab: $selectedTab)
+            OnboardingFiltersView(selectedTab: $selectedTab)
                 .tag(1)
-            OnboardingGetStartedView()
+            OnboardingHowToView(selectedTab: $selectedTab)
                 .tag(2)
+            OnboardingGetStartedView()
+                .tag(3)
         }
         .tabViewStyle(.page)
         .indexViewStyle(.page(backgroundDisplayMode: .always))
