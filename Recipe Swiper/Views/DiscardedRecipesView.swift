@@ -35,7 +35,9 @@ struct DiscardedRecipesView: View {
                                     Task {
                                         await recipe.getImage()
                                     }
-                                }
+                            }
+                        } label: {
+                            Label("Save", systemImage: "bookmark")
                         }
                         Text(recipe.title)
                             .font(.headline)
@@ -43,24 +45,27 @@ struct DiscardedRecipesView: View {
                     }
                     .contentShape(Rectangle())
                 }
+                .swipeActions {
+                    Button {
+                        recipe.isDiscarded = false
+                    } label: {
+                        Label("Save", systemImage: "bookmark")
+                    }
+                }
             }
         }
         .overlay {
             if discardedRecipes.isEmpty {
-                ContentUnavailableView(
-                    label: {
-                        Label("No discarded recipes", systemImage: "trash")
-                    },
-                    description: {
-                        Text(
-                            "Only the last 10 discarded recipes will be saved here."
-                        )
-                    })
+                ContentUnavailableView(label: {
+                    Label("No discarded recipes", systemImage: "trash")
+                }, description: {
+                    Text("Only the last 10 discarded recipes will be saved here.")
+                })
             }
         }
     }
 }
-
+        
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: RecipeModel.self, configurations: config)

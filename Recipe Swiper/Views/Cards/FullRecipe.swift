@@ -12,6 +12,7 @@ struct FullRecipe: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var recipe: RecipeModel
     @State var recipeImage: UIImage?
+    @State var showEditing: Bool = false
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -21,7 +22,6 @@ struct FullRecipe: View {
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top)
                     if let image = recipeImage {
                         Image(uiImage: image)
                             .resizable()
@@ -34,6 +34,7 @@ struct FullRecipe: View {
                             .fill(Color.gray.opacity(0.3))
                             .frame(height: 300)
                             .padding()
+                            .padding()
                     }
                     
                     Text("Details")
@@ -41,11 +42,11 @@ struct FullRecipe: View {
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
+                    FullCardDetails(recipe: recipe)
                     FullCardDetails(recipe: recipe)
                     
                     Divider()
-                    
+                    RatingComponent(recipe: recipe)
                     RatingComponent(recipe: recipe)
                         
                     Divider()
@@ -61,16 +62,31 @@ struct FullRecipe: View {
                         .padding(.bottom)
                     
                     Divider()
-                    
+                    IngredientsListComponent(recipe: recipe)
                     IngredientsListComponent(recipe: recipe)
                     
                     Divider()
-                    
+                    InstructionsStepsComponent(recipe: recipe)
                     InstructionsStepsComponent(recipe: recipe)
                     
                     Divider()
                 }
                 .padding()
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Edit Recipe Details", systemImage: "gear") {
+                            showEditing = true
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundStyle(.black)
+                    }
+                }
+            }
+            .sheet(isPresented: $showEditing) {
+                EditFullRecipeView(recipe: $recipe)
             }
         }
         .task {

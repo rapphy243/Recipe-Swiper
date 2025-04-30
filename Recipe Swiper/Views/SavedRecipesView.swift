@@ -41,6 +41,13 @@ struct SavedRecipesView: View {
                     }
                     .contentShape(Rectangle())
                 }
+                .swipeActions {
+                    Button(role: .destructive) {
+                        recipe.isDiscarded = true
+                    } label: {
+                        Label("Discard", systemImage: "trash")
+                    }
+                }
             }
         }
         .overlay {
