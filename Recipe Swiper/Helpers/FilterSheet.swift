@@ -34,22 +34,31 @@ struct FilterSheetView: View {
                         }
                     }
                 }
+                Section("Meal Type") {
+                                    Picker("Meal Type", selection: $model.includeMealType) {
+                                        ForEach(mealTypes, id: \.self) {
+                                            Text($0.capitalized)
+                                        }
+                                    }
+                                }
 
                 Section("Intolerances") {
-                    Picker("Intolerances", selection: $model.includeIntolerance) {
-                        ForEach(intolerances, id: \.self) {
-                            Text($0.capitalized)
-                        }
+                    ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) { intolerance in
+                        Toggle(intolerance.capitalized, isOn: Binding(
+                            get: { model.selectedIntolerances.contains(intolerance) },
+                            set: { isSelected in
+                                if isSelected {
+                                    model.selectedIntolerances.insert(intolerance)
+                                } else {
+                                    model.selectedIntolerances.remove(intolerance)
+                                }
+                            }
+                        ))
                     }
                 }
+
                 
-                Section("Meal Type") {
-                    Picker("Meal Type", selection: $model.includeMealType) {
-                        ForEach(mealTypes, id: \.self) {
-                            Text($0.capitalized)
-                        }
-                    }
-                }
+                
                 
             }
             .navigationTitle("Filters")

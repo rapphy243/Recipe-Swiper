@@ -17,6 +17,7 @@ class FilterModel: ObservableObject {
     @Published var excludeCuisine = ""
     @Published var excludeDiet = ""
     @Published var excludeMealType = ""
+    @Published var selectedIntolerances: Set<String> = []
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
         var items = [URLQueryItem(name: "apiKey", value: apiKey)] // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
@@ -30,6 +31,11 @@ class FilterModel: ObservableObject {
         if !includeDiet.isEmpty {
             include.append(includeDiet)
         }
+        if !selectedIntolerances.isEmpty {
+            let intoleranceString = selectedIntolerances.joined(separator: ",")
+            items.append(.init(name: "intolerances", value: intoleranceString))
+        }
+
         if !includeMealType.isEmpty {
             include.append(includeMealType)
         }

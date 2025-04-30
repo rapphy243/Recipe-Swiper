@@ -35,6 +35,8 @@ func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
 
     var components = URLComponents(string: "https://api.spoonacular.com/recipes/random")!
     components.queryItems = filterModel.queryItems(apiKey: Secrets.apiKey)
+   print("📡 API Request URL: \(components.url!.absoluteString)")
+
     guard let url = components.url else {
         throw RecipeError.invalidURL
     }
@@ -72,6 +74,7 @@ func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
         // Catch any other unexpected errors
         throw RecipeError.unknown(error)
     }
+    
 }
 
 // Recipe.summary sometime has html tags, so we should get rid of them
