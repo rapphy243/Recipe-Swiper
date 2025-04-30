@@ -16,11 +16,16 @@ struct EditFullRecipeView: View {
                 // Section for basic identification and core details
                 Section("Basic Info") {
                     // ID is usually not editable
-                    Text("ID: \(recipe.id)")
-                        .foregroundColor(.secondary)
-                    
-                    TextField("Title", text: $recipe.title)
-                    
+                    HStack {
+                        Text("Recipe ID")
+                        Text("\(recipe.id)")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Recipe Title:")
+                        TextField("", text: $recipe.title)
+                    }
+
                     HStack {
                         Text("Image URL")
                         TextField(
@@ -73,20 +78,29 @@ struct EditFullRecipeView: View {
                 
                 // Section for dietary flags
                 Section("Dietary Information") {
-                    Toggle("Vegetarian", isOn: $recipe.vegetarian)
-                    Toggle("Vegan", isOn: $recipe.vegan)
-                    Toggle("Gluten Free", isOn: $recipe.glutenFree)
-                    Toggle("Dairy Free", isOn: $recipe.dairyFree)
-                    Toggle("Very Healthy", isOn: $recipe.veryHealthy)
-                    Toggle("Cheap", isOn: $recipe.cheap)
+//                    Toggle("Vegetarian", isOn: $recipe.vegetarian)
+//                    Toggle("Vegan", isOn: $recipe.vegan)
+//                    Toggle("Gluten Free", isOn: $recipe.glutenFree)
+//                    Toggle("Dairy Free", isOn: $recipe.dairyFree)
+//                    Toggle("Very Healthy", isOn: $recipe.veryHealthy)
+//                    Toggle("Cheap", isOn: $recipe.cheap)
                     // Displaying arrays as comma-separated strings (read-only is safer)
                     // Consider dedicated editing UI for these if needed
-                    Text("Cuisines: \(recipe.cuisines.joined(separator: ", "))")
-                        .foregroundColor(.secondary)
-                    Text("Dish Types: \(recipe.dishTypes.joined(separator: ", "))")
-                        .foregroundColor(.secondary)
-                    Text("Diets: \(recipe.diets.joined(separator: ", "))")
-                        .foregroundColor(.secondary)
+                    HStack {
+                        Text("Cuisines")
+                        Text("\(recipe.cuisines.joined(separator: ", "))")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Dish Types")
+                        Text("\(recipe.dishTypes.joined(separator: ", "))")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Diets")
+                        Text("\(recipe.diets.joined(separator: ", "))")
+                            .foregroundColor(.secondary)
+                    }
                 }
                 
                 Section("Ingredients & Instructions") {
@@ -99,11 +113,11 @@ struct EditFullRecipeView: View {
                 }
                 
                 // Section for summary and details
-                Section("Details") {
-                    Text("Summary:")
+                Section("Summary") {
                     TextEditor(text: $recipe.summary)
-                        .frame(height: 150)
-                    
+                        .frame(height: 250)
+                }
+                Section("Other Details") {
                     HStack {
                         Text("Health Score")
                         TextField(
@@ -114,7 +128,7 @@ struct EditFullRecipeView: View {
                         .keyboardType(.numberPad)
                     }
                     HStack {
-                        Text("Price Per Serving")
+                        Text("Estmated Price Per Serving")
                         TextField(
                             "Price",
                             value: $recipe.pricePerServing,
@@ -122,16 +136,14 @@ struct EditFullRecipeView: View {
                         )
                         .keyboardType(.decimalPad)
                     }
-                    HStack {
-                        Text("Rating (Optional)")
-                        TextField("1-5", text: binding(for: $recipe.rating))
-                            .keyboardType(.numberPad)
-                    }
                 }
                 
                 // Section for source and metadata
                 Section("Source & Meta") {
-                    TextField("Source Name", text: $recipe.sourceName)
+                    HStack {
+                        Text("Source Name: ")
+                        TextField("Source Name", text: $recipe.sourceName)
+                    }
                     HStack {
                         Text("Source URL")
                         TextField(
@@ -142,32 +154,30 @@ struct EditFullRecipeView: View {
                         .keyboardType(.URL)
                         .autocapitalization(.none)
                     }
-                    TextField("Credits Text", text: $recipe.creditsText)
-                    
+                    HStack {
+                        Text("Credits Text: ")
+                        TextField("Source Name", text: $recipe.creditsText)
+                    }
                     HStack {
                         Text("Spoonacular Score")
                         TextField(
                             "Score",
-                            value: $recipe.spoonacularScore,
+                            value: .constant(recipe.spoonacularScore),
                             formatter: decimalFormatter
                         )
                         .keyboardType(.decimalPad)
+                        .foregroundColor(.secondary)
                     }
                     HStack {
                         Text("Spoonacular Source URL")
                         TextField(
                             "Optional URL",
-                            text: binding(for: $recipe.spoonacularSourceUrl)
+                            text: binding(for: .constant(recipe.spoonacularSourceUrl))
                         )
                         .lineLimit(1)
                         .keyboardType(.URL)
                         .autocapitalization(.none)
-                    }
-                    
-                    // Original ID is usually not editable
-                    if let originalId = recipe.originalId {
-                        Text("Original ID: \(originalId)")
-                            .foregroundColor(.secondary)
+                        .foregroundColor(.secondary)
                     }
                 }
             }
