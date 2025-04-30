@@ -11,15 +11,16 @@ import SwiftUI
 struct EditFullRecipeView: View {
     @Binding var recipe: Recipe
     var body: some View {
+        NavigationStack {
             Form {
                 // Section for basic identification and core details
                 Section("Basic Info") {
                     // ID is usually not editable
                     Text("ID: \(recipe.id)")
                         .foregroundColor(.secondary)
-
+                    
                     TextField("Title", text: $recipe.title)
-
+                    
                     HStack {
                         Text("Image URL")
                         TextField(
@@ -31,7 +32,7 @@ struct EditFullRecipeView: View {
                         .autocapitalization(.none)
                     }
                 }
-
+                
                 // Section for timings and servings
                 Section("Timings & Servings") {
                     HStack {
@@ -69,7 +70,7 @@ struct EditFullRecipeView: View {
                         .keyboardType(.numberPad)
                     }
                 }
-
+                
                 // Section for dietary flags
                 Section("Dietary Information") {
                     Toggle("Vegetarian", isOn: $recipe.vegetarian)
@@ -87,26 +88,22 @@ struct EditFullRecipeView: View {
                     Text("Diets: \(recipe.diets.joined(separator: ", "))")
                         .foregroundColor(.secondary)
                 }
-
-                // Section for ingredients and instructions (summary/placeholders)
+                
                 Section("Ingredients & Instructions") {
-                    // Editing complex arrays needs dedicated views
-                    Text("Ingredients: \(recipe.extendedIngredients.count) items")
-                        .foregroundColor(.secondary)
-                    // NavigationLink("Edit Ingredients") { /* IngredientListView(...) */ }
-
-                    Text("Instructions:")
-                    TextEditor(text: binding(for: $recipe.instructions))
-                        .frame(height: 150) // Give TextEditor some default height
-                    // NavigationLink("Edit Steps") { /* AnalyzedInstructionListView(...) */ }
+                    NavigationLink("Edit Ingredients") {
+                        EditIngredientListView(ingredients: $recipe.extendedIngredients)
+                    }
+                    NavigationLink("Edit Instructions") {
+                        EditAnalyzedInstructionListView(analyzedInstructions: $recipe.analyzedInstructions)
+                    }
                 }
-
+                
                 // Section for summary and details
                 Section("Details") {
                     Text("Summary:")
                     TextEditor(text: $recipe.summary)
                         .frame(height: 150)
-
+                    
                     HStack {
                         Text("Health Score")
                         TextField(
@@ -131,7 +128,7 @@ struct EditFullRecipeView: View {
                             .keyboardType(.numberPad)
                     }
                 }
-
+                
                 // Section for source and metadata
                 Section("Source & Meta") {
                     TextField("Source Name", text: $recipe.sourceName)
@@ -146,7 +143,7 @@ struct EditFullRecipeView: View {
                         .autocapitalization(.none)
                     }
                     TextField("Credits Text", text: $recipe.creditsText)
-
+                    
                     HStack {
                         Text("Spoonacular Score")
                         TextField(
@@ -166,7 +163,7 @@ struct EditFullRecipeView: View {
                         .keyboardType(.URL)
                         .autocapitalization(.none)
                     }
-
+                    
                     // Original ID is usually not editable
                     if let originalId = recipe.originalId {
                         Text("Original ID: \(originalId)")
@@ -176,6 +173,7 @@ struct EditFullRecipeView: View {
             }
             .navigationTitle("Edit Recipe") // Add a title if used in NavigationView
         }
+    }
 
     // Formatters for numeric input
         private let numberFormatter: NumberFormatter = {

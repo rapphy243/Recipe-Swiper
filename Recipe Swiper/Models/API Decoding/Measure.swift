@@ -11,15 +11,18 @@ import Foundation
 
 // MARK: - Measures
 // Contains measurement details in US and metric units.
-struct Measures: Codable {
-    let us: MeasurementUnit
-    let metric: MeasurementUnit
+struct Measures: Codable, Hashable {
+    var us: MeasurementUnit
+    var metric: MeasurementUnit
+    static let empty = Measures(us: MeasurementUnit.empty,metric: MeasurementUnit.empty)
 }
 
 // MARK: - MeasurementUnit
 // Represents a specific measurement unit with amount and names.
-struct MeasurementUnit: Codable {
-    let amount: Double
-    let unitShort: String
-    let unitLong: String
+struct MeasurementUnit: Codable, Hashable {
+    var amount: Double
+    var unitShort: String
+    var unitLong: String
+    
+    static let empty = MeasurementUnit(amount: 0.0, unitShort: "", unitLong: "")
 }
