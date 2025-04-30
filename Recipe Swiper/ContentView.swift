@@ -22,7 +22,7 @@ struct ContentView: View {
     var body: some View {
             TabView(selection: $selection) {
                 Group {
-                    DiscardedRecipesView(discardedRecipes: $discardedRecipes)  // View to go to
+                    DiscardedRecipesView(discardedRecipes: $discardedRecipes, savedRecipes: $savedRecipes)  // Pass both bindings
                         .tabItem {
                             Label("Discarded Recipes", systemImage: "trash")  // Icon & Label on tab
                         }
@@ -32,7 +32,7 @@ struct ContentView: View {
                             Label("Home", systemImage: "house")
                         }
                         .tag(1)
-                    SavedRecipesView(savedRecipes: $savedRecipes)
+                    SavedRecipesView(savedRecipes: $savedRecipes, discardedRecipes: $discardedRecipes)  // Pass both bindings
                         .tabItem {
                             Label("Saved Recipes", systemImage: "fork.knife")
                         }
