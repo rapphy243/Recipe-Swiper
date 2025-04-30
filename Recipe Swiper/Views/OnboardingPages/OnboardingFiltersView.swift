@@ -24,48 +24,45 @@ struct OnboardingFiltersView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                     if filterTapped {
-                                            VStack(alignment: .leading, spacing: 10) {
-                                                Text("You can:")
-                                                    .font(.headline)
-
-                                                Text("• Choose a Cuisine – e.g., Italian, Korean")
-                                                Text("• Pick a Diet – e.g., Vegan, Keto")
-                                                Text("• Avoid Intolerances – e.g., Gluten-Free")
-                                                Text("• Select a Meal Type – e.g., Snack, Dessert")
-                                            }
-                                            .font(.body)
-                                            .padding()
-                                            .background(.ultraThinMaterial)
-                                            .cornerRadius(12)
-                                            .padding(.horizontal)
-
-                                            Button("Next") {
-                                                selectedTab = 2
-                                            }
-                                            .buttonStyle(.borderedProminent)
-                                            .padding(.top)
-                                        }
-                    SmallRecipeCard(recipe: loadCakeRecipe()) { }
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("You can:")
+                                .font(.headline)
+                            Text("• Choose a Cuisine – e.g., Italian, Korean")
+                            Text("• Pick a Diet – e.g., Vegan, Keto")
+                            Text("• Avoid Intolerances – e.g., Gluten-Free")
+                            Text("• Select a Meal Type – e.g., Snack, Dessert")
+                        }
+                        .font(.body)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(12)
                         .padding(.horizontal)
 
-                    
+                        Button("Next") {
+                            selectedTab = 2
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.top)
+                    }
+                    SmallRecipeCard(recipe: loadCakeRecipe()) {}
+                        .padding(.horizontal)
 
                     Spacer()
                 }
 
-                // ↖️ Arrow pointing toward the filter icon (322° rotation)
+                // ↖️ Arrow pointing toward the filter icon
                 if !filterTapped {
                     VStack(spacing: 4) {
                         Image(systemName: "arrow.up")
                             .font(.system(size: 44, weight: .bold))
-                            .rotationEffect(.degrees(55))
+                            .rotationEffect(.degrees(42))
                             .foregroundColor(.blue)
-                        Text("Tap the filter")
+                        Text("Tap me!")
                             .font(.caption)
                             .foregroundColor(.blue)
                             .bold()
                     }
-                    .offset(x: -55, y: 50) // adjust to align with filter icon
+                    .offset(x: -55, y: 45)  // adjust to align with filter icon
                     .transition(.opacity)
                 }
             }
@@ -81,6 +78,7 @@ struct OnboardingFiltersView: View {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                             .foregroundStyle(.blue)
                             .font(.title2)
+                            .padding(.horizontal)
                     }
                 }
             }
