@@ -19,22 +19,22 @@ final class RecipeModel {
     var rating: Int
     @Attribute(.unique)
     var id: Int
-    var image: String?
+    var image: String
     @Attribute(.externalStorage)
     var imageData: Data?
     var imageType: String?
     var title: String
     var readyInMinutes: Int
     var servings: Int
-    var sourceUrl: String?
+    var sourceUrl: String
     var vegetarian: Bool
     var vegan: Bool
     var glutenFree: Bool
     var dairyFree: Bool
     var veryHealthy: Bool
     var cheap: Bool
-    var preparationMinutes: Int?
-    var cookingMinutes: Int?
+    var preparationMinutes: Int
+    var cookingMinutes: Int
     var healthScore: Int
     var creditsText: String
     var license: String?
@@ -85,21 +85,21 @@ final class RecipeModel {
         //
         self.rating = 0
         self.id = recipe.id
-        self.image = recipe.image
+        self.image = recipe.image ?? ""
         self.imageData = nil
         self.imageType = recipe.imageType
         self.title = recipe.title
         self.readyInMinutes = recipe.readyInMinutes
         self.servings = recipe.servings
-        self.sourceUrl = recipe.sourceUrl
+        self.sourceUrl = recipe.sourceUrl ?? ""
         self.vegetarian = recipe.vegetarian
         self.vegan = recipe.vegan
         self.glutenFree = recipe.glutenFree
         self.dairyFree = recipe.dairyFree
         self.veryHealthy = recipe.veryHealthy
         self.cheap = recipe.cheap
-        self.preparationMinutes = recipe.preparationMinutes
-        self.cookingMinutes = recipe.cookingMinutes
+        self.preparationMinutes = recipe.preparationMinutes ?? 0
+        self.cookingMinutes = recipe.cookingMinutes ?? 0
         self.healthScore = recipe.healthScore
         self.creditsText = recipe.creditsText
         self.license = recipe.license
@@ -116,6 +116,9 @@ final class RecipeModel {
         self.originalId = recipe.originalId
         self.spoonacularScore = recipe.spoonacularScore
         self.spoonacularSourceUrl = recipe.spoonacularSourceUrl
+        Task {
+            await fetchImage()
+        }
     }
 
     final func getImage() async -> UIImage? {
@@ -124,18 +127,19 @@ final class RecipeModel {
             return UIImage(data: imageData)
         }
         
-        // Download if we have a URL
-        guard let imageString = self.image,
-              let imageUrl = URL(string: imageString) else {
+        // if we don't have a URL
+        if self.image == "" {
             return nil
         }
         
+        let imageUrl = URL(string: self.image)
+        
         do {
-            let (data, response) = try await URLSession.shared.data(from: imageUrl)
+            let (data, response) = try await URLSession.shared.data(from: imageUrl!)
             
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
-                print("Error: Invalid response for image URL: \(imageString)")
+                print("Error: Invalid response for image URL: \(self.image)")
                 return nil
             }
             
@@ -148,10 +152,27 @@ final class RecipeModel {
             return nil
         }
     }
+    private func fetchImage() async {
+        let imageUrl = URL(string: self.image)
+        do {
+            let (data, response) = try await URLSession.shared.data(from: imageUrl!)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                print("Error: Invalid response for image URL: \(self.image)")
+                return
+            }
+            // Store data in the model
+            self.imageData = data
+        }
+        catch {
+            print("Error downloading image: \(error.localizedDescription)")
+        }
+    }
     // Helper methods for conversion
     private func encodeStringArray(_ array: [String]) -> Data? {
         try? JSONEncoder().encode(array)
     }
+    
     private func getStringArray(from data: Data?) -> [String]? {
         guard let data = data else {
             return nil

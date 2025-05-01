@@ -35,7 +35,7 @@ struct EditFullRecipeView: View {
                         Text("Image URL")
                         TextField(
                             "e.g., https://...",
-                            text: binding(for: $recipe.image)
+                            text: $recipe.image
                         )
                         .lineLimit(1)
                         .keyboardType(.URL)
@@ -64,9 +64,9 @@ struct EditFullRecipeView: View {
                     }
                     HStack {
                         Text("Preparation Minutes")
-                        TextField(
-                            "Optional",
-                            text: binding(for: $recipe.preparationMinutes)
+                        TextField("Optional",
+                                  value: $recipe.preparationMinutes,
+                                  formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
                     }
@@ -74,7 +74,8 @@ struct EditFullRecipeView: View {
                         Text("Cooking Minutes")
                         TextField(
                             "Optional",
-                            text: binding(for: $recipe.cookingMinutes)
+                            value: $recipe.cookingMinutes,
+                            formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
                     }
@@ -146,7 +147,7 @@ struct EditFullRecipeView: View {
                         Text("Source URL")
                         TextField(
                             "Optional URL",
-                            text: binding(for: $recipe.sourceUrl)
+                            text: $recipe.sourceUrl
                         )
                         .lineLimit(1)
                         .keyboardType(.URL)
@@ -197,55 +198,6 @@ struct EditFullRecipeView: View {
         formatter.maximumFractionDigits = 4  // Allow reasonable precision
         return formatter
     }()
-
-    // MARK: - Helper Binding Functions for Optionals
-
-    /// Creates a non-optional String binding for an optional String.
-    /// Treats nil as an empty string.
-    private func binding(for optionalString: Binding<String?>) -> Binding<
-        String
-    > {
-        Binding<String>(
-            get: { optionalString.wrappedValue ?? "" },
-            set: {
-                if $0.isEmpty {
-                    optionalString.wrappedValue = nil  // Set back to nil if empty
-                } else {
-                    optionalString.wrappedValue = $0
-                }
-            }
-        )
-    }
-
-    /// Creates a String binding for an optional Int.
-    /// Basic conversion - assumes valid integer input in the TextField.
-    private func binding(for optionalInt: Binding<Int?>) -> Binding<String> {
-        Binding<String>(
-            get: {
-                guard let value = optionalInt.wrappedValue else { return "" }
-                return String(value)
-            },
-            set: {
-                optionalInt.wrappedValue = Int($0)  // nil if conversion fails
-            }
-        )
-    }
-
-    /// Creates a String binding for an optional Double.
-    /// Basic conversion - assumes valid double input in the TextField.
-    private func binding(for optionalDouble: Binding<Double?>) -> Binding<String> {
-        Binding<String>(
-            get: {
-                guard let value = optionalDouble.wrappedValue else { return "" }
-                // Potentially use a formatter here for consistent display
-                return String(value)
-            },
-            set: {
-                optionalDouble.wrappedValue = Double($0)  // nil if conversion fails
-            }
-        )
-    }
-
 }
 
 #Preview {

@@ -16,9 +16,9 @@ struct FullCardDetails: View {
             HStack(spacing: 10) {
                 HStack {
                     Image(systemName: "book.closed.fill")
-                    if let hosturl = recipe.sourceUrl {
-                        Link(destination: URL(string: hosturl)!) {
-                            Text("\(getHostURL(hosturl))")
+                    if recipe.sourceUrl != "" {
+                        Link(destination: URL(string: recipe.sourceUrl)!) {
+                            Text("\(getHostURL(recipe.sourceUrl))")
                                 .font(.footnote)
                                 .foregroundColor(colorScheme == .dark ? .white : .black)
                         }
