@@ -34,7 +34,11 @@ struct FullRecipe: View {
                             .fill(Color.gray.opacity(0.3))
                             .frame(height: 300)
                             .padding()
-                            .padding()
+                            .onAppear {
+                                Task {
+                                    await recipe.getImage()
+                                }
+                        }
                     }
                     
                     Text("Details")
@@ -42,11 +46,11 @@ struct FullRecipe: View {
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    FullCardDetails(recipe: recipe)
+                    
                     FullCardDetails(recipe: recipe)
                     
                     Divider()
-                    RatingComponent(recipe: recipe)
+                    
                     RatingComponent(recipe: recipe)
                         
                     Divider()
@@ -57,16 +61,16 @@ struct FullRecipe: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
                     
-                    Text(simplifySummary(recipe.summary))
+                    Text(recipe.summary)
                         .font(.body)
                         .padding(.bottom)
                     
                     Divider()
-                    IngredientsListComponent(recipe: recipe)
+                    
                     IngredientsListComponent(recipe: recipe)
                     
                     Divider()
-                    InstructionsStepsComponent(recipe: recipe)
+
                     InstructionsStepsComponent(recipe: recipe)
                     
                     Divider()
@@ -86,7 +90,7 @@ struct FullRecipe: View {
                 }
             }
             .sheet(isPresented: $showEditing) {
-                EditFullRecipeView(recipe: $recipe)
+                EditFullRecipeView(recipe: recipe)
             }
         }
         .task {

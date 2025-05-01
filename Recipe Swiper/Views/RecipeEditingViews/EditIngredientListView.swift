@@ -4,15 +4,15 @@
 //
 //  Created by Raphael Abano on 4/29/25.
 //
-//  Generated with Gemini 2.5 Pro
+//  Generated with Gemini 2.5 Pro & Reworked with Claude 3.7 Sonnet Thinking
 
 import SwiftUI
+import SwiftData
 
 struct EditIngredientListView: View {
-    @Binding var ingredients: [ExtendedIngredient]
+    @Environment(\.modelContext) private var modelContext
+    @Binding var ingredients: [ExtendedIngredientModel]
     @Environment(\.editMode) var editMode
-    // State to track the next temporary ID for new items
-    @State private var nextNewItemId: Int = -1
 
     var body: some View {
         List {
@@ -20,7 +20,7 @@ struct EditIngredientListView: View {
                 // Use indices for stable bindings during editing
                 ForEach($ingredients.indices, id: \.self) { index in
                     EditableIngredientRowView(
-                        ingredient: $ingredients[index],
+                        ingredient: ingredients[index],
                         formatter: numberFormatter // Pass the formatter
                     )
                 }
@@ -43,12 +43,6 @@ struct EditIngredientListView: View {
         .toolbar {
             EditButton() // Add standard Edit/Done button
         }
-        .onAppear {
-            // Initialize nextNewItemId based on existing data if needed
-            // Find the lowest (most negative) ID among existing items
-            let minId = ingredients.map { $0.id }.min() ?? 0
-            nextNewItemId = min(minId, 0) - 1 // Start below 0 or existing negatives
-        }
     }
 
     // Formatter for the amount field
@@ -61,23 +55,31 @@ struct EditIngredientListView: View {
     }()
     
     private func deleteIngredient(at offsets: IndexSet) {
-        ingredients.remove(atOffsets: offsets)
-    }
+            // Remove from ingredients array
+            for index in offsets {
+                let ingredient = ingredients[index]
+                // Delete from model context if needed
+                modelContext.delete(ingredient)
+            }
+            ingredients.remove(atOffsets: offsets)
+        }
 
     private func moveIngredient(from source: IndexSet, to destination: Int) {
         ingredients.move(fromOffsets: source, toOffset: destination)
     }
 
     private func addIngredient() {
-        let newIngredient = ExtendedIngredient.newEmpty(id: nextNewItemId)
-        ingredients.append(newIngredient)
-        nextNewItemId -= 1 // Decrement for the next potential add
-    }
+            // Create empty ingredient using ExtendedIngredient helper, then convert
+            let tempIngredient = ExtendedIngredient.newEmpty(id: -1)
+            let newIngredient = ExtendedIngredientModel(from: tempIngredient)
+            ingredients.append(newIngredient)
+            modelContext.insert(newIngredient)
+        }
 }
 
 // MARK: - Editable Ingredient Row View
 struct EditableIngredientRowView: View {
-    @Binding var ingredient: ExtendedIngredient
+    @Bindable var ingredient: ExtendedIngredientModel
     let formatter: NumberFormatter
     
     var body: some View {
@@ -111,9 +113,8 @@ struct EditableIngredientRowView: View {
                 // Display Unit (Could make this a TextField too if needed)
                 TextField("Unit", text: $ingredient.unit)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-
-
-                Spacer() // Push unit text to the left if needed
+                
+                Spacer()
             }
 
             // --- Display Original Text (Read-only) ---
@@ -151,6 +152,18 @@ struct EditableIngredientRowView: View {
 }
 
 #Preview {
-    @Previewable @State var recipe: Recipe = loadCurryRecipe()
-    EditIngredientListView(ingredients: $recipe.extendedIngredients)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: ExtendedIngredientModel.self, configurations: config)
+    let recipe = loadCurryRecipe()
+    var ingredientModels: [ExtendedIngredientModel] = []
+    
+    // Convert recipe ingredients to models for preview
+    for ingredient in recipe.extendedIngredients {
+        let model = ExtendedIngredientModel(from: ingredient)
+        ingredientModels.append(model)
+        container.mainContext.insert(model)
+    }
+    
+    return EditIngredientListView(ingredients: .constant(ingredientModels))
+        .modelContainer(container)
 }

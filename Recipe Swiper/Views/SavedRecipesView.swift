@@ -17,13 +17,15 @@ struct SavedRecipesView: View {
             List(savedRecipes, id: \.self) { recipe in
                 NavigationLink(destination: FullRecipe(recipe: recipe)) {
                     HStack {
-                        if let image = recipe.imageData {
-                            Image(uiImage: UIImage(data: image)!)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 60, height: 60)
-                                .clipped()
-                                .cornerRadius(10)
+                        if let imageData = recipe.imageData {
+                            if let image = UIImage(data: imageData) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 60, height: 60)
+                                    .clipped()
+                                    .cornerRadius(10)
+                            }
                         }
                         else {
                             RoundedRectangle(cornerRadius: 10)

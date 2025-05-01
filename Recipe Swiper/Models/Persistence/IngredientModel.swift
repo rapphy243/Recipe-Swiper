@@ -11,7 +11,6 @@ import SwiftData
 
 @Model
 final class ExtendedIngredientModel {
-    var id: Int
     var aisle: String?
     var image: String?
     var consistency: String?
@@ -22,7 +21,7 @@ final class ExtendedIngredientModel {
     var amount: Double
     var unit: String
     @Attribute(.externalStorage)
-    var metaData: Data?
+    private var metaData: Data?
     
     var meta: [String]? {
         get {getStringArray(from: metaData) ?? []}
@@ -32,7 +31,6 @@ final class ExtendedIngredientModel {
     var measures: MeasuresModel
     
     init(from ingredient: ExtendedIngredient) {
-        self.id = ingredient.id
         self.aisle = ingredient.aisle
         self.image = ingredient.image
         self.consistency = ingredient.consistency

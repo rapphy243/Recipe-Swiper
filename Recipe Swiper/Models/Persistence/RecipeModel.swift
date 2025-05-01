@@ -54,19 +54,19 @@ final class RecipeModel {
     @Attribute(.externalStorage)
     private var occasionsData: Data?
     //
-    private var cuisines: [String] {
+    var cuisines: [String] {
         get {getStringArray(from: cuisinesData) ?? []}
         set {cuisinesData = encodeStringArray(newValue)}
     }
-    private var dishTypes: [String] {
+    var dishTypes: [String] {
         get {getStringArray(from: dishTypesData) ?? []}
         set {dishTypesData = encodeStringArray(newValue)}
     }
-    private var diets: [String] {
+    var diets: [String] {
         get {getStringArray(from: dietsData) ?? []}
         set {dietsData = encodeStringArray(newValue)}
     }
-    private var occasions: [String] {
+    var occasions: [String] {
         get { getStringArray(from: occasionsData) ?? []}
         set { occasionsData = encodeStringArray(newValue)}
     }
@@ -106,7 +106,7 @@ final class RecipeModel {
         self.sourceName = recipe.sourceName
         self.pricePerServing = recipe.pricePerServing
         self.extendedIngredients = recipe.extendedIngredients.map(ExtendedIngredientModel.init)
-        self.summary = recipe.summary
+        self.summary = simplifySummary(recipe.summary)
         self.cuisinesData = try? JSONEncoder().encode(recipe.cuisines)
         self.dishTypesData = try? JSONEncoder().encode(recipe.dishTypes)
         self.dietsData = try? JSONEncoder().encode(recipe.diets)
