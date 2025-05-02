@@ -15,7 +15,6 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     @State private var selection = 1  // Show MainView
     @StateObject private var filterModel = FilterModel()
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true

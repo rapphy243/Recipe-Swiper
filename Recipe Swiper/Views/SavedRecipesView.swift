@@ -11,12 +11,25 @@ import SwiftData
 struct SavedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(filter: #Predicate<RecipeModel> {!$0.isDiscarded})
-       private var savedRecipes: [RecipeModel]
+    private var savedRecipes: [RecipeModel]
+    @State private var isEditing: Bool = false
+    
     var body: some View {
         NavigationStack {
             List {
                 ForEach(savedRecipes, id: \.self) { recipe in
                     HStack {
+                        if isEditing {
+                            withAnimation {
+                                Button(action: {
+                                    recipe.isDiscarded = true
+                                }) {
+                                    Image(systemName: "minus.circle")
+                                        .foregroundColor(.red)
+                                        .padding(.trailing)
+                                }
+                            }
+                        }
                         if let imageData = recipe.imageData {
                             if let image = UIImage(data: imageData) {
                                 Image(uiImage: image)
@@ -42,30 +55,26 @@ struct SavedRecipesView: View {
                         Spacer()
                     }
                 }
-                .swipeActions {
-                    Button(role: .destructive) {
-                        recipe.dateModified = Date()
-                        recipe.isDiscarded = true
-                    } label: {
-                        Label("Discard", systemImage: "trash")
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(isEditing ? "Done" : "Edit") {
-                        withAnimation {
-                            isEditing.toggle()
+                if !savedRecipes.isEmpty {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(isEditing ? "Done" : "Edit") {
+                            withAnimation {
+                                isEditing.toggle()
+                            }
                         }
                     }
                 }
             }
-        }
-        .overlay {
-            if savedRecipes.isEmpty {
-                ContentUnavailableView(label: {
-                    Label("No saved recipes yet", systemImage: "list.bullet.rectangle.portrait")
-                }, description: {
-                    Text("Start saving recipes by swiping right on them in the Home feed.")
-                })
+            .overlay {
+                if savedRecipes.isEmpty {
+                    ContentUnavailableView(label: {
+                        Label("No saved recipes yet", systemImage: "list.bullet.rectangle.portrait")
+                    }, description: {
+                        Text("Start saving recipes by swiping right on them in the Home feed.")
+                    })
+                }
             }
         }
     }
