@@ -51,6 +51,13 @@ struct DiscardedRecipesView: View {
                         recipe.isDiscarded = false
                     } label: {
                         Label("Save", systemImage: "bookmark")
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(isEditing ? "Done" : "Edit") {
+                        withAnimation {
+                            isEditing.toggle()
+                        }
                     }
                 }
             }

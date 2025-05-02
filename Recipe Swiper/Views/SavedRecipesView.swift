@@ -14,8 +14,8 @@ struct SavedRecipesView: View {
        private var savedRecipes: [RecipeModel]
     var body: some View {
         NavigationStack {
-            List(savedRecipes, id: \.self) { recipe in
-                NavigationLink(destination: FullRecipe(recipe: recipe)) {
+            List {
+                ForEach(savedRecipes, id: \.self) { recipe in
                     HStack {
                         if let imageData = recipe.imageData {
                             if let image = UIImage(data: imageData) {
@@ -41,7 +41,6 @@ struct SavedRecipesView: View {
                             .font(.headline)
                         Spacer()
                     }
-                    .contentShape(Rectangle())
                 }
                 .swipeActions {
                     Button(role: .destructive) {
@@ -49,6 +48,13 @@ struct SavedRecipesView: View {
                         recipe.isDiscarded = true
                     } label: {
                         Label("Discard", systemImage: "trash")
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(isEditing ? "Done" : "Edit") {
+                        withAnimation {
+                            isEditing.toggle()
+                        }
                     }
                 }
             }
@@ -56,8 +62,8 @@ struct SavedRecipesView: View {
         .overlay {
             if savedRecipes.isEmpty {
                 ContentUnavailableView(label: {
-                Label("No saved recipes yet", systemImage: "list.bullet.rectangle.portrait")
-                }, description : {
+                    Label("No saved recipes yet", systemImage: "list.bullet.rectangle.portrait")
+                }, description: {
                     Text("Start saving recipes by swiping right on them in the Home feed.")
                 })
             }

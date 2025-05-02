@@ -18,6 +18,7 @@ struct ContentView: View {
     @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     @State private var selection = 1  // Show MainView
     @StateObject private var filterModel = FilterModel()
+    @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
     var body: some View {
             TabView(selection: $selection) {
                 Group {
