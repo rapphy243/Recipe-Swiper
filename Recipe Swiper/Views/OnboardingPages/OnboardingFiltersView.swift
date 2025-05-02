@@ -10,15 +10,13 @@ import SwiftUI
 struct OnboardingFiltersView: View {
     @State private var filterTapped = false
     @Binding var selectedTab: Int
-
+    @Binding var recipe: Recipe
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .topTrailing) {
-                Color.white.ignoresSafeArea()
-
                 VStack(spacing: 20) {
                     Spacer()
-
                     Text("Filters help you personalize your recipes!")
                         .font(.headline)
                         .multilineTextAlignment(.center)
@@ -44,7 +42,7 @@ struct OnboardingFiltersView: View {
                         .buttonStyle(.borderedProminent)
                         .padding(.top)
                     }
-                    SmallRecipeCard(recipe: loadCakeRecipe()) {}
+                    SmallRecipeCard(recipe: recipe) {}
                         .padding(.horizontal)
 
                     Spacer()
@@ -54,20 +52,19 @@ struct OnboardingFiltersView: View {
                 if !filterTapped {
                     VStack(spacing: 4) {
                         Image(systemName: "arrow.up")
-                            .font(.system(size: 44, weight: .bold))
+                            .font(.system(size: 44))
                             .rotationEffect(.degrees(42))
                             .foregroundColor(.blue)
+                            .bold()
                         Text("Tap me!")
                             .font(.caption)
                             .foregroundColor(.blue)
                             .bold()
                     }
-                    .offset(x: -55, y: 45)  // adjust to align with filter icon
+                    .offset(x: -75, y: -5)  // adjust to align with filter icon
                     .transition(.opacity)
                 }
             }
-            .navigationTitle("Filter Recipes")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -88,5 +85,6 @@ struct OnboardingFiltersView: View {
 
 #Preview {
     @Previewable @State var selectedTab: Int = 1
-    OnboardingFiltersView(selectedTab: $selectedTab)
+    @Previewable @State var recipe = loadCakeRecipe()
+    OnboardingFiltersView(selectedTab: $selectedTab, recipe: $recipe)
 }

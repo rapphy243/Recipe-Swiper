@@ -206,6 +206,21 @@ struct MainView: View {
             }
             return  // Exit if the recipe exists
         }
+
+        // Check if we need to remove an old discarded recipe
+            let discardedFetchDescriptor = FetchDescriptor<RecipeModel>(
+                predicate: #Predicate { $0.isDiscarded == true },
+                sortBy: [SortDescriptor(\RecipeModel.dateModified, order: .forward)]
+            )
+            
+            if let discardedRecipes = try? modelContext.fetch(discardedFetchDescriptor),
+               discardedRecipes.count >= 10,
+               let oldestDiscarded = discardedRecipes.first {
+                // Delete the oldest discarded recipe if we have 10 or more
+                modelContext.delete(oldestDiscarded)
+                print("Deleted oldest discarded recipe: \(oldestDiscarded.title)")
+            }
+        // Add deletedRecipe to model container
         let deletedRecipe = RecipeModel(from: currentRecipe, isDiscarded: true)
         Task {
             await deletedRecipe.getImage()

@@ -10,13 +10,14 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var selectedTab: Int = 0
+    @State private var recipe = loadCakeRecipe()
     var body: some View {
         TabView(selection: $selectedTab) {
             OnboardingAboutView()
                 .tag(0)
-            OnboardingFiltersView(selectedTab: $selectedTab)
+            OnboardingFiltersView(selectedTab: $selectedTab, recipe: $recipe)
                 .tag(1)
-            OnboardingHowToView(selectedTab: $selectedTab)
+            OnboardingHowToView(recipe: $recipe, selectedTab: $selectedTab)
                 .tag(2)
             OnboardingGetStartedView()
                 .tag(3)

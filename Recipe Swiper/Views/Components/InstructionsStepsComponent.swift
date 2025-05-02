@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InstructionsStepsComponent: View {
     @Bindable var recipe: RecipeModel
-    @State private var isExpanded: Bool = false
+    @State private var isExpanded: Bool = true
 
     var body: some View {
         VStack {

@@ -45,6 +45,7 @@ struct SavedRecipesView: View {
                 }
                 .swipeActions {
                     Button(role: .destructive) {
+                        recipe.dateModified = Date()
                         recipe.isDiscarded = true
                     } label: {
                         Label("Discard", systemImage: "trash")

@@ -47,6 +47,7 @@ struct DiscardedRecipesView: View {
                 }
                 .swipeActions {
                     Button {
+                        recipe.dateModified = Date()
                         recipe.isDiscarded = false
                     } label: {
                         Label("Save", systemImage: "bookmark")

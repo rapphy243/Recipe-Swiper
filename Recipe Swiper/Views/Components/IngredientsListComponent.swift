@@ -2,7 +2,7 @@ import SwiftUI
 
 struct IngredientsListComponent: View {
     @Bindable var recipe: RecipeModel
-    @State private var isExpanded = false
+    @State private var isExpanded = true
     
     var body: some View {
         Text("Required Ingredients")

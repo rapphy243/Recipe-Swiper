@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingHowToView: View {
-    @State private var recipe: Recipe = loadCakeRecipe()
+    @Binding var recipe: Recipe
     @State private var offset: CGSize = .zero
     @State private var step = 0
     @State private var isAnimatingReset = false  // To disable gesture during reset
@@ -119,5 +119,6 @@ struct OnboardingHowToView: View {
 
 #Preview {
     @Previewable @State var selectedTab: Int = 1
-    OnboardingHowToView(selectedTab: $selectedTab)
+    @Previewable @State var recipe = loadCakeRecipe()
+    OnboardingHowToView(recipe: $recipe, selectedTab: $selectedTab)
 }
