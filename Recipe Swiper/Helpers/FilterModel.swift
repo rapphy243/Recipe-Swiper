@@ -13,10 +13,7 @@ class FilterModel: ObservableObject {
     @Published var includeCuisine = ""
     @Published var includeDiet = ""
     @Published var includeMealType = ""
-    @Published var includeIntolerance = ""
-    @Published var excludeCuisine = ""
-    @Published var excludeDiet = ""
-    @Published var excludeMealType = ""
+    @Published var excludeIntolerance = ""
     @Published var selectedIntolerances: Set<String> = []
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
@@ -32,24 +29,14 @@ class FilterModel: ObservableObject {
             include.append(includeDiet)
         }
         if !selectedIntolerances.isEmpty {
-            let intoleranceString = selectedIntolerances.joined(separator: ",")
-            items.append(.init(name: "intolerances", value: intoleranceString))
+            let intoleranceString = selectedIntolerances.joined(separator: ",").lowercased()
+            exclude.append(intoleranceString)
         }
 
         if !includeMealType.isEmpty {
             include.append(includeMealType)
         }
         
-        // Exclude Tags
-        if !excludeCuisine.isEmpty {
-            exclude.append(excludeCuisine)
-        }
-        if !excludeDiet.isEmpty {
-            exclude.append(excludeDiet)
-        }
-        if !excludeMealType.isEmpty {
-            exclude.append(excludeMealType)
-        }
         
         items.append(.init(name: "include-tags", value: include.joined(separator: ",")))
         items.append(.init(name: "exclude-tags", value: exclude.joined(separator: ",")))
