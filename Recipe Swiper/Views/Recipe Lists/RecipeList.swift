@@ -1,0 +1,92 @@
+//
+//  RecipelistItem.swift
+//  Recipe Swiper
+//
+//  Created by Raphael Abano on 5/4/25.
+//
+
+import SwiftUI
+import SwiftData // Uneeded for view but used for preview
+
+struct RecipelistItem: View {
+    @State var recipe: RecipeModel
+    var showRating: Bool = true
+    var body: some View {
+        HStack {
+            if let imageData = recipe.imageData {
+                if let image = UIImage(data: imageData) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 60, height: 60)
+                        .clipped()
+                        .cornerRadius(10)
+                }
+            } else {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 60, height: 60)
+                    .onAppear {
+                        Task {
+                            await recipe.getImage()
+                        }
+                    }
+            }
+            VStack(alignment: .leading) {
+                Text(recipe.title)
+                    .font(.headline)
+                if showRating {
+                    if recipe.rating > 0 {
+                        HStack {
+                            ForEach(1...5, id: \.self) { star in
+                                Image(
+                                    systemName: star <= Int(recipe.rating + 0.5 / 2) // Round up due to no half stars
+                                        ? "star.fill" : "star"
+                                )
+                                .foregroundColor(.yellow)
+                                .font(.caption)
+                            }
+                        }
+                    }
+                }
+            }
+            Spacer()
+        }
+    }
+}
+
+enum SortOrder {
+    case dateDesc, dateAsc, title, rating
+    var sortDescriptor: SortDescriptor<RecipeModel> {
+        switch self {
+        case .dateDesc:
+            return SortDescriptor(
+                \RecipeModel.dateModified,
+                order: .reverse
+            )
+        case .dateAsc:
+            return SortDescriptor(\RecipeModel.dateModified)
+        case .title:
+            return SortDescriptor(\RecipeModel.title)
+        case .rating:
+            return SortDescriptor(\RecipeModel.rating, order: .reverse)
+        }
+    }
+}
+
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: RecipeModel.self,
+        configurations: config
+    )
+    let recipe1 = RecipeModel(from: loadCakeRecipe(), isDiscarded: false)
+    let recipe2 = RecipeModel(from: loadCurryRecipe(), isDiscarded: false)
+    let recipe3 = RecipeModel(from: loadSaladRecipe(), isDiscarded: false)
+    container.mainContext.insert(recipe1)
+    container.mainContext.insert(recipe2)
+    container.mainContext.insert(recipe3)
+
+    return SavedRecipesView()
+        .modelContainer(container)
+}

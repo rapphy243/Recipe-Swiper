@@ -13,26 +13,6 @@ struct SavedRecipesView: View {
     @State private var sortOrder = SortOrder.dateDesc
     @State private var isEditing: Bool = false
 
-    enum SortOrder {
-        case dateDesc, dateAsc, title, rating
-
-        var sortDescriptor: SortDescriptor<RecipeModel> {
-            switch self {
-            case .dateDesc:
-                return SortDescriptor(
-                    \RecipeModel.dateModified,
-                    order: .reverse
-                )
-            case .dateAsc:
-                return SortDescriptor(\RecipeModel.dateModified)
-            case .title:
-                return SortDescriptor(\RecipeModel.title)
-            case .rating:
-                return SortDescriptor(\RecipeModel.rating, order: .reverse)
-            }
-        }
-    }
-
     var savedRecipes: [RecipeModel] {
         try! modelContext.fetch(
             FetchDescriptor<RecipeModel>(
@@ -44,27 +24,34 @@ struct SavedRecipesView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(savedRecipes, id: \.self) { recipe in
-                    HStack {
-                        if isEditing {
-                            withAnimation {
-                                Button(action: {
-                                    recipe.isDiscarded = true
-                                }) {
-                                    Image(systemName: "minus.circle")
-                                        .foregroundColor(.red)
-                                        .padding(.trailing)
+            HStack {
+                List {
+                    ForEach(savedRecipes, id: \.self) { recipe in
+                        HStack {
+                            if isEditing {
+                                withAnimation {
+                                    Button(action: {
+                                        recipe.isDiscarded = true
+                                    }) {
+                                        Image(systemName: "minus.circle")
+                                            .foregroundColor(.red)
+                                            .padding(.trailing)
+                                    }
                                 }
                             }
-                            listDetails(recipe: recipe)
-                        } else {
-                            NavigationLink(
-                                destination: FullRecipe(recipe: recipe)
-                            ) {
-                                listDetails(recipe: recipe)
+                            if !isEditing {
+                                NavigationLink(
+                                    destination: FullRecipe(recipe: recipe)
+                                ) {
+                                    RecipelistItem(recipe: recipe)
+                                }
+
+                            }
+                            else {
+                                RecipelistItem(recipe: recipe)
                             }
                         }
+                        .animation(.smooth, value: isEditing)
                     }
                 }
             }
@@ -113,50 +100,6 @@ struct SavedRecipesView: View {
                     )
                 }
             }
-        }
-    }
-}
-
-struct listDetails: View {
-    @State var recipe: RecipeModel
-    var body: some View {
-        HStack {
-            if let imageData = recipe.imageData {
-                if let image = UIImage(data: imageData) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 60, height: 60)
-                        .clipped()
-                        .cornerRadius(10)
-                }
-            } else {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 60, height: 60)
-                    .onAppear {
-                        Task {
-                            await recipe.getImage()
-                        }
-                    }
-            }
-            VStack(alignment: .leading) {
-                Text(recipe.title)
-                    .font(.headline)
-                if recipe.rating > 0 {
-                    HStack {
-                        ForEach(1...5, id: \.self) { star in
-                            Image(
-                                systemName: star <= Int(recipe.rating)
-                                    ? "star.fill" : "star"
-                            )
-                            .foregroundColor(.yellow)
-                            .font(.caption)
-                        }
-                    }
-                }
-            }
-            Spacer()
         }
     }
 }

@@ -11,9 +11,10 @@ struct SmallCardDetails: View {
     @Environment(\.colorScheme) private var colorScheme
     @State var recipe: Recipe
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
                 HStack(spacing: 5) {
+                    // Time to make
                     Image(systemName: "timer")
                     VStack(alignment: .leading, spacing: 0) {
                         Text("\(recipe.readyInMinutes)min")
@@ -23,19 +24,40 @@ struct SmallCardDetails: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                // How many servings
                 HStack(spacing: 2) {
                     Image(systemName: "person.2.fill")
                     Text("\(recipe.servings)")
                         .font(.footnote)
                 }
-                HStack(spacing: 4) {
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(healthScoreColor)
-                    Text("\(recipe.healthScore)")
-                        .font(.footnote)
+            }
+            HStack(spacing: 10) {
+                // Source of recipe
+                HStack {
+                    Image(systemName: "book.closed.fill")
+                    if let hosturl = recipe.sourceUrl {
+                        Link(destination: URL(string: hosturl)!) {
+                            Text("\(getHostURL(hosturl))")
+                                .font(.footnote)
+                                .foregroundColor(
+                                    colorScheme == .dark ? .white : .black
+                                )
+                        }
+                    } else {
+                        Text("No Source")
+                            .font(.footnote)
+                    }
+                    // Health score provided by Spoonacular
+                    HStack(spacing: 4) {
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(healthScoreColor)
+                        Text("\(recipe.healthScore)")
+                            .font(.footnote)
+                    }
                 }
             }
             HStack(spacing: 10) {
+                // Show cuisine recipe is from and if it is vegan or gluten free
                 if !recipe.cuisines.isEmpty {
                     HStack(spacing: 5) {
                         Image(systemName: "globe")
@@ -54,7 +76,7 @@ struct SmallCardDetails: View {
                             .background(.green.opacity(0.2))
                             .cornerRadius(4)
                     }
-                } else {
+                } else { // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
                     if recipe.vegan {
                         Image(systemName: "leaf.fill")
                             .foregroundColor(.green)
@@ -74,36 +96,16 @@ struct SmallCardDetails: View {
                             .padding(.vertical, 2)
                             .background(.green.opacity(0.2))
                             .cornerRadius(4)
-                    }
-                }
-            }
-            HStack(spacing: 10) {
-                HStack {
-                    Image(systemName: "book.closed.fill")
-                    if let hosturl = recipe.sourceUrl {
-                        Link(destination: URL(string: hosturl)!) {
-                            Text("\(getHostURL(hosturl))")
-                                .font(.footnote)
-                                .foregroundColor(
-                                    colorScheme == .dark ? .white : .black
-                                )
-                        }
-                    } else {
-                        Text("No Source")
-                            .font(.footnote)
+                            .background(.blue.opacity(0.2))
                     }
                 }
             }
         }
         .padding()
-        .cornerRadius(8)  // Optional: Add rounded corners
-        // Optional: Add a border or shadow if desired
-        //         .overlay(
-        //             RoundedRectangle(cornerRadius: 8)
-        //                 .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-        //         )
+        .cornerRadius(8)
     }
 
+    // color for health score
     private var healthScoreColor: Color {
         switch recipe.healthScore {
         case 80...100: return .green
@@ -114,6 +116,7 @@ struct SmallCardDetails: View {
     }
 
     // Takes a URL and returns the host of it (www.google.com -> google.com)
+    // This is not a really good solution to get the host, but it is simple enough to mostly work
     private func getHostURL(_ urlString: String) -> String {
         guard let url = URL(string: urlString), let host = url.host,
             !host.isEmpty

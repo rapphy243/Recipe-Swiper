@@ -85,6 +85,11 @@ struct MainView: View {
                     }
                 }
                 .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Snack Swipe")
+                            .foregroundColor(.white)
+                            .bold()
+                    }
                     ToolbarItemGroup(placement: .topBarTrailing) {
                         Button {
                             showFilterSheet = true
@@ -109,7 +114,6 @@ struct MainView: View {
                 .toolbarBackground(.indigo, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle("Recipe Swiper")
                 .task {
                     if currentRecipe.id == -1 {
                         await fetchNewRecipe()
