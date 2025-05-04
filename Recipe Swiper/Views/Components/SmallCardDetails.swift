@@ -28,6 +28,54 @@ struct SmallCardDetails: View {
                     Text("\(recipe.servings)")
                         .font(.footnote)
                 }
+                HStack(spacing: 4) {
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(healthScoreColor)
+                    Text("\(recipe.healthScore)")
+                        .font(.footnote)
+                }
+            }
+            HStack(spacing: 10) {
+                if !recipe.cuisines.isEmpty {
+                    HStack(spacing: 5) {
+                        Image(systemName: "globe")
+                        Text(recipe.cuisines[0].capitalized)
+                            .font(.footnote)
+                    }
+                    if recipe.vegan {
+                        Image(systemName: "leaf.fill")
+                            .foregroundColor(.green)
+                    }
+                    if recipe.glutenFree {
+                        Text("GF")
+                            .font(.caption)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 2)
+                            .background(.green.opacity(0.2))
+                            .cornerRadius(4)
+                    }
+                } else {
+                    if recipe.vegan {
+                        Image(systemName: "leaf.fill")
+                            .foregroundColor(.green)
+                    }
+                    if recipe.glutenFree {
+                        Text("GF")
+                            .font(.caption)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 2)
+                            .background(.green.opacity(0.2))
+                            .cornerRadius(4)
+                    }
+                    if recipe.dairyFree {
+                        Text("DF")
+                            .font(.caption)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 2)
+                            .background(.green.opacity(0.2))
+                            .cornerRadius(4)
+                    }
+                }
             }
             HStack(spacing: 10) {
                 HStack {
@@ -36,7 +84,9 @@ struct SmallCardDetails: View {
                         Link(destination: URL(string: hosturl)!) {
                             Text("\(getHostURL(hosturl))")
                                 .font(.footnote)
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                                .foregroundColor(
+                                    colorScheme == .dark ? .white : .black
+                                )
                         }
                     } else {
                         Text("No Source")
@@ -52,6 +102,15 @@ struct SmallCardDetails: View {
         //             RoundedRectangle(cornerRadius: 8)
         //                 .stroke(Color.gray.opacity(0.5), lineWidth: 1)
         //         )
+    }
+
+    private var healthScoreColor: Color {
+        switch recipe.healthScore {
+        case 80...100: return .green
+        case 60..<80: return .yellow
+        case 40..<60: return .orange
+        default: return .red
+        }
     }
 
     // Takes a URL and returns the host of it (www.google.com -> google.com)

@@ -10,10 +10,38 @@ import SwiftUI
 
 struct DiscardedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(filter: #Predicate<RecipeModel> {$0.isDiscarded})
-    private var discardedRecipes: [RecipeModel]
+    @State private var sortOrder = SortOrder.dateDesc
     @State private var isEditing: Bool = false
-    
+
+    enum SortOrder {
+        case dateDesc, dateAsc, title, rating
+
+        var sortDescriptor: SortDescriptor<RecipeModel> {
+            switch self {
+            case .dateDesc:
+                return SortDescriptor(
+                    \RecipeModel.dateModified,
+                    order: .reverse
+                )
+            case .dateAsc:
+                return SortDescriptor(\RecipeModel.dateModified)
+            case .title:
+                return SortDescriptor(\RecipeModel.title)
+            case .rating:
+                return SortDescriptor(\RecipeModel.rating, order: .reverse)
+            }
+        }
+    }
+
+    var discardedRecipes: [RecipeModel] {
+        try! modelContext.fetch(
+            FetchDescriptor<RecipeModel>(
+                predicate: #Predicate<RecipeModel> { $0.isDiscarded },
+                sortBy: [sortOrder.sortDescriptor]
+            )
+        )
+    }
+
     var body: some View {
         NavigationStack {
             List {
@@ -22,10 +50,10 @@ struct DiscardedRecipesView: View {
                         if isEditing {
                             withAnimation {
                                 Button(action: {
-                                    modelContext.delete(recipe)
+                                    recipe.isDiscarded = false
                                 }) {
-                                    Image(systemName: "trash.fill")
-                                        .foregroundColor(.red)
+                                    Image(systemName: "plus.circle")
+                                        .foregroundColor(.green)
                                         .padding(.trailing)
                                 }
                             }
@@ -39,8 +67,7 @@ struct DiscardedRecipesView: View {
                                     .clipped()
                                     .cornerRadius(10)
                             }
-                        }
-                        else {
+                        } else {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.gray.opacity(0.3))
                                 .frame(width: 60, height: 60)
@@ -50,30 +77,39 @@ struct DiscardedRecipesView: View {
                                     }
                                 }
                         }
-                        Text(recipe.title)
-                            .font(.headline)
+                        //                        VStack(alignment: .leading) {
+                        //                            Text(recipe.title)
+                        //                                .font(.headline)
+                        //                            if recipe.rating > 0 {
+                        //                                HStack {
+                        //                                    ForEach(1...5, id: \.self) { star in
+                        //                                        Image(systemName: star <= recipe.rating ? "star.fill" : "star")
+                        //                                            .foregroundColor(.yellow)
+                        //                                            .font(.caption)
+                        //                                    }
+                        //                                }
+                        //                            }
+                        //                        }
                         Spacer()
                     }
                 }
             }
             .toolbar {
-                if !discardedRecipes.isEmpty {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(isEditing ? "Done" : "Edit") {
-                            withAnimation {
-                                isEditing.toggle()
-                            }
-                        }
-                    }
-                }
+
             }
             .overlay {
                 if discardedRecipes.isEmpty {
-                    ContentUnavailableView(label: {
-                        Label("No saved recipes yet", systemImage: "list.bullet.rectangle.portrait")
-                    }, description: {
-                        Text("Start saving recipes by swiping right on them in the Home feed.")
-                    })
+                    ContentUnavailableView(
+                        label: {
+                            Label(
+                                "No discarded recipes",
+                                systemImage: "list.bullet.rectangle.portrait"
+                            )
+                        },
+                        description: {
+                            Text("Recipes you swipe left on will appear here.")
+                        }
+                    )
                 }
             }
         }

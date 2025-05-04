@@ -19,10 +19,10 @@ class FilterModel: ObservableObject {
     @Published var excludeMealType = ""
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
-        var items = [URLQueryItem(name: "apiKey", value: apiKey)] // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
+        var items = [URLQueryItem(name: "apiKey", value: apiKey)]  // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
         var include: [String] = []
         var exclude: [String] = []
-        
+
         // Include Tags
         if !includeCuisine.isEmpty {
             include.append(includeCuisine)
@@ -33,7 +33,7 @@ class FilterModel: ObservableObject {
         if !includeMealType.isEmpty {
             include.append(includeMealType)
         }
-        
+
         // Exclude Tags
         if !excludeCuisine.isEmpty {
             exclude.append(excludeCuisine)
@@ -44,9 +44,13 @@ class FilterModel: ObservableObject {
         if !excludeMealType.isEmpty {
             exclude.append(excludeMealType)
         }
-        
-        items.append(.init(name: "include-tags", value: include.joined(separator: ",")))
-        items.append(.init(name: "exclude-tags", value: exclude.joined(separator: ",")))
+
+        items.append(
+            .init(name: "include-tags", value: include.joined(separator: ","))
+        )
+        items.append(
+            .init(name: "exclude-tags", value: exclude.joined(separator: ","))
+        )
         return items
     }
 }

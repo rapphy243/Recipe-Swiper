@@ -131,10 +131,14 @@ struct MainView: View {
 
         // Right swipe (save)
         if horizontalMovement > swipeThreshold {
+            let impactMed = UIImpactFeedbackGenerator(style: .medium)
+            impactMed.impactOccurred()
             saveCurrentRecipe()
         }
         // Left swipe (skip)
         else if horizontalMovement < -swipeThreshold {
+            let impactLight = UIImpactFeedbackGenerator(style: .light)
+            impactLight.impactOccurred()
             skipCurrentRecipe()
         }
         // Not enough movement - reset position
@@ -208,18 +212,21 @@ struct MainView: View {
         }
 
         // Check if we need to remove an old discarded recipe
-            let discardedFetchDescriptor = FetchDescriptor<RecipeModel>(
-                predicate: #Predicate { $0.isDiscarded == true },
-                sortBy: [SortDescriptor(\RecipeModel.dateModified, order: .forward)]
-            )
-            
-            if let discardedRecipes = try? modelContext.fetch(discardedFetchDescriptor),
-               discardedRecipes.count >= 10,
-               let oldestDiscarded = discardedRecipes.first {
-                // Delete the oldest discarded recipe if we have 10 or more
-                modelContext.delete(oldestDiscarded)
-                print("Deleted oldest discarded recipe: \(oldestDiscarded.title)")
-            }
+        let discardedFetchDescriptor = FetchDescriptor<RecipeModel>(
+            predicate: #Predicate { $0.isDiscarded == true },
+            sortBy: [SortDescriptor(\RecipeModel.dateModified, order: .forward)]
+        )
+
+        if let discardedRecipes = try? modelContext.fetch(
+            discardedFetchDescriptor
+        ),
+            discardedRecipes.count >= 10,
+            let oldestDiscarded = discardedRecipes.first
+        {
+            // Delete the oldest discarded recipe if we have 10 or more
+            modelContext.delete(oldestDiscarded)
+            print("Deleted oldest discarded recipe: \(oldestDiscarded.title)")
+        }
         // Add deletedRecipe to model container
         let deletedRecipe = RecipeModel(from: currentRecipe, isDiscarded: true)
         Task {
@@ -255,8 +262,7 @@ struct MainView: View {
                 let newRecipe = try await fetchRandomRecipe(using: filterModel)
                 currentRecipe = newRecipe
                 break
-            }
-            catch {
+            } catch {
                 print("Error fetching recipe: \(error)")
                 currentRecipe = Recipe.empty
             }

@@ -15,7 +15,7 @@ final class MeasuresModel {
     var us: MeasurementUnitModel
     @Relationship(deleteRule: .cascade)
     var metric: MeasurementUnitModel
-    
+
     init(from measures: Measures) {
         self.us = MeasurementUnitModel(from: measures.us)
         self.metric = MeasurementUnitModel(from: measures.metric)
@@ -27,7 +27,7 @@ final class MeasurementUnitModel {
     var amount: Double
     var unitShort: String
     var unitLong: String
-    
+
     init(from unit: MeasurementUnit) {
         self.amount = unit.amount
         self.unitShort = unit.unitShort

@@ -5,8 +5,8 @@
 //  Created by Zane Matarieh on 4/15/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SmallRecipeCard: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -51,9 +51,13 @@ struct SmallRecipeCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.8) : .white.opacity(0.8))
+                .fill(
+                    colorScheme == .dark
+                        ? Color(.systemGray6).opacity(0.8) : .white.opacity(0.8)
+                )
                 .shadow(
-                    color: colorScheme == .dark ? .black.opacity(0.3) : .gray.opacity(0.3),
+                    color: colorScheme == .dark
+                        ? .black.opacity(0.3) : .gray.opacity(0.3),
                     radius: 5
                 )
         )

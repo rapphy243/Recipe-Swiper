@@ -5,8 +5,8 @@
 //  Created by Raphael Abano on 4/11/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct Recipe_SwiperApp: App {
@@ -18,12 +18,18 @@ struct Recipe_SwiperApp: App {
             InstructionComponentModel.self,
             InstructionLengthModel.self,
             MeasuresModel.self,
-            MeasurementUnitModel.self
+            MeasurementUnitModel.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false
+        )
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(
+                for: schema,
+                configurations: [modelConfiguration]
+            )
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

@@ -40,7 +40,8 @@ struct EditAnalyzedInstructionListView: View {
 
     private func addInstructionSet() {
         let newInstruction = AnalyzedInstructionModel(
-            from: AnalyzedInstruction(name: "", steps: []))
+            from: AnalyzedInstruction(name: "", steps: [])
+        )
         modelContext.insert(newInstruction)
         analyzedInstructions.append(newInstruction)
     }
@@ -98,7 +99,8 @@ struct EditableInstructionSetView: View {
                 ingredients: [],
                 equipment: [],
                 length: nil
-            ))
+            )
+        )
 
         modelContext.insert(newStep)
         instructionSet.steps.append(newStep)
@@ -157,7 +159,8 @@ struct EditableInstructionStepView: View {
                     from: InstructionLength(
                         number: number,
                         unit: lengthUnitString
-                    ))
+                    )
+                )
             } else {
                 step.length?.number = number
                 step.length?.unit = lengthUnitString
@@ -171,7 +174,9 @@ struct EditableInstructionStepView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(
-        for: AnalyzedInstructionModel.self, configurations: config)
+        for: AnalyzedInstructionModel.self,
+        configurations: config
+    )
 
     // Create preview data
     let recipe = loadCakeRecipe()

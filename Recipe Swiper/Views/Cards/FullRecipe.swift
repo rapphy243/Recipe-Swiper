@@ -5,8 +5,8 @@
 //  Created by Tyler Berlin on 4/23/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct FullRecipe: View {
     @Environment(\.modelContext) private var modelContext
@@ -28,8 +28,7 @@ struct FullRecipe: View {
                             .scaledToFit()
                             .cornerRadius(10)
                             .padding()
-                    }
-                    else {
+                    } else {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.gray.opacity(0.3))
                             .frame(height: 300)
@@ -38,41 +37,41 @@ struct FullRecipe: View {
                                 Task {
                                     await recipe.getImage()
                                 }
-                        }
+                            }
                     }
-                    
+
                     Text("Details")
                         .font(.title2)
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
+
                     FullCardDetails(recipe: recipe)
-                    
+
                     Divider()
-                    
+
                     RatingComponent(recipe: recipe)
-                        
+
                     Divider()
-                    
+
                     Text("Summary")
                         .font(.title2)
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
+
                     Text(recipe.summary)
                         .font(.body)
                         .padding(.bottom)
-                    
+
                     Divider()
-                    
+
                     IngredientsListComponent(recipe: recipe)
-                    
+
                     Divider()
 
                     InstructionsStepsComponent(recipe: recipe)
-                    
+
                     Divider()
                 }
                 .padding()

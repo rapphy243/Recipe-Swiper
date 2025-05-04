@@ -25,10 +25,10 @@ struct RecipeTestView: View {
     @State private var errorMessage: String? = nil
 
     var body: some View {
-        NavigationView { // Optional: Provides a title bar
+        NavigationView {  // Optional: Provides a title bar
             VStack(spacing: 20) {
                 if isLoading {
-                    ProgressView("Fetching Recipe...") // Show loading indicator
+                    ProgressView("Fetching Recipe...")  // Show loading indicator
                 } else if let error = errorMessage {
                     // Show error message and a retry button
                     Text("Error: \(error)")
@@ -56,7 +56,9 @@ struct RecipeTestView: View {
                         .font(.subheadline)
 
                     // Optionally display the image (requires internet)
-                    if let imageUrlString = recipe.image, let imageUrl = URL(string: imageUrlString) {
+                    if let imageUrlString = recipe.image,
+                        let imageUrl = URL(string: imageUrlString)
+                    {
                         AsyncImage(url: imageUrl) { phase in
                             switch phase {
                             case .empty:
@@ -71,7 +73,7 @@ struct RecipeTestView: View {
                             case .failure:
                                 Image(
                                     systemName: "photo"
-                                ) // Placeholder on failure
+                                )  // Placeholder on failure
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 200)
@@ -83,8 +85,7 @@ struct RecipeTestView: View {
                         .padding(.horizontal)
                     }
 
-
-                    Spacer() // Pushes content to the top
+                    Spacer()  // Pushes content to the top
 
                     Button("Fetch New Recipe") {
                         // Clear previous state and fetch again
@@ -95,7 +96,6 @@ struct RecipeTestView: View {
                         }
                     }
                     .buttonStyle(.bordered)
-
 
                 } else {
                     // Initial state or after a successful fetch was cleared
@@ -123,12 +123,14 @@ struct RecipeTestView: View {
     /// Helper function to encapsulate the fetching logic and state updates
     private func loadRecipe() async {
         isLoading = true
-        errorMessage = nil // Clear previous error on new attempt
+        errorMessage = nil  // Clear previous error on new attempt
 
         do {
             print("Attempting to fetch recipe from View...")
-            let fetchedRecipe = try await fetchRandomRecipe(using: FilterModel())
-            self.fetchedRecipe = fetchedRecipe // Update state on the main thread
+            let fetchedRecipe = try await fetchRandomRecipe(
+                using: FilterModel()
+            )
+            self.fetchedRecipe = fetchedRecipe  // Update state on the main thread
             print("Successfully updated recipe state in View.")
         } catch {
             // Handle errors
@@ -136,11 +138,11 @@ struct RecipeTestView: View {
             if let recipeError = error as? RecipeError {
                 self.errorMessage = recipeError.localizedDescription
             } else {
-                self.errorMessage = error.localizedDescription // Store error message
+                self.errorMessage = error.localizedDescription  // Store error message
             }
         }
 
-        isLoading = false // Update loading state on the main thread
+        isLoading = false  // Update loading state on the main thread
     }
 }
 

@@ -19,11 +19,13 @@ struct OnboardingGetStartedView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
-                    
-                    Text("Ready to discover your next favorite meal? Tap the button below to start swiping through delicious recipes!")
-                        .font(.headline)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.secondary)
+
+                    Text(
+                        "Ready to discover your next favorite meal? Tap the button below to start swiping through delicious recipes!"
+                    )
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.secondary)
                 }
                 .padding(.horizontal)
                 Spacer()

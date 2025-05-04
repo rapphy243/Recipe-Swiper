@@ -16,7 +16,7 @@ final class RecipeModel {
     var isDiscarded: Bool  // if saved show in savedItems, if not show in discardedItems
     var dateModified: Date  // sort by date added/modified
     //
-    var rating: Int
+    var rating: Double
     @Attribute(.unique)
     var id: Int
     var image: String
@@ -55,20 +55,20 @@ final class RecipeModel {
     private var occasionsData: Data?
     //
     var cuisines: [String] {
-        get {getStringArray(from: cuisinesData) ?? []}
-        set {cuisinesData = encodeStringArray(newValue)}
+        get { getStringArray(from: cuisinesData) ?? [] }
+        set { cuisinesData = encodeStringArray(newValue) }
     }
     var dishTypes: [String] {
-        get {getStringArray(from: dishTypesData) ?? []}
-        set {dishTypesData = encodeStringArray(newValue)}
+        get { getStringArray(from: dishTypesData) ?? [] }
+        set { dishTypesData = encodeStringArray(newValue) }
     }
     var diets: [String] {
-        get {getStringArray(from: dietsData) ?? []}
-        set {dietsData = encodeStringArray(newValue)}
+        get { getStringArray(from: dietsData) ?? [] }
+        set { dietsData = encodeStringArray(newValue) }
     }
     var occasions: [String] {
-        get { getStringArray(from: occasionsData) ?? []}
-        set { occasionsData = encodeStringArray(newValue)}
+        get { getStringArray(from: occasionsData) ?? [] }
+        set { occasionsData = encodeStringArray(newValue) }
     }
     //
     var instructions: String?
@@ -83,7 +83,7 @@ final class RecipeModel {
         self.isDiscarded = isDiscarded
         self.dateModified = Date()
         //
-        self.rating = 0
+        self.rating = 0.0  // Initialize as Double
         self.id = recipe.id
         self.image = recipe.image ?? ""
         self.imageData = nil
@@ -105,14 +105,18 @@ final class RecipeModel {
         self.license = recipe.license
         self.sourceName = recipe.sourceName
         self.pricePerServing = recipe.pricePerServing
-        self.extendedIngredients = recipe.extendedIngredients.map(ExtendedIngredientModel.init)
+        self.extendedIngredients = recipe.extendedIngredients.map(
+            ExtendedIngredientModel.init
+        )
         self.summary = simplifySummary(recipe.summary)
         self.cuisinesData = try? JSONEncoder().encode(recipe.cuisines)
         self.dishTypesData = try? JSONEncoder().encode(recipe.dishTypes)
         self.dietsData = try? JSONEncoder().encode(recipe.diets)
         self.occasionsData = try? JSONEncoder().encode(recipe.occasions)
         self.instructions = recipe.instructions
-        self.analyzedInstructions = recipe.analyzedInstructions.map(AnalyzedInstructionModel.init)
+        self.analyzedInstructions = recipe.analyzedInstructions.map(
+            AnalyzedInstructionModel.init
+        )
         self.originalId = recipe.originalId
         self.spoonacularScore = recipe.spoonacularScore
         self.spoonacularSourceUrl = recipe.spoonacularSourceUrl
@@ -126,28 +130,30 @@ final class RecipeModel {
         if let imageData = self.imageData {
             return UIImage(data: imageData)
         }
-        
+
         // if we don't have a URL
         if self.image == "" {
             return nil
         }
-        
+
         let imageUrl = URL(string: self.image)
-        
+
         do {
-            let (data, response) = try await URLSession.shared.data(from: imageUrl!)
-            
+            let (data, response) = try await URLSession.shared.data(
+                from: imageUrl!
+            )
+
             guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode == 200 else {
+                httpResponse.statusCode == 200
+            else {
                 print("Error: Invalid response for image URL: \(self.image)")
                 return nil
             }
-            
+
             // Store data in the model
             self.imageData = data
             return UIImage(data: data)
-        }
-        catch {
+        } catch {
             print("Error downloading image: \(error.localizedDescription)")
             return nil
         }
@@ -155,16 +161,18 @@ final class RecipeModel {
     private func fetchImage() async {
         let imageUrl = URL(string: self.image)
         do {
-            let (data, response) = try await URLSession.shared.data(from: imageUrl!)
+            let (data, response) = try await URLSession.shared.data(
+                from: imageUrl!
+            )
             guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode == 200 else {
+                httpResponse.statusCode == 200
+            else {
                 print("Error: Invalid response for image URL: \(self.image)")
                 return
             }
             // Store data in the model
             self.imageData = data
-        }
-        catch {
+        } catch {
             print("Error downloading image: \(error.localizedDescription)")
         }
     }
@@ -172,7 +180,7 @@ final class RecipeModel {
     private func encodeStringArray(_ array: [String]) -> Data? {
         try? JSONEncoder().encode(array)
     }
-    
+
     private func getStringArray(from data: Data?) -> [String]? {
         guard let data = data else {
             return nil

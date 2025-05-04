@@ -20,7 +20,9 @@ struct FullCardDetails: View {
                         Link(destination: URL(string: recipe.sourceUrl)!) {
                             Text("\(getHostURL(recipe.sourceUrl))")
                                 .font(.footnote)
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                                .foregroundColor(
+                                    colorScheme == .dark ? .white : .black
+                                )
                         }
                     } else {
                         Text("No Source")
@@ -71,7 +73,6 @@ struct FullCardDetails: View {
 }
 
 #Preview {
-    @Previewable @State var recipe =  RecipeModel(from: loadCurryRecipe())
+    @Previewable @State var recipe = RecipeModel(from: loadCurryRecipe())
     FullCardDetails(recipe: recipe)
 }
-

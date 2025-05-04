@@ -22,14 +22,14 @@ final class ExtendedIngredientModel {
     var unit: String
     @Attribute(.externalStorage)
     private var metaData: Data?
-    
+
     var meta: [String]? {
-        get {getStringArray(from: metaData) ?? []}
-        set {metaData = encodeStringArray(newValue!)}
+        get { getStringArray(from: metaData) ?? [] }
+        set { metaData = encodeStringArray(newValue!) }
     }
     @Relationship(deleteRule: .cascade)
     var measures: MeasuresModel
-    
+
     init(from ingredient: ExtendedIngredient) {
         self.aisle = ingredient.aisle
         self.image = ingredient.image
@@ -43,7 +43,7 @@ final class ExtendedIngredientModel {
         self.metaData = try? JSONEncoder().encode(ingredient.meta)
         self.measures = MeasuresModel(from: ingredient.measures)
     }
-    
+
     // Helper methods for conversion
     private func encodeStringArray(_ array: [String]) -> Data? {
         try? JSONEncoder().encode(array)

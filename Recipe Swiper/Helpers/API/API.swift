@@ -22,30 +22,43 @@ enum RecipeError: Error, LocalizedError {
         case .requestFailed(let statusCode):
             return "The network request failed with status code: \(statusCode)."
         case .decodingFailed(let underlyingError):
-            return "Failed to decode the JSON response: \(underlyingError.localizedDescription)"
+            return
+                "Failed to decode the JSON response: \(underlyingError.localizedDescription)"
         case .noRecipeFound:
             return "The API response did not contain any recipes."
         case .unknown(let underlyingError):
-            return "An unknown error occurred: \(underlyingError.localizedDescription)"
+            return
+                "An unknown error occurred: \(underlyingError.localizedDescription)"
         }
     }
 }
 
 func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
 
-    var components = URLComponents(string: "https://api.spoonacular.com/recipes/random")!
+    var components = URLComponents(
+        string: "https://api.spoonacular.com/recipes/random"
+    )!
     components.queryItems = filterModel.queryItems(apiKey: Secrets.apiKey)
     guard let url = components.url else {
         throw RecipeError.invalidURL
     }
-    print("Fetching recipe from: \(url.absoluteString)") // Debugging
+    print("Fetching recipe from: \(url.absoluteString)")  // Debugging
 
     do {
         let (data, response) = try await URLSession.shared.data(from: url)
         guard let httpResponse = response as? HTTPURLResponse else {
-             throw RecipeError.unknown(NSError(domain: "NetworkError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response type received."]))
+            throw RecipeError.unknown(
+                NSError(
+                    domain: "NetworkError",
+                    code: -1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey:
+                            "Invalid response type received."
+                    ]
+                )
+            )
         }
-        print("Received HTTP status code: \(httpResponse.statusCode)") // Debugging
+        print("Received HTTP status code: \(httpResponse.statusCode)")  // Debugging
 
         guard (200...299).contains(httpResponse.statusCode) else {
             throw RecipeError.requestFailed(statusCode: httpResponse.statusCode)
@@ -89,7 +102,7 @@ func removeHTMLTagsRegex(from htmlString: String) -> String {
         of: pattern,
         with: "",
         options: [.regularExpression],
-        range: nil // Apply to the entire string
+        range: nil  // Apply to the entire string
     )
 }
 
@@ -105,7 +118,7 @@ func getPrefixBefore(phrase: String, in originalString: String) -> String {
         // If the phrase is found, get the part of the string *before*
         // the phrase starts (up to its lowerBound).
         let prefix = originalString[..<range.lowerBound]
-        return String(prefix) // Convert the Substring slice back to a String
+        return String(prefix)  // Convert the Substring slice back to a String
     } else {
         // If the phrase is not found, return the whole original string.
         return originalString
@@ -114,7 +127,13 @@ func getPrefixBefore(phrase: String, in originalString: String) -> String {
 
 func simplifySummary(_ summary: String) -> String {
     var strippedSummary = removeHTMLTagsRegex(from: summary)
-    strippedSummary = getPrefixBefore(phrase: "It is brought to ", in: strippedSummary)
-    strippedSummary = getPrefixBefore(phrase: "If you like this ", in: strippedSummary)
+    strippedSummary = getPrefixBefore(
+        phrase: "It is brought to ",
+        in: strippedSummary
+    )
+    strippedSummary = getPrefixBefore(
+        phrase: "If you like this ",
+        in: strippedSummary
+    )
     return strippedSummary
 }

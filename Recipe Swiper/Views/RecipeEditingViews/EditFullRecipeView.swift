@@ -6,7 +6,6 @@
 //
 //  Generated with Gemini 2.5 Pro & Reworked with Claude 3.7 Sonnet Thinking
 
-
 // "In console there is an error "Unable to simultaneously satisfy constraints.... " this is fine apparently https://www.reddit.com/r/SwiftUI/comments/1dxxjh5/unable_to_simultaneously_satisfy_constraints/
 import SwiftData
 import SwiftUI
@@ -15,7 +14,7 @@ struct EditFullRecipeView: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var recipe: RecipeModel
     @FocusState private var isTextEditorFocused: Bool
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -42,7 +41,7 @@ struct EditFullRecipeView: View {
                         .autocapitalization(.none)
                     }
                 }
-                
+
                 Section("Timings & Servings") {
                     HStack {
                         Text("Ready in Minutes")
@@ -64,9 +63,10 @@ struct EditFullRecipeView: View {
                     }
                     HStack {
                         Text("Preparation Minutes")
-                        TextField("Optional",
-                                  value: $recipe.preparationMinutes,
-                                  formatter: numberFormatter
+                        TextField(
+                            "Optional",
+                            value: $recipe.preparationMinutes,
+                            formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
                     }
@@ -80,7 +80,7 @@ struct EditFullRecipeView: View {
                         .keyboardType(.numberPad)
                     }
                 }
-                
+
                 Section("Dietary Information") {
                     HStack {
                         Text("Cuisines")
@@ -98,16 +98,20 @@ struct EditFullRecipeView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                
+
                 Section("Ingredients & Instructions") {
                     NavigationLink("Edit Ingredients") {
-                        EditIngredientListView(ingredients: $recipe.extendedIngredients)
+                        EditIngredientListView(
+                            ingredients: $recipe.extendedIngredients
+                        )
                     }
                     NavigationLink("Edit Instructions") {
-                        EditAnalyzedInstructionListView(analyzedInstructions: $recipe.analyzedInstructions)
+                        EditAnalyzedInstructionListView(
+                            analyzedInstructions: $recipe.analyzedInstructions
+                        )
                     }
                 }
-                
+
                 Section("Summary") {
                     VStack {
                         TextEditor(text: $recipe.summary)
@@ -115,7 +119,7 @@ struct EditFullRecipeView: View {
                             .frame(minHeight: 150)
                     }
                 }
-                
+
                 Section("Other Details") {
                     HStack {
                         Text("Health Score")
@@ -136,7 +140,7 @@ struct EditFullRecipeView: View {
                         .keyboardType(.decimalPad)
                     }
                 }
-                
+
                 // Section for source and metadata
                 Section("Source & Meta") {
                     HStack {
@@ -203,7 +207,9 @@ struct EditFullRecipeView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(
-        for: RecipeModel.self, configurations: config)
+        for: RecipeModel.self,
+        configurations: config
+    )
     let recipe = RecipeModel(from: loadCurryRecipe(), isDiscarded: false)
     container.mainContext.insert(recipe)
 

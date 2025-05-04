@@ -11,7 +11,7 @@ struct OnboardingFiltersView: View {
     @State private var filterTapped = false
     @Binding var selectedTab: Int
     @Binding var recipe: Recipe
-    
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .topTrailing) {
