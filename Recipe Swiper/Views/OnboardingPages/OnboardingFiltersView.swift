@@ -45,7 +45,7 @@ struct OnboardingFiltersView: View {
                             }
                         }
                         .buttonStyle(.borderedProminent)
-                        .padding(.top)
+                        .padding(.vertical)
                     }
                     
                     SmallRecipeCard(recipe: recipe) {}

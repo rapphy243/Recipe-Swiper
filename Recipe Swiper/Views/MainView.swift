@@ -199,7 +199,7 @@ struct MainView: View {
         // Check if the recipe already exists in the model container
         let fetchDescriptor = FetchDescriptor<RecipeModel>(
             predicate: #Predicate {
-                $0.title == currentRecipe.title
+                $0.id == currentRecipe.id  // Ids should be only non editable property
             }
         )
 

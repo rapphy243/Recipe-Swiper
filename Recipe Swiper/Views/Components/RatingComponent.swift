@@ -22,16 +22,16 @@ struct RatingComponent: View {
                     Image(systemName: "star.fill")
                         .font(.system(size: 30))
                         .foregroundStyle(
-                            .linearGradient( // Hacky solution to get half stars
+                            .linearGradient(  // Hacky solution to get half stars
                                 stops: [
-                                    .init(color: .yellow, location: 0), // No star
-                                    .init(// Half star
+                                    .init(color: .yellow, location: 0),  // No star
+                                    .init(  // Half star
                                         color: .yellow,
                                         location: getStarFillPercentage(
                                             for: star
                                         )
                                     ),
-                                    .init( // Full star
+                                    .init(  // Full star
                                         color: .gray.opacity(0.3),
                                         location: getStarFillPercentage(
                                             for: star

@@ -28,12 +28,12 @@ struct ContentView: View {
                     .tag(0)
                 MainView(filterModel: filterModel)
                     .tabItem {
-                        Label("Explore", systemImage: "safari")
+                        Label("Home", systemImage: "house")
                     }
                     .tag(1)
                 SavedRecipesView()
                     .tabItem {
-                        Label("Saved Recipes", systemImage: "fork.knife")
+                        Label("Cookbook", systemImage: "book.closed")
                     }
                     .tag(3)
             }

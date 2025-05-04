@@ -76,7 +76,7 @@ struct SmallCardDetails: View {
                             .background(.green.opacity(0.2))
                             .cornerRadius(4)
                     }
-                } else { // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
+                } else {  // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
                     if recipe.vegan {
                         Image(systemName: "leaf.fill")
                             .foregroundColor(.green)

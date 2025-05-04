@@ -13,7 +13,7 @@ struct OnboardingView: View {
     @State private var recipe = loadCakeRecipe()
     var body: some View {
         TabView(selection: $selectedTab) {
-            OnboardingAboutView()
+            OnboardingAboutView(selectedTab: $selectedTab)
                 .tag(0)
             OnboardingFiltersView(selectedTab: $selectedTab, recipe: $recipe)
                 .tag(1)

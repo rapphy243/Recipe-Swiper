@@ -10,7 +10,10 @@ import SwiftUI
 
 struct SavedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var sortOrder = SortDescriptor(\RecipeModel.dateModified)
+    @State private var sortOrder = SortDescriptor(
+        \RecipeModel.dateModified,
+        order: .reverse
+    )
     @State private var isEditing: Bool = false
     @Query(filter: #Predicate<RecipeModel> { !$0.isDiscarded })
     private var savedRecipes: [RecipeModel]
@@ -68,7 +71,7 @@ struct SavedRecipesView: View {
                         label: {
                             Label(
                                 "No saved recipes yet",
-                                systemImage: "list.bullet.rectangle.portrait"
+                                systemImage: "book.closed.fill"
                             )
                         },
                         description: {

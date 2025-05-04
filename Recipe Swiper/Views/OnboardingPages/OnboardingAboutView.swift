@@ -10,6 +10,7 @@ import SwiftUI
 
 struct OnboardingAboutView: View {
     @State private var isAnimating = false
+    @Binding var selectedTab: Int
 
     var body: some View {
         VStack(spacing: 30) {
@@ -53,27 +54,34 @@ struct OnboardingAboutView: View {
                     systemName: "hand.tap",
                     title: "Simple",
                     color: .blue,
-                    delay: 0.6
+                    delay: 1.0
                 )
 
                 FeatureItem(
                     systemName: "magnifyingglass",
                     title: "Discover",
                     color: .purple,
-                    delay: 1.0
+                    delay: 1.4
                 )
 
                 FeatureItem(
                     systemName: "bookmark.fill",
                     title: "Save",
                     color: .green,
-                    delay: 0.8
+                    delay: 1.8
                 )
 
             }
             .opacity(isAnimating ? 1 : 0)
             .offset(y: isAnimating ? 0 : 20)
-
+            
+            Button("Next") {
+                withAnimation {
+                    selectedTab = 1
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.bottom)
             Spacer()
         }
         .padding(.top)
@@ -111,5 +119,5 @@ struct FeatureItem: View {
 }
 
 #Preview {
-    OnboardingAboutView()
+    OnboardingAboutView(selectedTab: .constant(1))
 }

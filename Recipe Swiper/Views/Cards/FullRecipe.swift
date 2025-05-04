@@ -84,7 +84,6 @@ struct FullRecipe: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis")
-                            .foregroundStyle(.black)
                     }
                 }
             }

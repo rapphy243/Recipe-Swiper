@@ -10,7 +10,10 @@ import SwiftUI
 
 struct DiscardedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var sortOrder = SortDescriptor(\RecipeModel.dateModified)
+    @State private var sortOrder = SortDescriptor(
+        \RecipeModel.dateModified,
+        order: .reverse
+    )
     @State private var isEditing: Bool = false
     @Query(filter: #Predicate<RecipeModel> { $0.isDiscarded })
     private var discardedRecipes: [RecipeModel]
@@ -67,7 +70,7 @@ struct DiscardedRecipesView: View {
                         label: {
                             Label(
                                 "No discarded recipes",
-                                systemImage: "list.bullet.rectangle.portrait"
+                                systemImage: "trash.fill"
                             )
                         },
                         description: {
