@@ -148,6 +148,8 @@ struct MainView: View {
         // Not enough movement - reset position
         else {
             resetCardPosition()
+            let impactMed = UIImpactFeedbackGenerator(style: .heavy)
+            impactMed.impactOccurred()
         }
     }
 

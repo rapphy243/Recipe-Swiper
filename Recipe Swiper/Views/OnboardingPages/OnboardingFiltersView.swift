@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingFiltersView: View {
     @State private var filterTapped = false
+    @State private var isArrowAnimating = false
     @Binding var selectedTab: Int
     @Binding var recipe: Recipe
 
@@ -21,6 +22,7 @@ struct OnboardingFiltersView: View {
                         .font(.headline)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
+                    
                     if filterTapped {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("You can:")
@@ -35,20 +37,23 @@ struct OnboardingFiltersView: View {
                         .background(.ultraThinMaterial)
                         .cornerRadius(12)
                         .padding(.horizontal)
+                        .transition(.scale.combined(with: .opacity))
 
                         Button("Next") {
-                            selectedTab = 2
+                            withAnimation {
+                                selectedTab = 2
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .padding(.top)
                     }
+                    
                     SmallRecipeCard(recipe: recipe) {}
                         .padding(.horizontal)
 
                     Spacer()
                 }
 
-                // ↖️ Arrow pointing toward the filter icon
                 if !filterTapped {
                     VStack(spacing: 4) {
                         Image(systemName: "arrow.up")
@@ -56,19 +61,25 @@ struct OnboardingFiltersView: View {
                             .rotationEffect(.degrees(42))
                             .foregroundColor(.blue)
                             .bold()
+                            .offset(y: isArrowAnimating ? -5 : 5)
                         Text("Tap me!")
                             .font(.caption)
                             .foregroundColor(.blue)
                             .bold()
                     }
-                    .offset(x: -75, y: -5)  // adjust to align with filter icon
+                    .offset(x: -75, y: -5)
                     .transition(.opacity)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 1.0).repeatForever()) {
+                            isArrowAnimating = true
+                        }
+                    }
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        withAnimation {
+                        withAnimation(.spring()) {
                             filterTapped = true
                         }
                     } label: {

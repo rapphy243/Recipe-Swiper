@@ -22,8 +22,9 @@ struct OnboardingHowToView: View {
                 .multilineTextAlignment(.center)
                 .padding()
                 .id(step)  // Add ID to force text update animation
+                .transition(.opacity)
 
-            SmallRecipeCard(recipe: recipe) {}
+            SmallRecipeCard(recipe: recipe)
                 .offset(offset)
                 .rotationEffect(.degrees(Double(offset.width / 20)))
                 .gesture(
@@ -37,7 +38,8 @@ struct OnboardingHowToView: View {
                             }
                         }
                         .onEnded { gesture in
-                            // Prevent new actions while the card is resetting                            guard !isAnimatingReset else { return }
+                            // Prevent new actions while the card is resetting
+                            guard !isAnimatingReset else { return }
 
                             let screenWidth = UIScreen.main.bounds.width
                             let swipeThreshold: CGFloat = 50  // Min distance for a swipe
@@ -45,6 +47,8 @@ struct OnboardingHowToView: View {
                             if step == 2 && offset.width < -swipeThreshold {
                                 // Swipe Left Success
                                 isAnimatingReset = true  // Disable gesture
+                                let impact = UIImpactFeedbackGenerator(style: .soft)
+                                impact.impactOccurred()
                                 withAnimation(.spring()) {
                                     // Animate far off-screen left
                                     offset = CGSize(
@@ -65,6 +69,8 @@ struct OnboardingHowToView: View {
                             {
                                 // Swipe Right Success
                                 isAnimatingReset = true  // Disable gesture
+                                let impact = UIImpactFeedbackGenerator(style: .medium)
+                                impact.impactOccurred()
                                 withAnimation(.spring()) {
                                     // Animate far off-screen right
                                     offset = CGSize(

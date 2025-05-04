@@ -50,7 +50,7 @@ struct Secrets {
     // Public accessor for the API key
     static var apiKey: String {
         lock.lock() // Ensure thread safety
-        defer { lock.unlock() } // Ensure lock is always released
+        defer { lock.unlock() } // Ensure lock is always released | defer unlocks the thread after all the code is finished executing
 
         // If we already have a key set (either initially or via setApiKey), return it
         if let key = currentApiKey {
