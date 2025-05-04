@@ -10,66 +10,45 @@ import SwiftUI
 
 struct SavedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var sortOrder = SortOrder.dateDesc
+    @State private var sortOrder = SortDescriptor(\RecipeModel.dateModified)
     @State private var isEditing: Bool = false
-
-    var savedRecipes: [RecipeModel] {
-        try! modelContext.fetch(
-            FetchDescriptor<RecipeModel>(
-                predicate: #Predicate<RecipeModel> { !$0.isDiscarded },
-                sortBy: [sortOrder.sortDescriptor]
-            )
-        )
-    }
-
+    @Query(filter: #Predicate<RecipeModel> { !$0.isDiscarded })
+    private var savedRecipes: [RecipeModel]
     var body: some View {
         NavigationStack {
-            HStack {
-                List {
-                    ForEach(savedRecipes, id: \.self) { recipe in
-                        HStack {
-                            if isEditing {
-                                withAnimation {
-                                    Button(action: {
-                                        recipe.isDiscarded = true
-                                    }) {
-                                        Image(systemName: "minus.circle")
-                                            .foregroundColor(.red)
-                                            .padding(.trailing)
-                                    }
-                                }
-                            }
-                            if !isEditing {
-                                NavigationLink(
-                                    destination: FullRecipe(recipe: recipe)
-                                ) {
-                                    RecipelistItem(recipe: recipe)
-                                }
-
-                            }
-                            else {
-                                RecipelistItem(recipe: recipe)
-                            }
-                        }
-                        .animation(.smooth, value: isEditing)
-                    }
-                }
-            }
+            RecipeListView(
+                sort: sortOrder,
+                isEditing: isEditing,
+                isDiscardedView: false
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !savedRecipes.isEmpty {
                         Menu {
-                            Button("Most Recent") {
-                                sortOrder = .dateDesc
-                            }
-                            Button("Oldest First") {
-                                sortOrder = .dateAsc
-                            }
-                            Button("By Title") {
-                                sortOrder = .title
-                            }
-                            Button("By Rating") {
-                                sortOrder = .rating
+                            Picker("Sort", selection: $sortOrder) {
+                                Text("Most Recent")
+                                    .tag(
+                                        SortDescriptor(
+                                            \RecipeModel.dateModified,
+                                            order: .reverse
+                                        )
+                                    )
+                                Text("Oldest First")
+                                    .tag(
+                                        SortDescriptor(
+                                            \RecipeModel.dateModified,
+                                            order: .forward
+                                        )
+                                    )
+                                Text("By Title")
+                                    .tag(SortDescriptor(\RecipeModel.title))
+                                Text("By Rating")
+                                    .tag(
+                                        SortDescriptor(
+                                            \RecipeModel.rating,
+                                            order: .reverse
+                                        )
+                                    )
                             }
                             Divider()
                             Button(isEditing ? "Done" : "Edit") {
