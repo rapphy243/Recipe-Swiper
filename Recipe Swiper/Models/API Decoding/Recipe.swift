@@ -55,7 +55,7 @@ struct Recipe: Codable, Hashable, Equatable {
     var originalId: Int?
     var spoonacularScore: Double
     var spoonacularSourceUrl: String?  // Changed to String as per JSON
-
+    
     // If JSON keys differ significantly from Swift property names,
     // you might need a CodingKeys enum. Example:
     // enum CodingKeys: String, CodingKey {
@@ -109,7 +109,7 @@ struct Recipe: Codable, Hashable, Equatable {
         spoonacularScore: 0.0,
         spoonacularSourceUrl: nil
     )
-
+    
     // https://www.hackingwithswift.com/example-code/language/how-to-conform-to-the-hashable-protocol
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
@@ -117,9 +117,25 @@ struct Recipe: Codable, Hashable, Equatable {
         hasher.combine(self.readyInMinutes)
         hasher.combine(self.servings)
     }
-
+    
     // https://www.hackingwithswift.com/example-code/language/how-to-conform-to-the-equatable-protocol
     static func == (lhs: Recipe, rhs: Recipe) -> Bool {
         return lhs.title == rhs.title && lhs.id == rhs.id
+    }
+    
+    static func getRecipe() async -> Recipe {
+        if let data = UserDefaults.standard.data(forKey: "lastRecipe") {
+            if let recipe = try? JSONDecoder().decode(Recipe.self, from: data) {
+                return recipe
+            }
+        }
+        else  {
+            do {
+                return try await fetchRandomRecipe(using: FilterModel())
+            } catch {
+                print("Error fetching recipe: \(error)")
+            }
+        }
+        return Recipe.empty
     }
 }

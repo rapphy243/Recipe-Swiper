@@ -13,7 +13,7 @@ struct MainView: View {
     @AppStorage("isOnboarding") var isOnboarding: Bool?
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
-    @State private var currentRecipe: Recipe = loadCurryRecipe()
+    @State private var currentRecipe: Recipe = Recipe.getRecipe()
     @State private var isLoading = false
     @State private var showSettings = false
     @State private var showFilterSheet = false
@@ -287,6 +287,9 @@ struct MainView: View {
         isLoading = true
         do {
             let newRecipe = try await fetchRandomRecipe(using: filterModel)
+            if let decodedData = try? JSONEncoder().encode(newRecipe) {
+                UserDefaults.standard.set(decodedData, forKey: "lastRecipe")
+            }
             currentRecipe = newRecipe
         } catch let recipeError as RecipeError {
             error = recipeError
