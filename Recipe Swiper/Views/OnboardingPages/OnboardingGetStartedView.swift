@@ -12,7 +12,7 @@ struct OnboardingGetStartedView: View {
     @AppStorage("isOnboarding") var isOnboarding: Bool?
     @State private var isButtonPressed = false
     @State private var showConfetti = false
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 30) {
@@ -23,29 +23,31 @@ struct OnboardingGetStartedView: View {
                     .frame(width: 120, height: 120)
                     .foregroundColor(.green)
                     .symbolEffect(.bounce, value: showConfetti)
-                
+
                 VStack(spacing: 15) {
                     Text("You're All Set!")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
-                    
-                    Text("Ready to discover your next favorite meal? Tap the button below to start swiping through delicious recipes!")
-                        .font(.headline)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.secondary)
+
+                    Text(
+                        "Ready to discover your next favorite meal? Tap the button below to start swiping through delicious recipes!"
+                    )
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.secondary)
                 }
                 .padding(.horizontal)
                 Spacer()
             }
             .padding(.top)
-            
+
             Button {
                 withAnimation(.spring()) {
                     isButtonPressed = true
                     showConfetti = true
                 }
-                
+
                 // Add slight delay before dismissing onboarding
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     isOnboarding = false
@@ -60,7 +62,7 @@ struct OnboardingGetStartedView: View {
             .padding(.horizontal)
             .padding(.bottom, 50)
             .disabled(isButtonPressed)
-            
+
             // Confetti effect when button is pressed
             if showConfetti {
                 ForEach(0..<20) { _ in
@@ -92,11 +94,13 @@ extension Color {
 // Confetti animation modifier
 struct ConfettiModifier: ViewModifier {
     @State private var isAnimating = false
-    
+
     func body(content: Content) -> some View {
         content
-            .offset(x: isAnimating ? .random(in: -150...150) : 0,
-                   y: isAnimating ? .random(in: -400...0) : 0)
+            .offset(
+                x: isAnimating ? .random(in: -150...150) : 0,
+                y: isAnimating ? .random(in: -400...0) : 0
+            )
             .opacity(isAnimating ? 0 : 1)
             .onAppear {
                 withAnimation(.easeOut(duration: 1.0)) {

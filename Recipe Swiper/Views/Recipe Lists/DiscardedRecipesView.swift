@@ -29,29 +29,24 @@ struct DiscardedRecipesView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !discardedRecipes.isEmpty {
                         Menu {
-                            Text("Most Recent")
-                                .tag(
-                                    SortDescriptor(
-                                        \RecipeModel.dateModified,
-                                        order: .reverse
+                            Picker("Sort", selection: $sortOrder) {
+                                Text("Most Recent")
+                                    .tag(
+                                        SortDescriptor(
+                                            \RecipeModel.dateModified,
+                                            order: .reverse
+                                        )
                                     )
-                                )
-                            Text("Oldest First")
-                                .tag(
-                                    SortDescriptor(
-                                        \RecipeModel.dateModified,
-                                        order: .forward
+                                Text("Oldest First")
+                                    .tag(
+                                        SortDescriptor(
+                                            \RecipeModel.dateModified,
+                                            order: .forward
+                                        )
                                     )
-                                )
-                            Text("By Title")
-                                .tag(SortDescriptor(\RecipeModel.title))
-                            Text("By Rating")
-                                .tag(
-                                    SortDescriptor(
-                                        \RecipeModel.rating,
-                                        order: .reverse
-                                    )
-                                )
+                                Text("By Title")
+                                    .tag(SortDescriptor(\RecipeModel.title))
+                            }
                             Divider()
                             Button(isEditing ? "Done" : "Edit") {
                                 withAnimation {

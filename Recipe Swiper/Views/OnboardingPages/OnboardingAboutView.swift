@@ -74,7 +74,7 @@ struct OnboardingAboutView: View {
             }
             .opacity(isAnimating ? 1 : 0)
             .offset(y: isAnimating ? 0 : 20)
-            
+
             Button("Next") {
                 withAnimation {
                     selectedTab = 1

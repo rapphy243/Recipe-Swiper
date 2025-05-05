@@ -22,7 +22,7 @@ struct OnboardingFiltersView: View {
                         .font(.headline)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                    
+
                     if filterTapped {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("You can:")
@@ -47,7 +47,7 @@ struct OnboardingFiltersView: View {
                         .buttonStyle(.borderedProminent)
                         .padding(.vertical)
                     }
-                    
+
                     SmallRecipeCard(recipe: recipe) {}
                         .padding(.horizontal)
 
@@ -70,7 +70,8 @@ struct OnboardingFiltersView: View {
                     .offset(x: -75, y: -5)
                     .transition(.opacity)
                     .onAppear {
-                        withAnimation(.easeInOut(duration: 1.0).repeatForever()) {
+                        withAnimation(.easeInOut(duration: 1.0).repeatForever())
+                        {
                             isArrowAnimating = true
                         }
                     }

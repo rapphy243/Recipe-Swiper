@@ -38,8 +38,7 @@ struct MainView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .padding()
-                    }
-                    else {
+                    } else {
                         SmallRecipeCard(recipe: currentRecipe)
                             .offset(cardOffset)
                             .rotationEffect(.degrees(cardRotation))
@@ -97,12 +96,14 @@ struct MainView: View {
                         Button {
                             showFilterSheet = true
                         } label: {
-                            Image(systemName: filterModel.includeCuisine.isEmpty && 
-                                             filterModel.includeDiet.isEmpty && 
-                                             filterModel.includeMealType.isEmpty && 
-                                             filterModel.includeIntolerance.isEmpty ? 
-                                "line.3.horizontal.decrease.circle" : 
-                                "line.3.horizontal.decrease.circle.fill")
+                            Image(
+                                systemName: filterModel.includeCuisine.isEmpty
+                                    && filterModel.includeDiet.isEmpty
+                                    && filterModel.includeMealType.isEmpty
+                                    && filterModel.includeIntolerance.isEmpty
+                                    ? "line.3.horizontal.decrease.circle"
+                                    : "line.3.horizontal.decrease.circle.fill"
+                            )
                             .foregroundStyle(.white)
                         }
 
@@ -133,7 +134,11 @@ struct MainView: View {
                 }
 
             }
-            .alert("Recipe Loading Error", isPresented: $showError, presenting: error) { _ in
+            .alert(
+                "Recipe Loading Error",
+                isPresented: $showError,
+                presenting: error
+            ) { _ in
                 Button("Retry") {
                     Task {
                         await fetchNewRecipe()
@@ -292,23 +297,6 @@ struct MainView: View {
             currentRecipe = Recipe.empty
         }
         isLoading = false
-    }
-}
-
-struct UndoToast: View {
-    var onTap: () -> Void
-    
-    var body: some View {
-        Button(action: onTap) {
-            HStack {
-                Image(systemName: "arrow.uturn.backward")
-                Text("Undo")
-            }
-            .padding()
-            .background(.thinMaterial)
-            .cornerRadius(20)
-        }
-        .padding(.bottom, 20)
     }
 }
 
