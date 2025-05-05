@@ -14,7 +14,10 @@ import Foundation
 struct Measures: Codable, Hashable {
     var us: MeasurementUnit
     var metric: MeasurementUnit
-    static let empty = Measures(us: MeasurementUnit.empty,metric: MeasurementUnit.empty)
+    static let empty = Measures(
+        us: MeasurementUnit.empty,
+        metric: MeasurementUnit.empty
+    )
 }
 
 // MARK: - MeasurementUnit
@@ -23,6 +26,6 @@ struct MeasurementUnit: Codable, Hashable {
     var amount: Double
     var unitShort: String
     var unitLong: String
-    
+
     static let empty = MeasurementUnit(amount: 0.0, unitShort: "", unitLong: "")
 }

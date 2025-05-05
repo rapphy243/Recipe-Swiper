@@ -10,19 +10,20 @@ import SwiftUI
 
 class FilterModel: ObservableObject {
     @Published var showFilter = false
-    @Published var includeCuisine = ""
-    @Published var includeDiet = ""
-    @Published var includeMealType = ""
-    @Published var includeIntolerance = ""
-    @Published var excludeCuisine = ""
-    @Published var excludeDiet = ""
-    @Published var excludeMealType = ""
+    
+    @AppStorage("includeCuisine") var includeCuisine: String = ""
+    @AppStorage("includeDiet") var includeDiet: String = ""
+    @AppStorage("includeMealType") var includeMealType: String = ""
+    @AppStorage("includeIntolerance") var includeIntolerance: String = ""
+    @AppStorage("excludeCuisine") var excludeCuisine: String = ""
+    @AppStorage("excludeDiet") var excludeDiet: String = ""
+    @AppStorage("excludeMealType") var excludeMealType: String = ""
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
-        var items = [URLQueryItem(name: "apiKey", value: apiKey)] // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
+        var items = [URLQueryItem(name: "apiKey", value: apiKey)]  // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
         var include: [String] = []
         var exclude: [String] = []
-        
+
         // Include Tags
         if !includeCuisine.isEmpty {
             include.append(includeCuisine)
@@ -33,7 +34,7 @@ class FilterModel: ObservableObject {
         if !includeMealType.isEmpty {
             include.append(includeMealType)
         }
-        
+
         // Exclude Tags
         if !excludeCuisine.isEmpty {
             exclude.append(excludeCuisine)
@@ -44,9 +45,13 @@ class FilterModel: ObservableObject {
         if !excludeMealType.isEmpty {
             exclude.append(excludeMealType)
         }
-        
-        items.append(.init(name: "include-tags", value: include.joined(separator: ",")))
-        items.append(.init(name: "exclude-tags", value: exclude.joined(separator: ",")))
+
+        items.append(
+            .init(name: "include-tags", value: include.joined(separator: ","))
+        )
+        items.append(
+            .init(name: "exclude-tags", value: exclude.joined(separator: ","))
+        )
         return items
     }
 }

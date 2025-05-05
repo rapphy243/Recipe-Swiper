@@ -4,15 +4,15 @@
 //
 //  Created by Raphael Abano on 4/29/25.
 //
-//  Generated with Gemini 2.5 Pro
+//  Generated with Gemini 2.5 Pro & Reworked with Claude 3.7 Sonnet Thinking
 
+import SwiftData
 import SwiftUI
 
 struct EditIngredientListView: View {
-    @Binding var ingredients: [ExtendedIngredient]
+    @Environment(\.modelContext) private var modelContext
+    @Binding var ingredients: [ExtendedIngredientModel]
     @Environment(\.editMode) var editMode
-    // State to track the next temporary ID for new items
-    @State private var nextNewItemId: Int = -1
 
     var body: some View {
         List {
@@ -20,8 +20,8 @@ struct EditIngredientListView: View {
                 // Use indices for stable bindings during editing
                 ForEach($ingredients.indices, id: \.self) { index in
                     EditableIngredientRowView(
-                        ingredient: $ingredients[index],
-                        formatter: numberFormatter // Pass the formatter
+                        ingredient: ingredients[index],
+                        formatter: numberFormatter  // Pass the formatter
                     )
                 }
                 .onDelete(perform: deleteIngredient)
@@ -36,18 +36,12 @@ struct EditIngredientListView: View {
                         Text("Add Ingredient")
                     }
                 }
-                .buttonStyle(.borderless) // Optional styling
+                .buttonStyle(.borderless)  // Optional styling
             }
         }
         .navigationTitle("Edit Ingredients")
         .toolbar {
-            EditButton() // Add standard Edit/Done button
-        }
-        .onAppear {
-            // Initialize nextNewItemId based on existing data if needed
-            // Find the lowest (most negative) ID among existing items
-            let minId = ingredients.map { $0.id }.min() ?? 0
-            nextNewItemId = min(minId, 0) - 1 // Start below 0 or existing negatives
+            EditButton()  // Add standard Edit/Done button
         }
     }
 
@@ -55,12 +49,18 @@ struct EditIngredientListView: View {
     private let numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 0 // Allow integers
-        formatter.maximumFractionDigits = 3 // Allow some precision
+        formatter.minimumFractionDigits = 0  // Allow integers
+        formatter.maximumFractionDigits = 3  // Allow some precision
         return formatter
     }()
-    
+
     private func deleteIngredient(at offsets: IndexSet) {
+        // Remove from ingredients array
+        for index in offsets {
+            let ingredient = ingredients[index]
+            // Delete from model context if needed
+            modelContext.delete(ingredient)
+        }
         ingredients.remove(atOffsets: offsets)
     }
 
@@ -69,23 +69,25 @@ struct EditIngredientListView: View {
     }
 
     private func addIngredient() {
-        let newIngredient = ExtendedIngredient.newEmpty(id: nextNewItemId)
+        // Create empty ingredient using ExtendedIngredient helper, then convert
+        let tempIngredient = ExtendedIngredient.newEmpty(id: -1)
+        let newIngredient = ExtendedIngredientModel(from: tempIngredient)
         ingredients.append(newIngredient)
-        nextNewItemId -= 1 // Decrement for the next potential add
+        modelContext.insert(newIngredient)
     }
 }
 
 // MARK: - Editable Ingredient Row View
 struct EditableIngredientRowView: View {
-    @Binding var ingredient: ExtendedIngredient
+    @Bindable var ingredient: ExtendedIngredientModel
     let formatter: NumberFormatter
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // --- Editable Name ---
             HStack {
                 Text("Name:")
-                    .frame(width: 60, alignment: .leading) // Align labels
+                    .frame(width: 60, alignment: .leading)  // Align labels
                     .font(.caption)
                     .foregroundColor(.secondary)
                 TextField("Ingredient Name", text: $ingredient.name)
@@ -95,62 +97,80 @@ struct EditableIngredientRowView: View {
             // --- Editable Amount & Unit Display ---
             HStack {
                 Text("Amount:")
-                    .frame(width: 60, alignment: .leading) // Align labels
+                    .frame(width: 60, alignment: .leading)  // Align labels
                     .font(.caption)
                     .foregroundColor(.secondary)
 
                 TextField(
                     "Amount",
                     value: $ingredient.amount,
-                    formatter: formatter // Use the passed formatter
+                    formatter: formatter  // Use the passed formatter
                 )
                 .keyboardType(.decimalPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(width: 80) // Give amount field a fixed width
+                .frame(width: 80)  // Give amount field a fixed width
 
                 // Display Unit (Could make this a TextField too if needed)
                 TextField("Unit", text: $ingredient.unit)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
 
-
-                Spacer() // Push unit text to the left if needed
+                Spacer()
             }
 
             // --- Display Original Text (Read-only) ---
             // Useful for reference while editing
             if !ingredient.original.isEmpty {
-                 HStack {
-                     Text("Original:")
-                         .frame(width: 60, alignment: .leading) // Align labels
-                         .font(.caption)
-                         .foregroundColor(.secondary)
-                     Text(ingredient.original)
-                         .font(.caption)
-                         .foregroundColor(.gray)
-                         .lineLimit(1)
-                 }
+                HStack {
+                    Text("Original:")
+                        .frame(width: 60, alignment: .leading)  // Align labels
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(ingredient.original)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                }
             }
 
             // --- Display Measures (Read-only for simplicity) ---
             // You could add TextFields here if editing measures is required
-             HStack(spacing: 15) {
-                 Text("Measures:")
-                     .frame(width: 60, alignment: .leading)
-                     .font(.caption)
-                     .foregroundColor(.secondary)
-                 Text("US: \(ingredient.measures.us.amount, specifier: "%.2f") \(ingredient.measures.us.unitShort)")
-                     .font(.caption)
-                     .foregroundColor(.gray)
-                 Text("Metric: \(ingredient.measures.metric.amount, specifier: "%.2f") \(ingredient.measures.metric.unitShort)")
-                     .font(.caption)
-                     .foregroundColor(.gray)
-             }
+            HStack(spacing: 15) {
+                Text("Measures:")
+                    .frame(width: 60, alignment: .leading)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(
+                    "US: \(ingredient.measures.us.amount, specifier: "%.2f") \(ingredient.measures.us.unitShort)"
+                )
+                .font(.caption)
+                .foregroundColor(.gray)
+                Text(
+                    "Metric: \(ingredient.measures.metric.amount, specifier: "%.2f") \(ingredient.measures.metric.unitShort)"
+                )
+                .font(.caption)
+                .foregroundColor(.gray)
+            }
         }
         .padding(.vertical, 4)
     }
 }
 
 #Preview {
-    @Previewable @State var recipe: Recipe = loadCurryRecipe()
-    EditIngredientListView(ingredients: $recipe.extendedIngredients)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: ExtendedIngredientModel.self,
+        configurations: config
+    )
+    let recipe = loadCurryRecipe()
+    var ingredientModels: [ExtendedIngredientModel] = []
+
+    // Convert recipe ingredients to models for preview
+    for ingredient in recipe.extendedIngredients {
+        let model = ExtendedIngredientModel(from: ingredient)
+        ingredientModels.append(model)
+        container.mainContext.insert(model)
+    }
+
+    return EditIngredientListView(ingredients: .constant(ingredientModels))
+        .modelContainer(container)
 }

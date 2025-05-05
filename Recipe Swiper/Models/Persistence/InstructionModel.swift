@@ -14,7 +14,7 @@ final class AnalyzedInstructionModel {
     var name: String
     @Relationship(deleteRule: .cascade)
     var steps: [InstructionStepModel]
-    
+
     init(from instruction: AnalyzedInstruction) {
         self.name = instruction.name
         self.steps = instruction.steps.map(InstructionStepModel.init)
@@ -31,7 +31,7 @@ final class InstructionStepModel {
     var equipment: [InstructionComponentModel]
     @Relationship(deleteRule: .cascade)
     var length: InstructionLengthModel?
-    
+
     init(from step: InstructionStep) {
         self.number = step.number
         self.step = step.step
@@ -47,7 +47,7 @@ final class InstructionComponentModel {
     var name: String
     var localizedName: String
     var image: String?
-    
+
     init(from component: InstructionComponent) {
         self.id = component.id
         self.name = component.name
@@ -60,7 +60,7 @@ final class InstructionComponentModel {
 final class InstructionLengthModel {
     var number: Int
     var unit: String
-    
+
     init(from length: InstructionLength) {
         self.number = length.number
         self.unit = length.unit

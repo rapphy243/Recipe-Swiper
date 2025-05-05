@@ -18,7 +18,7 @@ struct AnalyzedInstruction: Codable, Hashable {
 
 // MARK: - InstructionStep
 // Represents a single step in the recipe instructions.
-struct InstructionStep: Codable, Hashable  {
+struct InstructionStep: Codable, Hashable {
     var number: Int
     var step: String
     var ingredients: [InstructionComponent]
@@ -29,16 +29,16 @@ struct InstructionStep: Codable, Hashable  {
 // MARK: - InstructionComponent
 // Represents either an ingredient or equipment used in a step.
 // Using a shared struct as ingredient/equipment have the same fields here.
-struct InstructionComponent: Codable, Hashable  {
+struct InstructionComponent: Codable, Hashable {
     var id: Int
     var name: String
     var localizedName: String
-    var image: String? // Image might be optional or just a filename
+    var image: String?  // Image might be optional or just a filename
 }
 
 // MARK: - InstructionLength
 // Represents the duration of an instruction step.
-struct InstructionLength: Codable, Hashable  {
+struct InstructionLength: Codable, Hashable {
     var number: Int
     var unit: String
 }

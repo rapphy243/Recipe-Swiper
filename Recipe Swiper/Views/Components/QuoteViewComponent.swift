@@ -40,9 +40,11 @@ struct QuoteViewComponent: View {
         "Life is short. Eat dessert first. – Jacques Torres",
         "Food is love made visible. – Sarah Ban Breathnach",
         "Cooking is all about people. Food is maybe the only universal thing that really has the power to bring everyone together. No matter what culture, everywhere around the world, people get together to eat. – Guy Fieri",
-        "The secret ingredient is always love. – Unknown"
+        "The secret ingredient is always love. – Unknown",
     ]
-    @State private var quoteIndex = Int.random(in: 0..<QuoteViewComponent.quotes.count)
+    @State private var quoteIndex = Int.random(
+        in: 0..<QuoteViewComponent.quotes.count
+    )
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         Text(QuoteViewComponent.quotes[quoteIndex])
@@ -51,9 +53,14 @@ struct QuoteViewComponent: View {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(colorScheme == .dark ? Color(.systemGray6).opacity(0.8) : .white.opacity(0.8))
+                    .fill(
+                        colorScheme == .dark
+                            ? Color(.systemGray6).opacity(0.8)
+                            : .white.opacity(0.8)
+                    )
                     .shadow(
-                        color: colorScheme == .dark ? .black.opacity(0.3) : .gray.opacity(0.3),
+                        color: colorScheme == .dark
+                            ? .black.opacity(0.3) : .gray.opacity(0.3),
                         radius: 5
                     )
             )

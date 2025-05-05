@@ -5,10 +5,13 @@
 //  Created by Tyler Berlin on 4/23/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct FullRecipe: View {
-    @State var recipe: Recipe
+    @Environment(\.modelContext) private var modelContext
+    @Bindable var recipe: RecipeModel
+    @State var recipeImage: UIImage?
     @State var showEditing: Bool = false
     var body: some View {
         NavigationStack {
@@ -19,57 +22,56 @@ struct FullRecipe: View {
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top)
-                    
-                    if let imageUrl = recipe.image, let url = URL(
-                        string: imageUrl
-                    ) {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(10)
-                                .padding()
-                        } placeholder: {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 300)
-                                .padding()
-                        }
+                    if let image = recipeImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(10)
+                            .padding()
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(height: 300)
+                            .padding()
+                            .onAppear {
+                                Task {
+                                    await recipe.getImage()
+                                }
+                            }
                     }
-                    
+
                     Text("Details")
                         .font(.title2)
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    FullCardDetails(recipe: $recipe)
-                    
+
+                    FullCardDetails(recipe: recipe)
+
                     Divider()
-                    
-                    RatingComponent(rating: $recipe.rating)
-                        
+
+                    RatingComponent(recipe: recipe)
+
                     Divider()
-                    
+
                     Text("Summary")
                         .font(.title2)
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    Text(simplifySummary(recipe.summary))
+
+                    Text(recipe.summary)
                         .font(.body)
                         .padding(.bottom)
-                    
+
                     Divider()
-                    
-                    IngredientsListComponent(recipe: $recipe)
-                    
+
+                    IngredientsListComponent(recipe: recipe)
+
                     Divider()
-                    
-                    InstructionsStepsComponent(recipe: $recipe)
-                    
+
+                    InstructionsStepsComponent(recipe: recipe)
+
                     Divider()
                 }
                 .padding()
@@ -82,17 +84,21 @@ struct FullRecipe: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis")
-                            .foregroundStyle(.black)
                     }
                 }
             }
             .sheet(isPresented: $showEditing) {
-                EditFullRecipeView(recipe: $recipe)
+                EditFullRecipeView(recipe: recipe)
+            }
+        }
+        .task {
+            if recipeImage == nil {
+                await recipeImage = recipe.getImage()
             }
         }
     }
 }
 
 #Preview {
-    FullRecipe(recipe: loadCakeRecipe())
+    FullRecipe(recipe: RecipeModel(from: loadCurryRecipe()))
 }
