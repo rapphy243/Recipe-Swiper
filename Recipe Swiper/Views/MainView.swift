@@ -18,6 +18,8 @@ struct MainView: View {
     @State private var showSettings = false
     @State private var showFilterSheet = false
     @ObservedObject var filterModel: FilterModel
+    @State private var error: RecipeError?
+    @State private var showError = false
 
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
@@ -36,7 +38,8 @@ struct MainView: View {
                         ProgressView()
                             .scaleEffect(1.5)
                             .padding()
-                    } else {
+                    }
+                    else {
                         SmallRecipeCard(recipe: currentRecipe)
                             .offset(cardOffset)
                             .rotationEffect(.degrees(cardRotation))
@@ -94,9 +97,12 @@ struct MainView: View {
                         Button {
                             showFilterSheet = true
                         } label: {
-                            Image(
-                                systemName: "line.3.horizontal.decrease.circle"
-                            )
+                            Image(systemName: filterModel.includeCuisine.isEmpty && 
+                                             filterModel.includeDiet.isEmpty && 
+                                             filterModel.includeMealType.isEmpty && 
+                                             filterModel.includeIntolerance.isEmpty ? 
+                                "line.3.horizontal.decrease.circle" : 
+                                "line.3.horizontal.decrease.circle.fill")
                             .foregroundStyle(.white)
                         }
 
@@ -126,6 +132,16 @@ struct MainView: View {
                     FilterSheetView(model: filterModel)
                 }
 
+            }
+            .alert("Recipe Loading Error", isPresented: $showError, presenting: error) { _ in
+                Button("Retry") {
+                    Task {
+                        await fetchNewRecipe()
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: { error in
+                Text(error.localizedDescription)
             }
         }
     }
@@ -263,16 +279,36 @@ struct MainView: View {
     }
 
     private func fetchNewRecipe() async {
-        for _ in 0..<1 {  // Only try and fetch a Recipe 1 times per call
-            do {
-                let newRecipe = try await fetchRandomRecipe(using: filterModel)
-                currentRecipe = newRecipe
-                break
-            } catch {
-                print("Error fetching recipe: \(error)")
-                currentRecipe = Recipe.empty
-            }
+        isLoading = true
+        do {
+            let newRecipe = try await fetchRandomRecipe(using: filterModel)
+            currentRecipe = newRecipe
+        } catch let recipeError as RecipeError {
+            error = recipeError
+            showError = true
+            currentRecipe = Recipe.empty
+        } catch {
+            showError = true
+            currentRecipe = Recipe.empty
         }
+        isLoading = false
+    }
+}
+
+struct UndoToast: View {
+    var onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack {
+                Image(systemName: "arrow.uturn.backward")
+                Text("Undo")
+            }
+            .padding()
+            .background(.thinMaterial)
+            .cornerRadius(20)
+        }
+        .padding(.bottom, 20)
     }
 }
 

@@ -36,6 +36,36 @@ struct FilterSheetView: View {
     var body: some View {
         NavigationView {
             Form {
+                Section("Active Filters") {
+                    if model.includeCuisine.isEmpty && model.includeDiet.isEmpty && 
+                       model.includeMealType.isEmpty && model.includeIntolerance.isEmpty {
+                        Text("No active filters")
+                            .foregroundColor(.secondary)
+                    } else {
+                        if !model.includeCuisine.isEmpty {
+                            Text("Cuisine: \(model.includeCuisine.capitalized)")
+                        }
+                        if !model.includeDiet.isEmpty {
+                            Text("Diet: \(model.includeDiet.capitalized)")
+                        }
+                        if !model.includeMealType.isEmpty {
+                            Text("Meal Type: \(model.includeMealType.capitalized)")
+                        }
+                        if !model.includeIntolerance.isEmpty {
+                            Text("Intolerance: \(model.includeIntolerance.capitalized)")
+                        }
+                        Button("Reset All Filters", role: .destructive) {
+                            model.includeCuisine = ""
+                            model.includeDiet = ""
+                            model.includeMealType = ""
+                            model.includeIntolerance = ""
+                            model.excludeCuisine = ""
+                            model.excludeDiet = ""
+                            model.excludeMealType = ""
+                        }
+                    }
+                }
+
                 Section("Cuisine") {
                     Picker("Cuisine", selection: $model.includeCuisine) {
                         ForEach(cuisines, id: \.self) {
