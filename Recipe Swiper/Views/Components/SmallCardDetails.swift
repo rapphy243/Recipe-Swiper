@@ -78,8 +78,12 @@ struct SmallCardDetails: View {
                     }
                 } else {  // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
                     if recipe.vegan {
-                        Image(systemName: "leaf.fill")
-                            .foregroundColor(.green)
+                        Text("VG")
+                            .font(.caption)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 2)
+                            .background(.green.opacity(0.2))
+                            .cornerRadius(4)
                     }
                     if recipe.glutenFree {
                         Text("GF")
