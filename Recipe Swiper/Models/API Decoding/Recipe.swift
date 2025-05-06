@@ -122,4 +122,17 @@ struct Recipe: Codable, Hashable, Equatable {
     static func == (lhs: Recipe, rhs: Recipe) -> Bool {
         return lhs.title == rhs.title && lhs.id == rhs.id
     }
+
+    static func getRecipe() -> Recipe {
+        if let data = UserDefaults.standard.data(forKey: "lastRecipe") {
+            if let recipe = try? JSONDecoder().decode(Recipe.self, from: data) {
+                return recipe
+            }
+        } else {
+            Task {
+                return try await fetchRandomRecipe(using: FilterModel())
+            }
+        }
+        return Recipe.empty
+    }
 }
