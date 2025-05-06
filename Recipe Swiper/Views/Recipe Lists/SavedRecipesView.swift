@@ -14,6 +14,7 @@ struct SavedRecipesView: View {
         \RecipeModel.dateModified,
         order: .reverse
     )
+    @State private var filterOrder: Predicate<RecipeModel>?
     @State private var isEditing: Bool = false
     @Query(filter: #Predicate<RecipeModel> { !$0.isDiscarded })
     private var savedRecipes: [RecipeModel]
@@ -28,7 +29,7 @@ struct SavedRecipesView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !savedRecipes.isEmpty {
                         Menu {
-                            Picker("Sort", selection: $sortOrder) {
+                            Picker(selection: $sortOrder, content: {
                                 Text("Most Recent")
                                     .tag(
                                         SortDescriptor(
@@ -52,7 +53,16 @@ struct SavedRecipesView: View {
                                             order: .reverse
                                         )
                                     )
-                            }
+                            }, label: {
+                                HStack {
+                                    Text("Sort")
+                                    Spacer()
+                                    Image(systemName: "line.2.horizontal.decrease.circle")
+                                }
+                            })
+                            .pickerStyle(.menu)
+                            
+                            
                             Divider()
                             Button(isEditing ? "Done" : "Edit") {
                                 withAnimation {
