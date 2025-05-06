@@ -52,7 +52,7 @@ struct FullCardDetails: View {
                     .frame(maxHeight: 30)
                 HStack {
                     Image(systemName: "heart.fill")
-                        .foregroundColor(healthScoreColor) // These are in SmallCardDetails
+                        .foregroundColor(healthScoreColor)
                     Text("\(recipe.healthScore)")
                         .font(.footnote)
                 }
