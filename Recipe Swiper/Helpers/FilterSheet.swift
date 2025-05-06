@@ -38,23 +38,24 @@ struct FilterSheetView: View {
         NavigationView {
             Form {
                 Section(header: Text("Active Filters")) {
-                    if model.includeCuisine.isEmpty && model.includeDiet.isEmpty &&
-                        model.includeMealType.isEmpty && model.selectedIntolerances.isEmpty {
+                    if !model.includeCuisine.isEmpty {
+                        Text("Cuisine: \(model.includeCuisine.capitalized)")
+                    }
+                    if !model.includeDiet.isEmpty {
+                        Text("Diet: \(model.includeDiet.capitalized)")
+                    }
+                    if !model.includeMealType.isEmpty {
+                        Text("Meal Type: \(model.includeMealType.capitalized)")
+                    }
+                    if !model.selectedIntolerances.isEmpty {
+                        Text("Intolerances: \(model.selectedIntolerances.joined(separator: ", ").capitalized)")
+                    }
+                    if (model.includeCuisine.isEmpty && model.includeDiet.isEmpty
+                        && model.includeMealType.isEmpty
+                        && model.selectedIntolerances.isEmpty) {
                         Text("No active filters")
                             .foregroundColor(.secondary)
                     } else {
-                        if !model.includeCuisine.isEmpty {
-                            Text("Cuisine: \(model.includeCuisine.capitalized)")
-                        }
-                        if !model.includeDiet.isEmpty {
-                            Text("Diet: \(model.includeDiet.capitalized)")
-                        }
-                        if !model.includeMealType.isEmpty {
-                            Text("Meal Type: \(model.includeMealType.capitalized)")
-                        }
-                        if !model.selectedIntolerances.isEmpty {
-                            Text("Intolerances: \(model.selectedIntolerances.joined(separator: ", ").capitalized)")
-                        }
                         Button("Reset All Filters", role: .destructive) {
                             model.includeCuisine = ""
                             model.includeDiet = ""
@@ -81,17 +82,29 @@ struct FilterSheetView: View {
                 }
 
                 Section("Intolerances") {
-                    ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) { intolerance in
-                        Toggle(intolerance.capitalized, isOn: Binding(
-                            get: { model.selectedIntolerances.contains(intolerance) },
-                            set: { isSelected in
-                                if isSelected {
-                                    model.selectedIntolerances.insert(intolerance)
-                                } else {
-                                    model.selectedIntolerances.remove(intolerance)
+                    ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) {
+                        intolerance in
+                        Toggle(
+                            intolerance.capitalized,
+                            isOn: Binding(
+                                get: {
+                                    model.selectedIntolerances.contains(
+                                        intolerance
+                                    )
+                                },
+                                set: { isSelected in
+                                    if isSelected {
+                                        model.selectedIntolerances.insert(
+                                            intolerance
+                                        )
+                                    } else {
+                                        model.selectedIntolerances.remove(
+                                            intolerance
+                                        )
+                                    }
                                 }
-                            }
-                        ))
+                            )
+                        )
                     }
                 }
 

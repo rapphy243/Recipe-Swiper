@@ -14,7 +14,7 @@ class FilterModel: ObservableObject {
     @AppStorage("includeCuisine") var includeCuisine = ""
     @AppStorage("includeDiet") var includeDiet = ""
     @AppStorage("includeMealType") var includeMealType = ""
-    @AppStorage("selectedIntolerancesRaw") private var selectedIntolerancesRaw: String = ""
+    @AppStorage("selectedIntolerancesRaw") var selectedIntolerancesRaw: String = ""
     
     @Published var selectedIntolerances: Set<String> {
         didSet {
@@ -33,10 +33,9 @@ class FilterModel: ObservableObject {
 
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
-        var items: [URLQueryItem] = [
-            URLQueryItem(name: "apiKey", value: apiKey),
-            URLQueryItem(name: "number", value: "10")
-        ]
+        var items = [URLQueryItem(name: "apiKey", value: apiKey)]  // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
+        var include: [String] = []
+        var exclude: [String] = []
         
         if !includeCuisine.isEmpty {
             items.append(URLQueryItem(name: "cuisine", value: includeCuisine.lowercased()))

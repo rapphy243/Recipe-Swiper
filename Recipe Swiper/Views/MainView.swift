@@ -100,7 +100,7 @@ struct MainView: View {
                                 systemName: filterModel.includeCuisine.isEmpty
                                     && filterModel.includeDiet.isEmpty
                                     && filterModel.includeMealType.isEmpty
-                                    && filterModel.includeIntolerance.isEmpty
+                                    && filterModel.selectedIntolerancesRaw.isEmpty
                                     ? "line.3.horizontal.decrease.circle"
                                     : "line.3.horizontal.decrease.circle.fill"
                             )
