@@ -22,6 +22,7 @@ struct DiscardedRecipesView: View {
         NavigationStack {
             RecipeListView(
                 sort: sortOrder,
+                filter: "All",
                 isEditing: isEditing,
                 isDiscardedView: true
             )

@@ -158,6 +158,7 @@ final class RecipeModel {
             return nil
         }
     }
+    
     private func fetchImage() async {
         let imageUrl = URL(string: self.image)
         do {

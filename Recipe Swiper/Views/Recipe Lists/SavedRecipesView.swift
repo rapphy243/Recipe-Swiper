@@ -14,7 +14,7 @@ struct SavedRecipesView: View {
         \RecipeModel.dateModified,
         order: .reverse
     )
-    @State private var filterOrder: Predicate<RecipeModel>?
+    @State private var filterBy: String = "All"
     @State private var isEditing: Bool = false
     @Query(filter: #Predicate<RecipeModel> { !$0.isDiscarded })
     private var savedRecipes: [RecipeModel]
@@ -22,6 +22,7 @@ struct SavedRecipesView: View {
         NavigationStack {
             RecipeListView(
                 sort: sortOrder,
+                filter: filterBy,
                 isEditing: isEditing,
                 isDiscardedView: false
             )
@@ -29,40 +30,67 @@ struct SavedRecipesView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !savedRecipes.isEmpty {
                         Menu {
-                            Picker(selection: $sortOrder, content: {
-                                Text("Most Recent")
-                                    .tag(
-                                        SortDescriptor(
-                                            \RecipeModel.dateModified,
-                                            order: .reverse
+                            Picker(
+                                selection: $sortOrder,
+                                content: {
+                                    Text("Most Recent")
+                                        .tag(
+                                            SortDescriptor(
+                                                \RecipeModel.dateModified,
+                                                order: .reverse
+                                            )
                                         )
-                                    )
-                                Text("Oldest First")
-                                    .tag(
-                                        SortDescriptor(
-                                            \RecipeModel.dateModified,
-                                            order: .forward
+                                    Text("Oldest First")
+                                        .tag(
+                                            SortDescriptor(
+                                                \RecipeModel.dateModified,
+                                                order: .forward
+                                            )
                                         )
-                                    )
-                                Text("By Title")
-                                    .tag(SortDescriptor(\RecipeModel.title))
-                                Text("By Rating")
-                                    .tag(
-                                        SortDescriptor(
-                                            \RecipeModel.rating,
-                                            order: .reverse
+                                    Text("By Title")
+                                        .tag(SortDescriptor(\RecipeModel.title))
+                                    Text("By Rating")
+                                        .tag(
+                                            SortDescriptor(
+                                                \RecipeModel.rating,
+                                                order: .reverse
+                                            )
                                         )
-                                    )
-                            }, label: {
-                                HStack {
-                                    Text("Sort")
-                                    Spacer()
-                                    Image(systemName: "line.2.horizontal.decrease.circle")
+                                },
+                                label: {
+                                    HStack {
+                                        Text("Sort")
+                                        Spacer()
+                                        Image(
+                                            systemName:
+                                                "line.2.horizontal.decrease.circle"
+                                        )
+                                    }
                                 }
-                            })
+                            )
                             .pickerStyle(.menu)
-                            
-                            
+                            Picker(
+                                selection: $filterBy,
+                                content: {
+                                    Text("All Recipes")
+                                        .tag("All")
+                                    Text("Has Rating")
+                                        .tag("Rating")
+                                },
+                                label: {
+                                    HStack {
+                                        Text("Filter")
+                                        Spacer()
+                                        Image(
+                                            systemName:
+                                                "line.2.horizontal.decrease.circle"
+                                        )
+                                    }
+                                }
+
+                            )
+                            .pickerStyle(.menu)
+
                             Divider()
                             Button(isEditing ? "Done" : "Edit") {
                                 withAnimation {
