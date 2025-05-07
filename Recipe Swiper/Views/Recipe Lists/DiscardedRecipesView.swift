@@ -56,10 +56,13 @@ struct DiscardedRecipesView: View {
                             }
                         } label: {
                             Image(systemName: "ellipsis.circle")
+                                .foregroundColor(.white)
                         }
                     }
                 }
             }
+            .toolbarBackground(.indigo, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .overlay {
                 if discardedRecipes.isEmpty {
                     ContentUnavailableView(

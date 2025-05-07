@@ -99,10 +99,13 @@ struct SavedRecipesView: View {
                             }
                         } label: {
                             Image(systemName: "ellipsis.circle")
+                                .foregroundColor(.white)
                         }
                     }
                 }
             }
+            .toolbarBackground(.indigo, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .overlay {
                 if savedRecipes.isEmpty {
                     ContentUnavailableView(
