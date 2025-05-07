@@ -11,17 +11,15 @@ import SwiftUI
 struct OnboardingAboutView: View {
     @State private var isAnimating = false
     @Binding var selectedTab: Int
-
+//check if animating, which slide youre on
     var body: some View {
         VStack(spacing: 30) {
             Spacer()
-            // This will parobably be replaced with the app icon
             Image(systemName: "fork.knife.circle.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120, height: 120)
                 .foregroundColor(.orange)
-            //
             VStack(spacing: 15) {
                 Text("Discover Your Next Meal")
                     .font(.largeTitle)
@@ -70,7 +68,7 @@ struct OnboardingAboutView: View {
                     color: .green,
                     delay: 1.8
                 )
-
+//some icons
             }
             .opacity(isAnimating ? 1 : 0)
             .offset(y: isAnimating ? 0 : 20)
@@ -97,7 +95,7 @@ struct FeatureItem: View {
     let color: Color
     let delay: Double
     @State private var isAnimating = false
-
+//struct to create the little icons and text
     var body: some View {
         VStack {
             Image(systemName: systemName)
