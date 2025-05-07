@@ -52,11 +52,6 @@ class FilterModel: ObservableObject {
             else if includeDiet == "gluten-free" {
                 exclude.insert("gluten")
             }
-            else if includeDiet == "ketogenic" {
-//                ["dairy", "egg", "shellfish", "fish", "gluten"].forEach {
-//                    exclude.insert($0)
-//                }
-            }
             else if includeDiet == "vegetarian" {
                 ["dairy", "egg", "fish"].forEach {
                     exclude.insert($0)
