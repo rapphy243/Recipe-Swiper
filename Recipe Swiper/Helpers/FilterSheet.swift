@@ -11,7 +11,7 @@ import SwiftUI
 struct FilterSheetView: View {
     @ObservedObject var model: FilterModel
     @Environment(\.dismiss) var dismiss
-
+//all options for filters
     let mealTypes = [
         "", "main course", "side dish", "dessert", "appetizer", "salad",
         "bread", "breakfast", "soup", "beverage", "sauce", "marinade",
@@ -36,6 +36,7 @@ struct FilterSheetView: View {
 
     var body: some View {
         NavigationView {
+            //active filters displayed, button to reset all filters. uses model to integrate the filterModel to this sheet
             Form {
                 Section(header: Text("Active Filters")) {
                     if !model.includeCuisine.isEmpty {
@@ -64,7 +65,7 @@ struct FilterSheetView: View {
                         }
                     }
                 }
-
+//picker for what cuisine you want
                 Section("Cuisine") {
                     Picker("Cuisine", selection: $model.includeCuisine) {
                         ForEach(cuisines, id: \.self) {
@@ -72,7 +73,7 @@ struct FilterSheetView: View {
                         }
                     }
                 }
-
+//picker for what diet youre on
                 Section("Diet") {
                     Picker("Diet", selection: $model.includeDiet) {
                         ForEach(diets, id: \.self) {
@@ -80,7 +81,15 @@ struct FilterSheetView: View {
                         }
                     }
                 }
-
+                //meal type picker
+                Section("Meal Type") {
+                                    Picker("Meal Type", selection: $model.includeMealType) {
+                                        ForEach(mealTypes, id: \.self) {
+                                            Text($0.capitalized)
+                                        }
+                                    }
+                                }
+//some people have multiple allergies, so you can select multiple filters
                 Section("Intolerances") {
                     ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) { intolerance in
                         Toggle(intolerance.capitalized, isOn: Binding(
@@ -100,16 +109,11 @@ struct FilterSheetView: View {
                     }
                 }
 
-                Section("Meal Type") {
-                    Picker("Meal Type", selection: $model.includeMealType) {
-                        ForEach(mealTypes, id: \.self) {
-                            Text($0.capitalized)
-                        }
-                    }
-                }
+                
             }
             .navigationTitle("Filters")
             .toolbar {
+                //cancel and save buttons
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
