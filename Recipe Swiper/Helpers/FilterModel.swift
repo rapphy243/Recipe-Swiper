@@ -10,40 +10,62 @@ import SwiftUI
 
 class FilterModel: ObservableObject {
     @Published var showFilter = false
-    
-    @AppStorage("includeCuisine") var includeCuisine: String = ""
-    @AppStorage("includeDiet") var includeDiet: String = ""
-    @AppStorage("includeMealType") var includeMealType: String = ""
-    @AppStorage("includeIntolerance") var includeIntolerance: String = ""
-    @AppStorage("excludeCuisine") var excludeCuisine: String = ""
-    @AppStorage("excludeDiet") var excludeDiet: String = ""
-    @AppStorage("excludeMealType") var excludeMealType: String = ""
+
+    @AppStorage("includeCuisine") var includeCuisine = ""
+    @AppStorage("includeDiet") var includeDiet = ""
+    @AppStorage("includeMealType") var includeMealType = ""
+    @Published var selectedIntolerances: Set<String> = []
+
+    init() {
+        if UserDefaults.standard.stringArray(forKey: "selectedIntolerances")
+            != nil
+        {
+            selectedIntolerances = Set(
+                UserDefaults.standard.stringArray(
+                    forKey: "selectedIntolerances"
+                )!
+            )
+        } else {
+            selectedIntolerances = []
+        }
+    }
 
     func queryItems(apiKey: String) -> [URLQueryItem] {
         var items = [URLQueryItem(name: "apiKey", value: apiKey)]  // API Key, Number of Recipes to return. A URLQueryItem automatically forms API query parameters.
-        var include: [String] = []
-        var exclude: [String] = []
+        var include: Set<String> = []
+        var exclude: Set<String> = []
 
-        // Include Tags
         if !includeCuisine.isEmpty {
-            include.append(includeCuisine)
-        }
-        if !includeDiet.isEmpty {
-            include.append(includeDiet)
-        }
-        if !includeMealType.isEmpty {
-            include.append(includeMealType)
+            include.insert(includeCuisine.lowercased())
         }
 
-        // Exclude Tags
-        if !excludeCuisine.isEmpty {
-            exclude.append(excludeCuisine)
+        if !includeMealType.isEmpty {
+            include.insert(includeMealType)
         }
-        if !excludeDiet.isEmpty {
-            exclude.append(excludeDiet)
+
+        if !includeDiet.isEmpty {
+            if includeDiet == "lactose-intolerant" {
+                ["dairy", "egg", "shellfish", "fish"].forEach {
+                    exclude.insert($0)
+                }
+            }
+            else if includeDiet == "gluten-free" {
+                exclude.insert("gluten")
+            }
+            else if includeDiet == "vegetarian" {
+                ["dairy", "egg", "fish"].forEach {
+                    exclude.insert($0)
+                }
+            }
+            else if includeDiet == "vegan" {
+                ["dairy", "egg", "fish", "shellfish"].forEach {
+                    exclude.insert($0)
+                }
+            }
         }
-        if !excludeMealType.isEmpty {
-            exclude.append(excludeMealType)
+
+        if !selectedIntolerances.isEmpty {
+            exclude.formUnion(selectedIntolerances) // Just inserts selectedIntolerances into exclude
         }
 
         items.append(

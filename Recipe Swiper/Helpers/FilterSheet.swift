@@ -30,38 +30,37 @@ struct FilterSheetView: View {
         "nordic", "southern", "spanish", "thai", "vietnamese",
     ]
     let intolerances = [
-        "", "Dairy", "Egg", "Gluten", "Grain", "Peanut", "Seafood", "Sesame",
-        "Shellfish", "Soy", "Sulfite", "Tree Nut", "Wheat",
+        "", "dairy", "egg", "gluten", "grain", "peanut", "seafood", "sesame",
+        "shellfish", "soy", "sulfite", "tree nut", "wheat",
     ]
+
     var body: some View {
         NavigationView {
             Form {
-                Section("Active Filters") {
-                    if model.includeCuisine.isEmpty && model.includeDiet.isEmpty && 
-                       model.includeMealType.isEmpty && model.includeIntolerance.isEmpty {
+                Section(header: Text("Active Filters")) {
+                    if !model.includeCuisine.isEmpty {
+                        Text("Cuisine: \(model.includeCuisine.capitalized)")
+                    }
+                    if !model.includeDiet.isEmpty {
+                        Text("Diet: \(model.includeDiet.capitalized)")
+                    }
+                    if !model.includeMealType.isEmpty {
+                        Text("Meal Type: \(model.includeMealType.capitalized)")
+                    }
+                    if !model.selectedIntolerances.isEmpty {
+                        Text("Intolerances: \(model.selectedIntolerances.joined(separator: ", ").capitalized)")
+                    }
+                    if (model.includeCuisine.isEmpty && model.includeDiet.isEmpty
+                        && model.includeMealType.isEmpty
+                        && model.selectedIntolerances.isEmpty) {
                         Text("No active filters")
                             .foregroundColor(.secondary)
                     } else {
-                        if !model.includeCuisine.isEmpty {
-                            Text("Cuisine: \(model.includeCuisine.capitalized)")
-                        }
-                        if !model.includeDiet.isEmpty {
-                            Text("Diet: \(model.includeDiet.capitalized)")
-                        }
-                        if !model.includeMealType.isEmpty {
-                            Text("Meal Type: \(model.includeMealType.capitalized)")
-                        }
-                        if !model.includeIntolerance.isEmpty {
-                            Text("Intolerance: \(model.includeIntolerance.capitalized)")
-                        }
                         Button("Reset All Filters", role: .destructive) {
                             model.includeCuisine = ""
                             model.includeDiet = ""
                             model.includeMealType = ""
-                            model.includeIntolerance = ""
-                            model.excludeCuisine = ""
-                            model.excludeDiet = ""
-                            model.excludeMealType = ""
+                            model.selectedIntolerances = []
                         }
                     }
                 }
@@ -83,11 +82,21 @@ struct FilterSheetView: View {
                 }
 
                 Section("Intolerances") {
-                    Picker("Intolerances", selection: $model.includeIntolerance)
-                    {
-                        ForEach(intolerances, id: \.self) {
-                            Text($0.capitalized)
-                        }
+                    ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) { intolerance in
+                        Toggle(intolerance.capitalized, isOn: Binding(
+                            get: {
+                                model.selectedIntolerances.contains(intolerance)
+                            },
+                            set: { isSelected in
+                                if isSelected {
+                                    model.selectedIntolerances.insert(intolerance)
+                                } else {
+                                    model.selectedIntolerances.remove(intolerance)
+                                }
+                                // Save changes to UserDefaults
+                                UserDefaults.standard.set(Array(model.selectedIntolerances), forKey: "selectedIntolerances")
+                            }
+                        ))
                     }
                 }
 
@@ -98,7 +107,6 @@ struct FilterSheetView: View {
                         }
                     }
                 }
-
             }
             .navigationTitle("Filters")
             .toolbar {
