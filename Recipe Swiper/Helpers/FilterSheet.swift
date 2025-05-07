@@ -30,8 +30,8 @@ struct FilterSheetView: View {
         "nordic", "southern", "spanish", "thai", "vietnamese",
     ]
     let intolerances = [
-        "", "Dairy", "Egg", "Gluten", "Grain", "Peanut", "Seafood", "Sesame",
-        "Shellfish", "Soy", "Sulfite", "Tree Nut", "Wheat",
+        "", "dairy", "egg", "gluten", "grain", "peanut", "seafood", "sesame",
+        "shellfish", "soy", "sulfite", "tree nut", "wheat",
     ]
 
     var body: some View {
@@ -82,29 +82,21 @@ struct FilterSheetView: View {
                 }
 
                 Section("Intolerances") {
-                    ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) {
-                        intolerance in
-                        Toggle(
-                            intolerance.capitalized,
-                            isOn: Binding(
-                                get: {
-                                    model.selectedIntolerances.contains(
-                                        intolerance
-                                    )
-                                },
-                                set: { isSelected in
-                                    if isSelected {
-                                        model.selectedIntolerances.insert(
-                                            intolerance
-                                        )
-                                    } else {
-                                        model.selectedIntolerances.remove(
-                                            intolerance
-                                        )
-                                    }
+                    ForEach(intolerances.filter { !$0.isEmpty }, id: \.self) { intolerance in
+                        Toggle(intolerance.capitalized, isOn: Binding(
+                            get: {
+                                model.selectedIntolerances.contains(intolerance)
+                            },
+                            set: { isSelected in
+                                if isSelected {
+                                    model.selectedIntolerances.insert(intolerance)
+                                } else {
+                                    model.selectedIntolerances.remove(intolerance)
                                 }
-                            )
-                        )
+                                // Save changes to UserDefaults
+                                UserDefaults.standard.set(Array(model.selectedIntolerances), forKey: "selectedIntolerances")
+                            }
+                        ))
                     }
                 }
 
