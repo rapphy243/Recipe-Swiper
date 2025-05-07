@@ -89,7 +89,7 @@ struct EditableInstructionSetView: View {
     }
 
     private func addStep() {
-        let nextNumber = (instructionSet.steps.last?.number ?? 0) + 1
+        let nextNumber = (instructionSet.steps.count) + 1
 
         // Create a new step model
         let newStep = InstructionStepModel(

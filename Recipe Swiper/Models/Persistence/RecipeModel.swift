@@ -158,7 +158,8 @@ final class RecipeModel {
             return nil
         }
     }
-    private func fetchImage() async {
+    
+    final func fetchImage() async {
         let imageUrl = URL(string: self.image)
         do {
             let (data, response) = try await URLSession.shared.data(

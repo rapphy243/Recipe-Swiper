@@ -40,6 +40,12 @@ struct EditFullRecipeView: View {
                         .keyboardType(.URL)
                         .autocapitalization(.none)
                     }
+                    Button("Refresh Image") {
+                        Task {
+                            await recipe.fetchImage()
+                        }
+                    }
+                    .font(.headline)
                 }
 
                 Section("Timings & Servings") {
@@ -84,17 +90,17 @@ struct EditFullRecipeView: View {
                 Section("Dietary Information") {
                     HStack {
                         Text("Cuisines")
-                        Text("\(recipe.cuisines.joined(separator: ", "))")
+                        Text("\(recipe.cuisines.joined(separator: ", ").capitalized)")
                             .foregroundColor(.secondary)
                     }
                     HStack {
                         Text("Dish Types")
-                        Text("\(recipe.dishTypes.joined(separator: ", "))")
+                        Text("\(recipe.dishTypes.joined(separator: ", ").capitalized)")
                             .foregroundColor(.secondary)
                     }
                     HStack {
                         Text("Diets")
-                        Text("\(recipe.diets.joined(separator: ", "))")
+                        Text("\(recipe.diets.joined(separator: ", ").capitalized)")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -113,11 +119,11 @@ struct EditFullRecipeView: View {
                 }
 
                 Section("Summary") {
-                    VStack {
-                        TextEditor(text: $recipe.summary)
+                    List {
+                        TextField("Summary", text: $recipe.summary, axis: .vertical)
                             .focused($isTextEditorFocused)
-                            .frame(minHeight: 150)
                     }
+                    .frame(height: 200)
                 }
 
                 Section("Other Details") {
@@ -176,14 +182,6 @@ struct EditFullRecipeView: View {
                 }
             }
             .navigationTitle("Edit Recipe")
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        isTextEditorFocused = false
-                    }
-                }
-            }
         }
     }
 

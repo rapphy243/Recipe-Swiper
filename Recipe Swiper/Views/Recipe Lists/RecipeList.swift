@@ -65,6 +65,7 @@ struct RecipeListView: View {
 
     init(
         sort: SortDescriptor<RecipeModel>,
+        filter: String,
         isEditing: Bool,
         isDiscardedView: Bool
     ) {
@@ -77,9 +78,26 @@ struct RecipeListView: View {
             )
         } else {
             _recipeList = Query(
-                filter: #Predicate<RecipeModel> { !$0.isDiscarded },
+                filter: returnFilterPredicate(filter),
                 sort: [sort]
             )
+        }
+    }
+    // This should only be used for SavedRecipesView. Returns a #Predicate to filter recipes
+    private func returnFilterPredicate(_ filter: String) -> Predicate<RecipeModel> {
+        if filter == "All" {
+            return #Predicate<RecipeModel> { recipe in
+                !recipe.isDiscarded
+            }
+        }
+        else if filter == "Rating" {
+            return #Predicate<RecipeModel> { recipe in
+                !recipe.isDiscarded && recipe.rating != 0.0
+            }
+        }
+        
+        return #Predicate<RecipeModel> { recipe in
+            !recipe.isDiscarded
         }
     }
 }
@@ -147,6 +165,7 @@ struct RecipelistItem: View {
 
     return RecipeListView(
         sort: SortDescriptor(\RecipeModel.dateModified),
+        filter: "All",
         isEditing: false,
         isDiscardedView: false
     )
