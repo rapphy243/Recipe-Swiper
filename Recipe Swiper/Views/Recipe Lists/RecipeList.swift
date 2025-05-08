@@ -29,14 +29,19 @@ struct RecipeListView: View {
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         if isDiscardedView {
                             Button(role: .destructive) {
-                                modelContext.delete(recipe)
+                                withAnimation {
+                                    modelContext.delete(recipe)
+                                }
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
                             .tint(.red)
                         } else {
                             Button(role: .destructive) {
-                                recipe.isDiscarded = true
+                                withAnimation {
+                                    recipe.isDiscarded = true
+                                    recipe.dateModified = Date()
+                                }
                             } label: {
                                 Label("Discard", systemImage: "trash")
                             }
@@ -46,14 +51,20 @@ struct RecipeListView: View {
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         if isDiscardedView {
                             Button {
-                                recipe.isDiscarded = false
+                                withAnimation {
+                                    recipe.isDiscarded = false
+                                    recipe.dateModified = Date()
+                                }
                             } label: {
                                 Label("Save", systemImage: "plus")
                             }
                             .tint(.green)
                         } else {
                             Button {
-                                recipe.rating = 0.0
+                                withAnimation {
+                                    recipe.rating = 0.0
+                                    recipe.dateModified = Date()
+                                }
                             } label: {
                                 Label("Clear Rating", systemImage: "star.slash")
                             }
