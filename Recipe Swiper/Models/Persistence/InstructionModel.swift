@@ -23,6 +23,7 @@ final class AnalyzedInstructionModel {
 
 @Model
 final class InstructionStepModel {
+    @Attribute(.unique) var id: UUID
     var number: Int
     var step: String
     @Relationship(deleteRule: .cascade)
@@ -33,6 +34,7 @@ final class InstructionStepModel {
     var length: InstructionLengthModel?
 
     init(from step: InstructionStep) {
+        self.id = UUID()
         self.number = step.number
         self.step = step.step
         self.ingredients = step.ingredients.map(InstructionComponentModel.init)

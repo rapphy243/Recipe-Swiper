@@ -30,21 +30,6 @@ struct EditAnalyzedInstructionListView: View {
             EditButton()
         }
     }
-
-    private func deleteInstructionSet(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(analyzedInstructions[index])
-        }
-        analyzedInstructions.remove(atOffsets: offsets)
-    }
-
-    private func addInstructionSet() {
-        let newInstruction = AnalyzedInstructionModel(
-            from: AnalyzedInstruction(name: "", steps: [])
-        )
-        modelContext.insert(newInstruction)
-        analyzedInstructions.append(newInstruction)
-    }
 }
 
 // MARK: - Editable Instruction Set View
@@ -54,10 +39,11 @@ struct EditableInstructionSetView: View {
 
     var body: some View {
         Section {
-            ForEach($instructionSet.steps.indices, id: \.self) { stepIndex in
+            let sortedSteps = instructionSet.steps.sorted { $0.number < $1.number }
+            ForEach(sortedSteps, id: \.id) { step in
                 EditableInstructionStepView(
-                    step: instructionSet.steps[stepIndex],
-                    stepNumber: stepIndex + 1
+                    step: step,
+                    stepNumber: step.number
                 )
             }
             .onDelete(perform: deleteStep)
@@ -76,33 +62,55 @@ struct EditableInstructionSetView: View {
             Text(instructionSet.name.isEmpty ? "Steps" : instructionSet.name)
         }
     }
-
+    
     private func deleteStep(at offsets: IndexSet) {
+        let sortedSteps = instructionSet.steps.sorted { $0.number < $1.number }
         for index in offsets {
-            modelContext.delete(instructionSet.steps[index])
+            modelContext.delete(sortedSteps[index])
         }
-        instructionSet.steps.remove(atOffsets: offsets)
+        instructionSet.steps.removeAll { step in
+            offsets.contains(sortedSteps.firstIndex(where: { $0.id == step.id }) ?? -1)
+        }
+        
+        // Renumber remaining steps
+        let remainingSteps = instructionSet.steps.sorted { $0.number < $1.number }
+        for (index, step) in remainingSteps.enumerated() {
+            step.number = index + 1
+        }
     }
 
     private func moveStep(from source: IndexSet, to destination: Int) {
-        instructionSet.steps.move(fromOffsets: source, toOffset: destination)
+        var sortedSteps = instructionSet.steps.sorted { $0.number < $1.number }
+        sortedSteps.move(fromOffsets: source, toOffset: destination)
+        
+        // Update all step numbers to match their new positions
+        for (index, step) in sortedSteps.enumerated() {
+            step.number = index + 1
+        }
+        
+        // Update the original array to match the new order
+        instructionSet.steps = sortedSteps
     }
 
     private func addStep() {
         let nextNumber = (instructionSet.steps.count) + 1
 
-        // Create a new step model
-        let newStep = InstructionStepModel(
-            from: InstructionStep(
-                number: nextNumber,
-                step: "",
-                ingredients: [],
-                equipment: [],
-                length: nil
-            )
+        // Create a new instruction step with empty arrays
+        let newInstructionStep = InstructionStep(
+            number: nextNumber,
+            step: "",
+            ingredients: [],
+            equipment: [],
+            length: nil
         )
 
+        // Create the model with the instruction step
+        let newStep = InstructionStepModel(from: newInstructionStep)
+        
+        // First insert into the model context
         modelContext.insert(newStep)
+        
+        // Then append to the steps array
         instructionSet.steps.append(newStep)
     }
 }
@@ -122,12 +130,14 @@ struct EditableInstructionStepView: View {
                     .padding(.top, 8)
 
                 TextEditor(text: $step.step)
-                    .frame(height: 120)
-                    .overlay(
+                    .frame(minHeight: 100, maxHeight: .infinity)
+                    .padding(4)
+                    .background(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                     )
             }
+            .frame(minHeight: 120)
             .onAppear(perform: setupLengthFields)
             .onChange(of: lengthNumberString) {
                 updateLengthBinding()
