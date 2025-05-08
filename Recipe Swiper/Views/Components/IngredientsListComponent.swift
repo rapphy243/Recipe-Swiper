@@ -13,26 +13,28 @@ struct IngredientsListComponent: View {
                 .frame(maxWidth: .infinity, alignment: .center)
 
             DisclosureGroup("", isExpanded: $isExpanded) {
-                // Serving size adjustment
-                HStack {
-                    Text("Adjust servings:")
-                        .font(.subheadline)
-                    Stepper(
-                        value: $servingMultiplier,
-                        in: 0.5...4.0,
-                        step: 0.5
-                    ) {
-                        Text(
-                            "\(Int(Double(recipe.servings) * servingMultiplier)) servings"
-                        )
-                        .font(.subheadline)
-                    }
-                }
-                .padding(.horizontal)
                 VStack(alignment: .leading, spacing: 16) {
+                    // Serving size adjustment
+                    HStack {
+                        Text("Adjust servings:")
+                            .font(.subheadline)
+                        Stepper(
+                            value: $servingMultiplier,
+                            in: 0.5...4.0,
+                            step: 0.5
+                        ) {
+                            Text(
+                                "\(Int(Double(recipe.servings) * servingMultiplier)) servings"
+                            )
+                            .font(.subheadline)
+                        }
+                    }
+                    .padding(.top)
                     ForEach(recipe.extendedIngredients, id: \.id) {
                         ingredient in
                         HStack(spacing: 12) {
+                            // Ingredient name
+                            Text(ingredient.name.capitalized)
                             // Ingredient amount and unit
                             Text(
                                 formatAmount(
@@ -40,16 +42,13 @@ struct IngredientsListComponent: View {
                                 ) + " " + ingredient.unit
                             )
                             .foregroundColor(.secondary)
-                            .frame(width: 100, alignment: .trailing)
-
-                            // Ingredient name
-                            Text(ingredient.name.capitalized)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.footnote)
                         }
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding()
+            .padding(.horizontal)
         }
     }
 

@@ -78,7 +78,6 @@ struct InstructionsStepsComponent: View {
                             .padding(.top, 4)
                     }
                 }
-                .padding(.leading)
                 .padding(.top, 5)
             }
         }

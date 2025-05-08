@@ -87,6 +87,8 @@ struct FullRecipe: View {
                     }
                 }
             }
+            .toolbarBackground(.clear, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .sheet(isPresented: $showEditing) {
                 EditFullRecipeView(recipe: recipe)
             }
