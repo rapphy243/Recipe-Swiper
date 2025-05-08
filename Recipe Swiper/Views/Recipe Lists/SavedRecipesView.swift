@@ -9,16 +9,19 @@ import SwiftData
 import SwiftUI
 
 struct SavedRecipesView: View {
+    //Lets you access the color scheme depending on the system settings
     @Environment(\.colorScheme) private var colorScheme
+    //Lets you access the model context for the current view
     @Environment(\.modelContext) private var modelContext
     @State private var sortOrder = SortDescriptor(
         \RecipeModel.dateModified,
-        order: .reverse
+         order: .reverse
     )
     @State private var filterBy: String = "All"
+    //Only shows recipes that were saved
     @Query(filter: #Predicate<RecipeModel> { !$0.isDiscarded })
     private var savedRecipes: [RecipeModel]
-
+    
     var body: some View {
         NavigationStack {
             RecipeListView(
@@ -26,6 +29,7 @@ struct SavedRecipesView: View {
                 filter: filterBy,
                 isDiscardedView: false
             )
+            //Adds a menu to the top right of the screen to sort the recipes
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !savedRecipes.isEmpty {
@@ -37,14 +41,14 @@ struct SavedRecipesView: View {
                                         .tag(
                                             SortDescriptor(
                                                 \RecipeModel.dateModified,
-                                                order: .reverse
+                                                 order: .reverse
                                             )
                                         )
                                     Text("Oldest First")
                                         .tag(
                                             SortDescriptor(
                                                 \RecipeModel.dateModified,
-                                                order: .forward
+                                                 order: .forward
                                             )
                                         )
                                     Text("By Title")
@@ -53,7 +57,7 @@ struct SavedRecipesView: View {
                                         .tag(
                                             SortDescriptor(
                                                 \RecipeModel.rating,
-                                                order: .reverse
+                                                 order: .reverse
                                             )
                                         )
                                 },
@@ -69,7 +73,7 @@ struct SavedRecipesView: View {
                                 }
                             )
                             .pickerStyle(.menu)
-
+                            
                             Picker(
                                 selection: $filterBy,
                                 content: {
@@ -101,6 +105,7 @@ struct SavedRecipesView: View {
             }
             .toolbarBackground(.clear, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            //Shows message if there are no saved recipes
             .overlay {
                 if savedRecipes.isEmpty {
                     ContentUnavailableView(
@@ -134,7 +139,7 @@ struct SavedRecipesView: View {
     container.mainContext.insert(recipe1)
     container.mainContext.insert(recipe2)
     container.mainContext.insert(recipe3)
-
+    
     return SavedRecipesView()
         .modelContainer(container)
 }
