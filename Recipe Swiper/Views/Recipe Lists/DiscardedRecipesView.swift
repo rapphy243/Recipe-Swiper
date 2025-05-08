@@ -9,12 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct DiscardedRecipesView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) private var modelContext
     @State private var sortOrder = SortDescriptor(
         \RecipeModel.dateModified,
         order: .reverse
     )
-    @State private var isEditing: Bool = false
     @Query(filter: #Predicate<RecipeModel> { $0.isDiscarded })
     private var discardedRecipes: [RecipeModel]
 
@@ -23,7 +23,6 @@ struct DiscardedRecipesView: View {
             RecipeListView(
                 sort: sortOrder,
                 filter: "All",
-                isEditing: isEditing,
                 isDiscardedView: true
             )
             .toolbar {
@@ -48,18 +47,17 @@ struct DiscardedRecipesView: View {
                                 Text("By Title")
                                     .tag(SortDescriptor(\RecipeModel.title))
                             }
-                            Divider()
-                            Button(isEditing ? "Done" : "Edit") {
-                                withAnimation {
-                                    isEditing.toggle()
-                                }
-                            }
                         } label: {
                             Image(systemName: "ellipsis.circle")
+                                .foregroundColor(
+                                    colorScheme == .light ? .black : .white
+                                )
                         }
                     }
                 }
             }
+            .toolbarBackground(.clear, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .overlay {
                 if discardedRecipes.isEmpty {
                     ContentUnavailableView(

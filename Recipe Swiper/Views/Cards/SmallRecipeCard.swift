@@ -18,7 +18,7 @@ struct SmallRecipeCard: View {
                 .font(.title)
                 .bold()
                 .multilineTextAlignment(.center)
-                .frame(width: 340)
+                .fixedSize(horizontal: false, vertical: true)
             Divider()
             HStack {
                 AsyncImage(url: URL(string: recipe.image ?? "")) { image in

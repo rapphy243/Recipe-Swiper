@@ -9,21 +9,21 @@ import SwiftData
 import SwiftUI
 
 struct SavedRecipesView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) private var modelContext
     @State private var sortOrder = SortDescriptor(
         \RecipeModel.dateModified,
         order: .reverse
     )
     @State private var filterBy: String = "All"
-    @State private var isEditing: Bool = false
     @Query(filter: #Predicate<RecipeModel> { !$0.isDiscarded })
     private var savedRecipes: [RecipeModel]
+
     var body: some View {
         NavigationStack {
             RecipeListView(
                 sort: sortOrder,
                 filter: filterBy,
-                isEditing: isEditing,
                 isDiscardedView: false
             )
             .toolbar {
@@ -69,6 +69,7 @@ struct SavedRecipesView: View {
                                 }
                             )
                             .pickerStyle(.menu)
+
                             Picker(
                                 selection: $filterBy,
                                 content: {
@@ -87,22 +88,19 @@ struct SavedRecipesView: View {
                                         )
                                     }
                                 }
-
                             )
                             .pickerStyle(.menu)
-
-                            Divider()
-                            Button(isEditing ? "Done" : "Edit") {
-                                withAnimation {
-                                    isEditing.toggle()
-                                }
-                            }
                         } label: {
                             Image(systemName: "ellipsis.circle")
+                                .foregroundColor(
+                                    colorScheme == .light ? .black : .white
+                                )
                         }
                     }
                 }
             }
+            .toolbarBackground(.clear, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .overlay {
                 if savedRecipes.isEmpty {
                     ContentUnavailableView(
