@@ -48,8 +48,7 @@ struct OnboardingFiltersView: View {
                         .padding(.vertical)
                     }
 
-                    SmallRecipeCard(recipe: recipe) {}
-                        .padding(.horizontal)
+                    SmallRecipeCard(recipe: recipe)
 
                     Spacer()
                 }
