@@ -13,6 +13,11 @@ struct EditIngredientListView: View {
     @Environment(\.modelContext) private var modelContext
     @Binding var ingredients: [ExtendedIngredientModel]
     @Environment(\.editMode) var editMode
+    @State private var showValidationAlert = false
+    @State private var validationMessage = ""
+    @State private var deletedIngredients:
+        [(ingredient: ExtendedIngredientModel, index: Int)] = []
+    @State private var showUndoToast = false
 
     var body: some View {
         List {
@@ -21,7 +26,11 @@ struct EditIngredientListView: View {
                 ForEach($ingredients.indices, id: \.self) { index in
                     EditableIngredientRowView(
                         ingredient: ingredients[index],
-                        formatter: numberFormatter  // Pass the formatter
+                        formatter: numberFormatter,
+                        onValidationError: { message in
+                            validationMessage = message
+                            showValidationAlert = true
+                        }
                     )
                 }
                 .onDelete(perform: deleteIngredient)
@@ -41,8 +50,37 @@ struct EditIngredientListView: View {
         }
         .navigationTitle("Edit Ingredients")
         .toolbar {
-            EditButton()  // Add standard Edit/Done button
+            ToolbarItem(placement: .navigationBarTrailing) {
+                EditButton()  // Add standard Edit/Done button
+            }
+            if !deletedIngredients.isEmpty {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Undo Delete") {
+                        undoLastDelete()
+                    }
+                }
+            }
         }
+        .alert("Validation Error", isPresented: $showValidationAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(validationMessage)
+        }
+        .overlay(
+            Group {
+                if showUndoToast {
+                    VStack {
+                        Spacer()
+                        Text("Ingredient restored")
+                            .padding()
+                            .background(Color(.systemBackground))
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                            .padding(.bottom)
+                    }
+                }
+            }
+        )
     }
 
     // Formatter for the amount field
@@ -58,10 +96,34 @@ struct EditIngredientListView: View {
         // Remove from ingredients array
         for index in offsets {
             let ingredient = ingredients[index]
+            // Store for undo
+            deletedIngredients.append((ingredient: ingredient, index: index))
             // Delete from model context if needed
             modelContext.delete(ingredient)
         }
         ingredients.remove(atOffsets: offsets)
+    }
+
+    private func undoLastDelete() {
+        guard let (ingredient, index) = deletedIngredients.popLast() else {
+            return
+        }
+
+        // Reinsert at original position if possible
+        let insertIndex = min(index, ingredients.count)
+        ingredients.insert(ingredient, at: insertIndex)
+        modelContext.insert(ingredient)
+
+        // Show feedback
+        withAnimation {
+            showUndoToast = true
+        }
+        // Hide feedback after delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            withAnimation {
+                showUndoToast = false
+            }
+        }
     }
 
     private func moveIngredient(from source: IndexSet, to destination: Int) {
@@ -81,6 +143,7 @@ struct EditIngredientListView: View {
 struct EditableIngredientRowView: View {
     @Bindable var ingredient: ExtendedIngredientModel
     let formatter: NumberFormatter
+    let onValidationError: (String) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -92,6 +155,9 @@ struct EditableIngredientRowView: View {
                     .foregroundColor(.secondary)
                 TextField("Ingredient Name", text: $ingredient.name)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .onChange(of: ingredient.name) {
+                        validateName()
+                    }
             }
 
             // --- Editable Amount & Unit Display ---
@@ -109,10 +175,16 @@ struct EditableIngredientRowView: View {
                 .keyboardType(.decimalPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .frame(width: 80)  // Give amount field a fixed width
+                .onChange(of: ingredient.amount) {
+                    validateAmount()
+                }
 
                 // Display Unit (Could make this a TextField too if needed)
                 TextField("Unit", text: $ingredient.unit)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .onChange(of: ingredient.unit) {
+                        validateUnit()
+                    }
 
                 Spacer()
             }
@@ -152,6 +224,28 @@ struct EditableIngredientRowView: View {
             }
         }
         .padding(.vertical, 4)
+    }
+
+    private func validateName() {
+        if ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty
+        {
+            onValidationError("Ingredient name cannot be empty")
+        }
+    }
+
+    private func validateAmount() {
+        if ingredient.amount <= 0 {
+            onValidationError("Amount must be greater than 0")
+        }
+    }
+
+    private func validateUnit() {
+        if !ingredient.unit.isEmpty
+            && ingredient.unit.rangeOfCharacter(from: .decimalDigits) != nil
+        {
+            onValidationError("Unit should not contain numbers")
+        }
     }
 }
 
