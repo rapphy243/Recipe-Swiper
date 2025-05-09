@@ -49,7 +49,7 @@ struct Secrets {
 
     // Public accessor for the API key
     static var apiKey: String {
-        lock.lock() // Ensure thread safety
+        lock.lock() // Ensure thread safety, locks to current thread, so no other threads can access key
         defer { lock.unlock() } // Ensure lock is always released | defer unlocks the thread after all the code is finished executing
 
         // If we already have a key set (either initially or via setApiKey), return it
@@ -69,7 +69,6 @@ struct Secrets {
             currentApiKey = errorMessage // Store the error message to avoid re-checking
             return errorMessage
         }
-        // ---
     }
 
     // --- Function to change the API key at runtime ---
@@ -84,7 +83,6 @@ struct Secrets {
         lock.lock() // Ensure thread safety
         defer { lock.unlock() } // Ensure lock is always released
 
-        // You might want to add validation here (e.g., check if empty)
         // if newKey?.isEmpty ?? true {
         //     print("Warning: Attempted to set an empty API key.")
         //     // Decide how to handle this: maybe revert to initial, maybe allow it
@@ -105,5 +103,4 @@ struct Secrets {
         // Trigger the getter once to reload/cache the initial value or error message
         _ = apiKey
     }
-    // ---
 }

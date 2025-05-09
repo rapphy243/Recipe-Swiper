@@ -18,6 +18,8 @@ import SwiftUI
 //
 //
 
+// View is unused in app
+
 struct RecipeTestView: View {
     // State variables to hold the fetched data, loading status, and error message
     @State private var fetchedRecipe: Recipe? = nil
