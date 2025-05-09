@@ -15,6 +15,7 @@ struct FullCardDetails: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 10) {
                 HStack {
+                    // Source of Recipe
                     Image(systemName: "book.closed.fill")
                     if recipe.sourceUrl != "" {
                         Link(destination: URL(string: recipe.sourceUrl)!) {
@@ -32,6 +33,7 @@ struct FullCardDetails: View {
                 Divider()
                     .frame(maxHeight: 30)
                 HStack {
+                    // How long to make
                     Image(systemName: "timer")
                     VStack(alignment: .leading, spacing: 0) {
                         Text("\(recipe.readyInMinutes)min")
@@ -43,6 +45,7 @@ struct FullCardDetails: View {
                 }
                 Divider()
                     .frame(maxHeight: 30)
+                // Amount of servings
                 HStack {
                     Image(systemName: "person.2.fill")
                     Text("\(recipe.servings)")
@@ -50,6 +53,7 @@ struct FullCardDetails: View {
                 }
                 Divider()
                     .frame(maxHeight: 30)
+                // Health Score
                 HStack {
                     Image(systemName: "heart.fill")
                         .foregroundColor(healthScoreColor)
@@ -59,12 +63,14 @@ struct FullCardDetails: View {
             }
             HStack(spacing: 10) {
                 if !recipe.cuisines.isEmpty {
+                    // List of regions recipe is from
                     HStack(spacing: 5) {
                         Image(systemName: "globe")
                         Text(recipe.cuisines.joined(separator: ", ").capitalized)
                             .font(.footnote)
                     }
                 }
+                // Vegan indicator
                 if recipe.vegan {
                     Text("VG")
                         .font(.caption)
@@ -73,6 +79,7 @@ struct FullCardDetails: View {
                         .background(.green.opacity(0.2))
                         .cornerRadius(4)
                 }
+                // Vegetarian indicator
                 if recipe.vegetarian {
                     Text("V")
                         .font(.caption)
@@ -81,6 +88,7 @@ struct FullCardDetails: View {
                         .background(.green.opacity(0.4))
                         .cornerRadius(4)
                 }
+                // Gluten free indicator
                 if recipe.glutenFree {
                     Text("GF")
                         .font(.caption)
@@ -89,6 +97,7 @@ struct FullCardDetails: View {
                         .background(.brown.opacity(0.4))
                         .cornerRadius(4)
                 }
+                // Dairy free indicator
                 if recipe.dairyFree {
                     Text("DF")
                         .font(.caption)
@@ -112,6 +121,7 @@ struct FullCardDetails: View {
         }
     }
     
+    // Simple, but kind of bad way to get only the host of a url (www.google.com -> google.com)
     private func getHostURL(_ urlString: String) -> String {
         guard let url = URL(string: urlString), let host = url.host,
             !host.isEmpty
