@@ -37,12 +37,11 @@ struct ContentView: View {
                     }
                     .tag(3)
             }
-            // Temp Colors
             .toolbarBackground(.indigo, for: .tabBar)
             .toolbarBackground(.visible, for: .tabBar)
             .toolbarColorScheme(.dark, for: .tabBar)
         }
-        .fullScreenCover(isPresented: $isOnboarding) {
+        .fullScreenCover(isPresented: $isOnboarding) { // Overlay OnboardingView if isOnboarding is true
             OnboardingView()
         }
     }

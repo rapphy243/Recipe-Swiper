@@ -12,7 +12,7 @@ struct OnboardingFiltersView: View {
     @State private var isArrowAnimating = false
     @Binding var selectedTab: Int
     @Binding var recipe: Recipe
-
+//vars
     var body: some View {
         NavigationStack {
             ZStack(alignment: .topTrailing) {
@@ -38,7 +38,7 @@ struct OnboardingFiltersView: View {
                         .cornerRadius(12)
                         .padding(.horizontal)
                         .transition(.scale.combined(with: .opacity))
-
+//checks if filterwas tapped, if so, it pulls up with an animation the abilities you can do with filters
                         Button("Next") {
                             withAnimation {
                                 selectedTab = 2
@@ -48,8 +48,9 @@ struct OnboardingFiltersView: View {
                         .padding(.vertical)
                     }
 
-                    SmallRecipeCard(recipe: recipe)
-
+                    SmallRecipeCard(recipe: recipe) {}
+                        .padding(.horizontal)
+//little recipe card to give you a sense of how it will look on the app
                     Spacer()
                 }
 
@@ -66,6 +67,7 @@ struct OnboardingFiltersView: View {
                             .foregroundColor(.blue)
                             .bold()
                     }
+                    //befoer filter is tapped layout
                     .offset(x: -75, y: -5)
                     .transition(.opacity)
                     .onAppear {
@@ -90,6 +92,7 @@ struct OnboardingFiltersView: View {
                     }
                 }
             }
+            //put filter button in the toolbar cuz thats whrer it actually is
         }
     }
 }
