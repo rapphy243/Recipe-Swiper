@@ -10,7 +10,6 @@ import SwiftUI
 
 @main
 struct Recipe_SwiperApp: App {
-    @UIApplicationDelegateAdaptor var appDelegate: AppDelegate // See class all the way below
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([ // What objects that are going to be in the container
             RecipeModel.self,
@@ -40,13 +39,5 @@ struct Recipe_SwiperApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
-    }
-}
-
-// Not ideal, but edits AppDelegate (root object of app) to lock app to portrait mode.
-// https://developer.apple.com/forums/thread/741703
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        .portrait
     }
 }

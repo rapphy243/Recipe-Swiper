@@ -12,50 +12,63 @@ import SwiftUI
 
 struct RecipeListView: View {
     @Environment(\.modelContext) private var modelContext
-    var isEditing: Bool
     var isDiscardedView: Bool
     @Query(sort: [SortDescriptor(\RecipeModel.dateModified, order: .forward)])
     var recipeList: [RecipeModel]
+
     var body: some View {
         NavigationStack {
             List {
                 ForEach(recipeList, id: \.self) { recipe in
-                    HStack(spacing: 0) {
-                        if isEditing {
-                            if !isDiscardedView {
-                                Button(action: {
-                                    recipe.isDiscarded = true
-                                }) {
-                                    Image(systemName: "minus.circle")
-                                        .foregroundColor(.red)
-                                        .padding(.trailing)
-                                }
-                            } else {
-                                Button(action: {
+                    NavigationLink(destination: FullRecipe(recipe: recipe)) {
+                        RecipelistItem(
+                            recipe: recipe,
+                            showRating: !isDiscardedView
+                        )
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        if isDiscardedView {
+                            Button(role: .destructive) {
+                                withAnimation {
                                     modelContext.delete(recipe)
-                                }) {
-                                    Image(systemName: "minus.circle")
-                                        .foregroundColor(.red)
-                                        .padding(.trailing)
                                 }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
                             }
-
-                        }
-
-                        if isEditing {
-                            RecipelistItem(
-                                recipe: recipe,
-                                showRating: !isDiscardedView
-                            )
+                            .tint(.red)
                         } else {
-                            NavigationLink(
-                                destination: FullRecipe(recipe: recipe)
-                            ) {
-                                RecipelistItem(
-                                    recipe: recipe,
-                                    showRating: !isDiscardedView
-                                )
+                            Button(role: .destructive) {
+                                withAnimation {
+                                    recipe.isDiscarded = true
+                                    recipe.dateModified = Date()
+                                }
+                            } label: {
+                                Label("Discard", systemImage: "trash")
                             }
+                            .tint(.red)
+                        }
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        if isDiscardedView {
+                            Button {
+                                withAnimation {
+                                    recipe.isDiscarded = false
+                                    recipe.dateModified = Date()
+                                }
+                            } label: {
+                                Label("Save", systemImage: "plus")
+                            }
+                            .tint(.green)
+                        } else {
+                            Button {
+                                withAnimation {
+                                    recipe.rating = 0.0
+                                    recipe.dateModified = Date()
+                                }
+                            } label: {
+                                Label("Clear Rating", systemImage: "star.slash")
+                            }
+                            .tint(.orange)
                         }
                     }
                 }
@@ -65,10 +78,9 @@ struct RecipeListView: View {
 
     init(
         sort: SortDescriptor<RecipeModel>,
-        isEditing: Bool,
+        filter: String,
         isDiscardedView: Bool
     ) {
-        self.isEditing = isEditing
         self.isDiscardedView = isDiscardedView
         if isDiscardedView {
             _recipeList = Query(
@@ -77,9 +89,28 @@ struct RecipeListView: View {
             )
         } else {
             _recipeList = Query(
-                filter: #Predicate<RecipeModel> { !$0.isDiscarded },
+                filter: returnFilterPredicate(filter),
                 sort: [sort]
             )
+        }
+    }
+
+    // This should only be used for SavedRecipesView. Returns a #Predicate to filter recipes
+    private func returnFilterPredicate(_ filter: String) -> Predicate<
+        RecipeModel
+    > {
+        if filter == "All" {
+            return #Predicate<RecipeModel> { recipe in
+                !recipe.isDiscarded
+            }
+        } else if filter == "Rating" {
+            return #Predicate<RecipeModel> { recipe in
+                !recipe.isDiscarded && recipe.rating != 0.0
+            }
+        }
+
+        return #Predicate<RecipeModel> { recipe in
+            !recipe.isDiscarded
         }
     }
 }
@@ -147,7 +178,7 @@ struct RecipelistItem: View {
 
     return RecipeListView(
         sort: SortDescriptor(\RecipeModel.dateModified),
-        isEditing: false,
+        filter: "All",
         isDiscardedView: false
     )
     .modelContainer(container)

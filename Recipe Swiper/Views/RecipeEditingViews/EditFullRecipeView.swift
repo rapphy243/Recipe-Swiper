@@ -12,8 +12,21 @@ import SwiftUI
 
 struct EditFullRecipeView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @Bindable var recipe: RecipeModel
     @FocusState private var isTextEditorFocused: Bool
+    @State private var isRefreshingImage = false
+    @State private var showValidationAlert = false
+    @State private var validationMessage = ""
+
+    // Create a temporary copy for editing
+    @State private var editedRecipe: RecipeModel
+
+    init(recipe: RecipeModel) {
+        self.recipe = recipe
+        // Initialize the edited copy
+        _editedRecipe = State(initialValue: recipe)
+    }
 
     var body: some View {
         NavigationStack {
@@ -21,25 +34,43 @@ struct EditFullRecipeView: View {
                 Section("Basic Info") {
                     HStack {
                         Text("Recipe ID")
-                        Text("\(recipe.id)")
+                        Text("\(editedRecipe.id)")
                             .foregroundColor(.secondary)
                             .textSelection(.enabled)
                     }
                     HStack {
                         Text("Recipe Title:")
-                        TextField("", text: $recipe.title)
+                        TextField("", text: $editedRecipe.title)
                     }
 
                     HStack {
                         Text("Image URL")
                         TextField(
                             "e.g., https://...",
-                            text: $recipe.image
+                            text: $editedRecipe.image
                         )
                         .lineLimit(1)
                         .keyboardType(.URL)
                         .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                     }
+                    Button(action: {
+                        Task {
+                            isRefreshingImage = true
+                            await editedRecipe.fetchImage()
+                            isRefreshingImage = false
+                        }
+                    }) {
+                        HStack {
+                            Text("Refresh Image")
+                            if isRefreshingImage {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                            }
+                        }
+                    }
+                    .disabled(isRefreshingImage)
+                    .font(.headline)
                 }
 
                 Section("Timings & Servings") {
@@ -47,7 +78,7 @@ struct EditFullRecipeView: View {
                         Text("Ready in Minutes")
                         TextField(
                             "Minutes",
-                            value: $recipe.readyInMinutes,
+                            value: $editedRecipe.readyInMinutes,
                             formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
@@ -56,7 +87,7 @@ struct EditFullRecipeView: View {
                         Text("Servings")
                         TextField(
                             "Count",
-                            value: $recipe.servings,
+                            value: $editedRecipe.servings,
                             formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
@@ -65,7 +96,7 @@ struct EditFullRecipeView: View {
                         Text("Preparation Minutes")
                         TextField(
                             "Optional",
-                            value: $recipe.preparationMinutes,
+                            value: $editedRecipe.preparationMinutes,
                             formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
@@ -74,7 +105,7 @@ struct EditFullRecipeView: View {
                         Text("Cooking Minutes")
                         TextField(
                             "Optional",
-                            value: $recipe.cookingMinutes,
+                            value: $editedRecipe.cookingMinutes,
                             formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
@@ -84,40 +115,51 @@ struct EditFullRecipeView: View {
                 Section("Dietary Information") {
                     HStack {
                         Text("Cuisines")
-                        Text("\(recipe.cuisines.joined(separator: ", "))")
-                            .foregroundColor(.secondary)
+                        Text(
+                            "\(editedRecipe.cuisines.joined(separator: ", ").capitalized)"
+                        )
+                        .foregroundColor(.secondary)
                     }
                     HStack {
                         Text("Dish Types")
-                        Text("\(recipe.dishTypes.joined(separator: ", "))")
-                            .foregroundColor(.secondary)
+                        Text(
+                            "\(editedRecipe.dishTypes.joined(separator: ", ").capitalized)"
+                        )
+                        .foregroundColor(.secondary)
                     }
                     HStack {
                         Text("Diets")
-                        Text("\(recipe.diets.joined(separator: ", "))")
-                            .foregroundColor(.secondary)
+                        Text(
+                            "\(editedRecipe.diets.joined(separator: ", ").capitalized)"
+                        )
+                        .foregroundColor(.secondary)
                     }
                 }
 
                 Section("Ingredients & Instructions") {
                     NavigationLink("Edit Ingredients") {
                         EditIngredientListView(
-                            ingredients: $recipe.extendedIngredients
+                            ingredients: $editedRecipe.extendedIngredients
                         )
                     }
                     NavigationLink("Edit Instructions") {
                         EditAnalyzedInstructionListView(
-                            analyzedInstructions: $recipe.analyzedInstructions
+                            analyzedInstructions: $editedRecipe
+                                .analyzedInstructions
                         )
                     }
                 }
 
                 Section("Summary") {
-                    VStack {
-                        TextEditor(text: $recipe.summary)
-                            .focused($isTextEditorFocused)
-                            .frame(minHeight: 150)
+                    List {
+                        TextField(
+                            "Summary",
+                            text: $editedRecipe.summary,
+                            axis: .vertical
+                        )
+                        .focused($isTextEditorFocused)
                     }
+                    .frame(height: 200)
                 }
 
                 Section("Other Details") {
@@ -125,7 +167,7 @@ struct EditFullRecipeView: View {
                         Text("Health Score")
                         TextField(
                             "Score",
-                            value: $recipe.healthScore,
+                            value: $editedRecipe.healthScore,
                             formatter: numberFormatter
                         )
                         .keyboardType(.numberPad)
@@ -134,7 +176,7 @@ struct EditFullRecipeView: View {
                         Text("Estimated Price Per Serving")
                         TextField(
                             "Price",
-                            value: $recipe.pricePerServing,
+                            value: $editedRecipe.pricePerServing,
                             formatter: decimalFormatter
                         )
                         .keyboardType(.decimalPad)
@@ -145,13 +187,13 @@ struct EditFullRecipeView: View {
                 Section("Source & Meta") {
                     HStack {
                         Text("Source Name: ")
-                        TextField("Source Name", text: $recipe.sourceName)
+                        TextField("Source Name", text: $editedRecipe.sourceName)
                     }
                     HStack {
                         Text("Source URL")
                         TextField(
                             "Optional URL",
-                            text: $recipe.sourceUrl
+                            text: $editedRecipe.sourceUrl
                         )
                         .lineLimit(1)
                         .keyboardType(.URL)
@@ -159,16 +201,24 @@ struct EditFullRecipeView: View {
                     }
                     HStack {
                         Text("Credits Text: ")
-                        TextField("Source Name", text: $recipe.creditsText)
+                        TextField(
+                            "Source Name",
+                            text: $editedRecipe.creditsText
+                        )
                     }
                     HStack {
                         Text("Spoonacular Score")
-                        Text(String(format: "%.2f", recipe.spoonacularScore))
-                            .foregroundColor(.secondary)
+                        Text(
+                            String(
+                                format: "%.2f",
+                                editedRecipe.spoonacularScore
+                            )
+                        )
+                        .foregroundColor(.secondary)
                     }
                     HStack {
                         Text("Spoonacular Source URL")
-                        Text(recipe.spoonacularSourceUrl ?? "N/A")
+                        Text(editedRecipe.spoonacularSourceUrl ?? "N/A")
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                             .textSelection(.enabled)
@@ -177,14 +227,90 @@ struct EditFullRecipeView: View {
             }
             .navigationTitle("Edit Recipe")
             .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        isTextEditorFocused = false
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        if validateRecipe() {
+                            saveChanges()
+                            dismiss()
+                        }
                     }
                 }
             }
+            .alert("Validation Error", isPresented: $showValidationAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(validationMessage)
+            }
         }
+    }
+
+    private func validateRecipe() -> Bool {
+        // Validate title
+        if editedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty
+        {
+            validationMessage = "Recipe title cannot be empty"
+            showValidationAlert = true
+            return false
+        }
+
+        // Validate image URL if provided
+        if !editedRecipe.image.isEmpty {
+            if URL(string: editedRecipe.image) == nil {
+                validationMessage = "Invalid image URL format"
+                showValidationAlert = true
+                return false
+            }
+        }
+
+        // Validate numeric fields
+        if editedRecipe.readyInMinutes < 0 {
+            validationMessage = "Ready in minutes cannot be negative"
+            showValidationAlert = true
+            return false
+        }
+
+        if editedRecipe.servings <= 0 {
+            validationMessage = "Servings must be greater than 0"
+            showValidationAlert = true
+            return false
+        }
+
+        if editedRecipe.preparationMinutes < 0 {
+            validationMessage = "Preparation minutes cannot be negative"
+            showValidationAlert = true
+            return false
+        }
+
+        if editedRecipe.cookingMinutes < 0 {
+            validationMessage = "Cooking minutes cannot be negative"
+            showValidationAlert = true
+            return false
+        }
+
+        return true
+    }
+
+    private func saveChanges() {
+        // Update the original recipe with edited values
+        recipe.title = editedRecipe.title
+        recipe.image = editedRecipe.image
+        recipe.readyInMinutes = editedRecipe.readyInMinutes
+        recipe.servings = editedRecipe.servings
+        recipe.preparationMinutes = editedRecipe.preparationMinutes
+        recipe.cookingMinutes = editedRecipe.cookingMinutes
+        recipe.healthScore = editedRecipe.healthScore
+        recipe.pricePerServing = editedRecipe.pricePerServing
+        recipe.sourceName = editedRecipe.sourceName
+        recipe.sourceUrl = editedRecipe.sourceUrl
+        recipe.creditsText = editedRecipe.creditsText
+        recipe.summary = editedRecipe.summary
+        recipe.dateModified = Date()
     }
 
     // Formatters for numeric input

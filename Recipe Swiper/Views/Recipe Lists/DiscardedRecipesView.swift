@@ -9,22 +9,26 @@ import SwiftData
 import SwiftUI
 
 struct DiscardedRecipesView: View {
+    //Lets you access the color scheme depending on the system settings
+    @Environment(\.colorScheme) private var colorScheme
+    //Lets you access the color scheme depending on the system settings
     @Environment(\.modelContext) private var modelContext
     @State private var sortOrder = SortDescriptor(
         \RecipeModel.dateModified,
-        order: .reverse
+         order: .reverse
     )
-    @State private var isEditing: Bool = false
+    //Only shows recipes that were discarded
     @Query(filter: #Predicate<RecipeModel> { $0.isDiscarded })
     private var discardedRecipes: [RecipeModel]
-
+    
     var body: some View {
         NavigationStack {
             RecipeListView(
                 sort: sortOrder,
-                isEditing: isEditing,
+                filter: "All",
                 isDiscardedView: true
             )
+            //Adds a menu to the top right of the screen to sort the recipes
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !discardedRecipes.isEmpty {
@@ -34,31 +38,32 @@ struct DiscardedRecipesView: View {
                                     .tag(
                                         SortDescriptor(
                                             \RecipeModel.dateModified,
-                                            order: .reverse
+                                             order: .reverse
                                         )
                                     )
                                 Text("Oldest First")
                                     .tag(
                                         SortDescriptor(
                                             \RecipeModel.dateModified,
-                                            order: .forward
+                                             order: .forward
                                         )
                                     )
                                 Text("By Title")
                                     .tag(SortDescriptor(\RecipeModel.title))
                             }
-                            Divider()
-                            Button(isEditing ? "Done" : "Edit") {
-                                withAnimation {
-                                    isEditing.toggle()
-                                }
-                            }
                         } label: {
                             Image(systemName: "ellipsis.circle")
+                                .foregroundColor(
+                                    colorScheme == .light ? .black : .white
+                                )
                         }
                     }
                 }
             }
+            .toolbarBackground(.clear, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            
+            //Shows message if there are no discarded recipes
             .overlay {
                 if discardedRecipes.isEmpty {
                     ContentUnavailableView(
@@ -92,7 +97,7 @@ struct DiscardedRecipesView: View {
     container.mainContext.insert(recipe1)
     container.mainContext.insert(recipe2)
     container.mainContext.insert(recipe3)
-
+    
     return DiscardedRecipesView()
         .modelContainer(container)
 }

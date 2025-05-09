@@ -63,13 +63,14 @@ class FilterModel: ObservableObject {
                     exclude.insert($0)
                 }
             }
+            include.insert(includeDiet) // ideallyu we would also exclude more ingrediences, but spoonacular doesn't support everything
         }
         //these are because a diet is basically an intolerance, and the API sometimes includes things not in the diet because the intolerance doesnt include the things the diet doesnt want, so we just made them linked
 
         if !selectedIntolerances.isEmpty {
             exclude.formUnion(selectedIntolerances) // Just inserts selectedIntolerances into exclude
         }
-
+        
         items.append(
             .init(name: "include-tags", value: include.joined(separator: ","))
         )

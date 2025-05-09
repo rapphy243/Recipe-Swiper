@@ -26,16 +26,17 @@ struct SettingsView: View {
                         }
 
                         // Daily quota progress bar
-                        GeometryReader { geometry in
+                        GeometryReader { geometry in // allows us toaccess and manipulate size and position of view
                             ZStack(alignment: .leading) {
+                                // Empty progress bar
                                 Rectangle()
                                     .frame(
-                                        width: geometry.size.width,
+                                        width: geometry.size.width, // Get with of view
                                         height: 20
                                     )
                                     .opacity(0.3)
                                     .foregroundColor(.gray)
-
+                                // Actual progress to max quota
                                 Rectangle()
                                     .frame(
                                         width: calculateProgressWidth(

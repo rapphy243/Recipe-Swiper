@@ -42,6 +42,7 @@ struct SmallCardDetails: View {
                                 .foregroundColor(
                                     colorScheme == .dark ? .white : .black
                                 )
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     } else {
                         Text("No Source")
