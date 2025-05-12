@@ -26,7 +26,9 @@ struct RecipeListView: View {
                             showRating: !isDiscardedView
                         )
                     }
+                    // Let the user user swipe to left to show action
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        //If the user is in the Discarded Recipes view it will show delete
                         if isDiscardedView {
                             Button(role: .destructive) {
                                 withAnimation {
@@ -36,6 +38,7 @@ struct RecipeListView: View {
                                 Label("Delete", systemImage: "trash")
                             }
                             .tint(.red)
+                            //If the user is in the Saved Recipes view it will show discard
                         } else {
                             Button(role: .destructive) {
                                 withAnimation {
@@ -48,7 +51,9 @@ struct RecipeListView: View {
                             .tint(.red)
                         }
                     }
+                    // Let the user user swipe to right to show action
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        //If the user is in the Discarded Recipes view it will show save
                         if isDiscardedView {
                             Button {
                                 withAnimation {
@@ -59,6 +64,7 @@ struct RecipeListView: View {
                                 Label("Save", systemImage: "plus")
                             }
                             .tint(.green)
+                            //If the user is in the Saved Recipes view it will show clear rating
                         } else {
                             Button {
                                 withAnimation {
