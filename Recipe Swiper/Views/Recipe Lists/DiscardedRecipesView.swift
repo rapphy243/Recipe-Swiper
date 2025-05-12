@@ -9,10 +9,11 @@ import SwiftData
 import SwiftUI
 
 struct DiscardedRecipesView: View {
-    //Lets you access the color scheme depending on the system settings
+    //Determins if the user is in dark mode or light mode and displays the color mode matching your set mode.
     @Environment(\.colorScheme) private var colorScheme
-    //Lets you access the color scheme depending on the system settings
+    //Lets you access the model context letting you save, update and delete recipes
     @Environment(\.modelContext) private var modelContext
+    //Shows the recipe most recently discared at the top
     @State private var sortOrder = SortDescriptor(
         \RecipeModel.dateModified,
          order: .reverse
@@ -62,7 +63,6 @@ struct DiscardedRecipesView: View {
             }
             .toolbarBackground(.clear, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            
             //Shows message if there are no discarded recipes
             .overlay {
                 if discardedRecipes.isEmpty {
