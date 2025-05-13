@@ -1,6 +1,10 @@
 # Recipe Swiper
 
 Recipe Swiper helps you discover and save recipes. Using a Tinder-like swipe interface, users can easily browse through recipes, saving the ones they love and skipping those they don't.
+## Screenshots
+![Onboarding Screen](https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_48_32-MT3hxDa1.png)
+![Main View](https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_49_09-BEgvQmsW.png)
+![Cookbook](https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_49_19-GlwEu35T.png)
 
 ## Features
 
