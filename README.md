@@ -38,9 +38,9 @@ Recipe Swiper helps you discover and save recipes. Using a Tinder-like swipe int
 
 1. Clone the repository:
 ```bash
-https://github.com/yourusername/Recipe-Swiper.git
+https://github.com/rapphy243/Recipe-Swiper.git
 ```
-2. Create a copy of `SecretsExample.xcconfig`, rename it to `Secrets.xcconfig`, then add Spoonacular API key in the Environment folder
+2. In the Environment folder, create a copy of `SecretsExample.xcconfig`, rename it to `Secrets.xcconfig`, then replace Spoonacular API key
 
 3. Build and run the project in Xcode.
 
@@ -48,5 +48,5 @@ https://github.com/yourusername/Recipe-Swiper.git
 
 
 ## Acknowledgments
-
+- Tinder for the inspiration
 - Recipe data provided by Spoonacular API
