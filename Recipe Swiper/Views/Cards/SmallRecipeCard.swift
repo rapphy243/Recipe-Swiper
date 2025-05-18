@@ -10,8 +10,8 @@ import SwiftUI
 
 struct SmallRecipeCard: View {
     @Environment(\.colorScheme) private var colorScheme
-    @State var recipe: Recipe
-    @State var onTap: (() -> Void)? = nil
+    let recipe: Recipe
+    let onTap: (() -> Void)? = nil
     var body: some View {
         VStack(spacing: 10) {
             Text(recipe.title)
@@ -43,7 +43,7 @@ struct SmallRecipeCard: View {
                             .font(.caption2)
                             .padding()
                     }
-                    .frame(minHeight: 175, maxHeight: 175)
+                    .frame(height: 175)
                 }
                 Spacer()
             }

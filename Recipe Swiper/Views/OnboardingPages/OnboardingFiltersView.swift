@@ -54,7 +54,6 @@ struct OnboardingFiltersView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
                 .transition(.scale.combined(with: .opacity))
-                //checks if filterwas tapped, if so, it pulls up with an animation the abilities you can do with filters
                 Button("Next") {
                     withAnimation {
                         selectedTab = 2

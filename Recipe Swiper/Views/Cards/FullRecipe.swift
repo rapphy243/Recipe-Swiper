@@ -11,7 +11,6 @@ import SwiftUI
 struct FullRecipe: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var recipe: RecipeModel
-    @State var recipeImage: UIImage?
     @State var showEditing: Bool = false
     var body: some View {
         NavigationStack {
@@ -22,8 +21,9 @@ struct FullRecipe: View {
                         .bold()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    if let image = recipeImage {
-                        Image(uiImage: image)
+                    
+                    if let imageData = recipe.imageData, let uiImage = UIImage(data: imageData) {
+                        Image(uiImage: uiImage)
                             .resizable()
                             .scaledToFit()
                             .cornerRadius(10)
@@ -33,18 +33,9 @@ struct FullRecipe: View {
                             .fill(Color.gray.opacity(0.3))
                             .frame(height: 300)
                             .padding()
-                            .onAppear {
-                                Task {
-                                    await recipe.getImage()
-                                }
-                            }
                     }
 
-                    Text("Details")
-                        .font(.title2)
-                        .bold()
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    SectionTitleView(title: "Details")
 
                     FullCardDetails(recipe: recipe)
 
@@ -54,25 +45,22 @@ struct FullRecipe: View {
 
                     Divider()
 
-                    Text("Summary")
-                        .font(.title2)
-                        .bold()
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    SectionTitleView(title: "Summary")
 
                     Text(recipe.summary)
                         .font(.body)
-                        .padding(.bottom)
 
                     Divider()
+
+                    SectionTitleView(title: "Ingredients")
 
                     IngredientsListComponent(recipe: recipe)
 
                     Divider()
 
-                    InstructionsStepsComponent(recipe: recipe)
+                    SectionTitleView(title: "Instructions")
 
-                    Divider()
+                    InstructionsStepsComponent(recipe: recipe)
                 }
                 .padding()
             }
@@ -87,17 +75,28 @@ struct FullRecipe: View {
                     }
                 }
             }
-            .toolbarBackground(.clear, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .sheet(isPresented: $showEditing) {
                 EditFullRecipeView(recipe: recipe)
             }
         }
         .task {
-            if recipeImage == nil {
-                await recipeImage = recipe.getImage()
+            if recipe.imageData == nil {
+                await recipe.fetchImage()
             }
         }
+    }
+}
+
+struct SectionTitleView: View {
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .font(.title2)
+            .bold()
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, alignment: .center)
     }
 }
 

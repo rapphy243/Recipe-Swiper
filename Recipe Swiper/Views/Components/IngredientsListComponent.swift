@@ -7,11 +7,6 @@ struct IngredientsListComponent: View {
 
     var body: some View {
         VStack {
-            Text("Required Ingredients")
-                .font(.title2)
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .center)
-
             DisclosureGroup("", isExpanded: $isExpanded) {
                 VStack(alignment: .leading, spacing: 16) {
                     // Serving size adjustment

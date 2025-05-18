@@ -105,18 +105,15 @@ struct RecipeListView: View {
     private func returnFilterPredicate(_ filter: String) -> Predicate<
         RecipeModel
     > {
-        if filter == "All" {
-            return #Predicate<RecipeModel> { recipe in
-                !recipe.isDiscarded
-            }
-        } else if filter == "Rating" {
+        if filter == "Rating" {
             return #Predicate<RecipeModel> { recipe in
                 !recipe.isDiscarded && recipe.rating != 0.0
             }
-        }
-
-        return #Predicate<RecipeModel> { recipe in
-            !recipe.isDiscarded
+        } else {
+            // Default to "All" or any other unspecified filter
+            return #Predicate<RecipeModel> { recipe in
+                !recipe.isDiscarded
+            }
         }
     }
 }

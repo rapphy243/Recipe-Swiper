@@ -68,7 +68,6 @@ struct OnboardingAboutView: View {
                     color: .green,
                     delay: 1.8
                 )
-//some icons
             }
             .opacity(isAnimating ? 1 : 0)
             .offset(y: isAnimating ? 0 : 20)

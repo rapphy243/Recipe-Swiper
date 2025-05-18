@@ -40,7 +40,6 @@ struct OnboardingGetStartedView: View {
                 .padding(.horizontal)
                 Spacer()
             }
-            //simple final tab
             .padding(.top)
 
             Button {

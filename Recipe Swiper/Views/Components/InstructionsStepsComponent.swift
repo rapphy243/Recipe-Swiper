@@ -13,11 +13,6 @@ struct InstructionsStepsComponent: View {
 
     var body: some View {
         VStack {
-            Text("Instructions")
-                .font(.title2)
-                .bold()
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity, alignment: .center)
             DisclosureGroup("", isExpanded: $isExpanded) {
                 VStack(alignment: .leading, spacing: 10) {
                     if !recipe.analyzedInstructions.isEmpty {
