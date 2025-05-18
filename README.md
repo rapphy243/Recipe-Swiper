@@ -1,6 +1,6 @@
-# Recipe Swiper
+# Snack Swipe
 
-Recipe Swiper helps you discover and save recipes. Using a Tinder-like swipe interface, users can easily browse through recipes, saving the ones they love and skipping those they don't.
+Snack Swipe helps you discover and save recipes. Using a Tinder-like swipe interface, users can easily browse through recipes, saving the ones they love and skipping those they don't.
 ## Screenshots
 <p>
 <img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_48_32-MT3hxDa1.png" width="300">
