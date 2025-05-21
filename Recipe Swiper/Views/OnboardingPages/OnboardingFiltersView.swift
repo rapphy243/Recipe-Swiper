@@ -56,7 +56,7 @@ struct OnboardingFiltersView: View {
                 .transition(.scale.combined(with: .opacity))
                 Button("Next") {
                     withAnimation {
-                        selectedTab = 2
+                        selectedTab = 3
                     }
                 }
                 .buttonStyle(.borderedProminent)

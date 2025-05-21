@@ -117,7 +117,7 @@ struct OnboardingHowToView: View {
         .onChange(of: step) { _, newStep in
             if newStep == 4 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    selectedTab = 3  // Move to next tab in Onboarding
+                    selectedTab = 4  // Move to next tab in Onboarding
                 }
             }
         }

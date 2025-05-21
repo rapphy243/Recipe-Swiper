@@ -16,12 +16,14 @@ struct OnboardingView: View {
             TabView(selection: $selectedTab) {
                 OnboardingAboutView(selectedTab: $selectedTab)
                     .tag(0)
-                OnboardingFiltersView(selectedTab: $selectedTab, recipe: $recipe)
+                OnboardingInputAPIView(selectedTab: $selectedTab)
                     .tag(1)
-                OnboardingHowToView(recipe: $recipe, selectedTab: $selectedTab)
+                OnboardingFiltersView(selectedTab: $selectedTab, recipe: $recipe)
                     .tag(2)
-                OnboardingGetStartedView()
+                OnboardingHowToView(recipe: $recipe, selectedTab: $selectedTab)
                     .tag(3)
+                OnboardingGetStartedView()
+                    .tag(4)
             }
             .tabViewStyle(.page)
             .indexViewStyle(.page(backgroundDisplayMode: .always)) // Show little dots for amount of tabs
