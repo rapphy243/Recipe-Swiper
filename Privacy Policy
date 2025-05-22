@@ -1,0 +1,46 @@
+Privacy Policy for Snack Swipe
+Effective Date: May 22, 2025
+Welcome to Snack Swipe ("we," "us," "our"). We are committed to protecting your privacy. This Privacy Policy explains how we handle information in connection with your use of the Snack Swipe mobile application (the "App").
+By using the App, you agree to the collection and use of information in accordance with this policy.
+1. Information We Collect
+We aim to collect as little information as possible to provide you with the best experience.
+
+Non-Personal Information (Analytics Data):
+
+API Call Metrics: We collect anonymized data regarding the number of API calls made to our third-party recipe provider (Spoonacular). This information is used solely for internal operational purposes, such as monitoring API usage limits, understanding service demand, and ensuring the stability and efficiency of the App. This data is aggregated and does not personally identify you.
+
+
+We do not collect any Personal Identifiable Information (PII) such as your name, email address, location, contacts, photos, or other sensitive personal data directly through the Snack Swipe app. You are not required to create an account to use Snack Swipe.
+2. How We Use Your Information
+The information we collect is used for the following purposes:
+
+To Provide and Maintain the App: To fetch recipes and display them within the App.
+To Monitor and Improve the App: To understand how many requests are being made to our recipe provider, which helps us manage our resources and improve the App's performance and features.
+To Ensure Compliance: To ensure we are complying with the terms of service of our third-party API providers.
+3. Third-Party Services: Spoonacular API
+Snack Swipe uses the Spoonacular API (https://spoonacular.com/food-api) to provide recipe content. When you use Snack Swipe to search for or view recipes, your requests are processed through the Spoonacular API.
+
+Spoonacular's Data Handling: Spoonacular has its own privacy policy and terms of service that govern its collection and use of data. We encourage you to review Spoonacular's Privacy Policy (available on their website) to understand how they handle any data they may collect. We are not responsible for the privacy practices of Spoonacular.
+Information Sent to Spoonacular: Recipe search queries or requests for recipe details are sent to Spoonacular to retrieve the relevant information for display within Snack Swipe.
+4. Data Sharing and Disclosure
+We do not sell, trade, or otherwise transfer your information to outside parties, except as described below:
+
+Spoonacular API: As mentioned above, recipe requests are sent to Spoonacular to fulfill the core functionality of the App.
+Legal Requirements: We may disclose your information if required to do so by law or in response to valid requests by public authorities (e.g., a court or a government agency).
+We do not share our API call metrics with any third parties, other than as may be implicitly necessary for the operation of the Spoonacular API itself (e.g., Spoonacular will know requests originate from our API key).
+5. Data Security
+We take reasonable measures to protect the limited information we collect. However, please remember that no method of transmission over the internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your information, we cannot guarantee its absolute security.
+The primary data processed by the App (recipe content) is retrieved from Spoonacular and displayed within the App; it is not stored persistently by Snack Swipe beyond temporary caching for performance, if any. Our API call metrics are stored securely.
+6. Data Retention
+We retain the anonymized API call metrics for as long as necessary for operational and analytical purposes, or as required to comply with our legal obligations.
+7. Children's Privacy
+Snack Swipe is not intended for use by children under the age of 13 (or a higher age threshold if stipulated by applicable law in your jurisdiction). We do not knowingly collect any personal information from children. If you are a parent or guardian and you are aware that your child has provided us with information without your consent, please contact us. If we become aware that we have collected information from children without verification of parental consent, we will take steps to remove that information.
+8. Changes to This Privacy Policy
+We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy within the App or on our App Store listing. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted.
+Your continued use of the App after any modification to this Privacy Policy will constitute your acceptance of such modification.
+9. Your Consent
+By using our App, you consent to our Privacy Policy.
+10. Contact Us
+If you have any questions about this Privacy Policy, please contact us:
+
+By email: rapphy243[at]gmail.com
