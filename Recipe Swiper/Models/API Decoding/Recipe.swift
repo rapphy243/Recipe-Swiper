@@ -72,7 +72,7 @@ struct Recipe: Codable, Hashable, Equatable {
     // }
     static let empty = Recipe(
         id: -1,  // Use -1 or 0 to indicate invalid/empty
-        image: nil,
+        image: "https://picsum.photos/200/300", // Returns a random image, used to make sure Persistence Model doenst try to get a null image   
         imageType: "",
         title: "Not Found",
         readyInMinutes: 0,

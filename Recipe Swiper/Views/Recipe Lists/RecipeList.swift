@@ -44,6 +44,22 @@ struct RecipeListView: View {
                                 withAnimation {
                                     recipe.isDiscarded = true
                                     recipe.dateModified = Date()
+                                    // Check if we need to remove an old discarded recipe
+                                    let discardedFetchDescriptor = FetchDescriptor<RecipeModel>(
+                                        predicate: #Predicate { $0.isDiscarded == true },
+                                        sortBy: [SortDescriptor(\RecipeModel.dateModified, order: .forward)]
+                                    )
+
+                                    if let discardedRecipes = try? modelContext.fetch(
+                                        discardedFetchDescriptor
+                                    ),
+                                        discardedRecipes.count > 10, // Changed from >= 10 to > 10 to only delete if count is over 10
+                                        let oldestDiscarded = discardedRecipes.first
+                                    {
+                                        // Delete the oldest discarded recipe if we have more than 10
+                                        modelContext.delete(oldestDiscarded)
+                                        print("Deleted oldest discarded recipe: \(oldestDiscarded.title)")
+                                    }
                                 }
                             } label: {
                                 Label("Discard", systemImage: "trash")

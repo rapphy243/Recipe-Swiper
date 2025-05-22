@@ -20,8 +20,10 @@ struct OnboardingView: View {
                     .tag(1)
                 OnboardingHowToView(recipe: $recipe, selectedTab: $selectedTab)
                     .tag(2)
-                OnboardingGetStartedView()
+                OnboardingInputAPIView(selectedTab: $selectedTab)
                     .tag(3)
+                OnboardingGetStartedView()
+                    .tag(4)
             }
             .tabViewStyle(.page)
             .indexViewStyle(.page(backgroundDisplayMode: .always)) // Show little dots for amount of tabs

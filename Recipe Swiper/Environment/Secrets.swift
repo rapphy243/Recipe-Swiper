@@ -17,7 +17,7 @@ struct Secrets {
 
     // --- Private storage for the potentially overridden key ---
     // This will hold the key currently in use. It starts as nil.
-    private static var currentApiKey: String? = nil
+    private static var currentApiKey: String? = UserDefaults.standard.object(forKey:"SavedApiKey") as? String ?? nil
     // Lock for thread safety when accessing/modifying currentApiKey
     private static let lock = NSLock()
     // ---
@@ -66,8 +66,8 @@ struct Secrets {
             let errorMessage =
                 "Secrets.xcconfig: API Key not found or invalid in Info.plist. Make sure it's set or restart Xcode."
             print(errorMessage)
-            currentApiKey = errorMessage // Store the error message to avoid re-checking
-            return errorMessage
+            currentApiKey = "No Build API Key" // Store the error message to avoid re-checking
+            return "No Build API Key"
         }
     }
 
@@ -90,6 +90,7 @@ struct Secrets {
 
         print("API Key changed at runtime.") // Good for debugging
         currentApiKey = newKey // Update the stored key
+        UserDefaults.standard.set(newKey, forKey: "SavedApiKey")
     }
 
     /// Resets the API key to the value originally loaded from Info.plist.
