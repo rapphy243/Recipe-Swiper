@@ -17,7 +17,7 @@ struct Secrets {
 
     // --- Private storage for the potentially overridden key ---
     // This will hold the key currently in use. It starts as nil.
-    private static var currentApiKey: String? = nil
+    private static var currentApiKey: String? = UserDefaults.standard.object(forKey:"SavedApiKey") as? String ?? nil
     // Lock for thread safety when accessing/modifying currentApiKey
     private static let lock = NSLock()
     // ---
@@ -90,6 +90,7 @@ struct Secrets {
 
         print("API Key changed at runtime.") // Good for debugging
         currentApiKey = newKey // Update the stored key
+        UserDefaults.standard.set(newKey, forKey: "SavedApiKey")
     }
 
     /// Resets the API key to the value originally loaded from Info.plist.
