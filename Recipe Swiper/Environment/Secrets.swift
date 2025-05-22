@@ -66,8 +66,8 @@ struct Secrets {
             let errorMessage =
                 "Secrets.xcconfig: API Key not found or invalid in Info.plist. Make sure it's set or restart Xcode."
             print(errorMessage)
-            currentApiKey = errorMessage // Store the error message to avoid re-checking
-            return errorMessage
+            currentApiKey = "No Build API Key" // Store the error message to avoid re-checking
+            return "No Build API Key"
         }
     }
 
