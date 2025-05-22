@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingInputAPIView: View {
-    @State private var apiKey: String = ""
+    @State private var apiKey: String = Secrets.apiKey
     @Binding var selectedTab: Int
     let spoonacularDashboardURL = URL(
         string: "https://spoonacular.com/food-api/console#Dashboard"
@@ -89,7 +89,7 @@ struct OnboardingInputAPIView: View {
 
                 Button(action: {
                     Secrets.setApiKey(apiKey)
-                    selectedTab = 2
+                    selectedTab = 4
                 }) {
                     Text("Save & Continue")
                         .fontWeight(.semibold)

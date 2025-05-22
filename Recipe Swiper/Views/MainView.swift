@@ -106,8 +106,12 @@ struct MainView: View {
                             )
                             .foregroundStyle(.white)
                         }
-
                         Menu {
+                            Button("Refresh Recipe", systemImage: "arrow.clockwise") {
+                                Task {
+                                    await fetchNewRecipe()
+                                }
+                            }
                             Button("Settings", systemImage: "gear") {
                                 showSettings = true
                             }
