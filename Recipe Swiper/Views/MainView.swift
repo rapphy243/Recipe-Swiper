@@ -122,7 +122,7 @@ struct MainView: View {
                 .toolbarBackground(.visible, for: .navigationBar)
                 .navigationBarTitleDisplayMode(.inline)
                 .task {
-                    if currentRecipe.id == -1 {
+                    if currentRecipe.id == -1 && isOnboarding == false {
                         await fetchNewRecipe()
                     }
                 }
@@ -147,6 +147,13 @@ struct MainView: View {
                 Button("Cancel", role: .cancel) {}
             } message: { error in
                 Text(error.localizedDescription)
+            }
+            .onChange(of: isOnboarding) {
+                if !(isOnboarding ?? false) {
+                    Task {
+                        await fetchNewRecipe()
+                    }
+                }
             }
         }
     }
@@ -210,7 +217,9 @@ struct MainView: View {
         // Fetch next recipe
         Task {
             isLoading = true
-            await fetchNewRecipe()
+            if isOnboarding == false {
+                await fetchNewRecipe()
+            }
             resetCardPosition()
             isLoading = false
         }
@@ -270,7 +279,9 @@ struct MainView: View {
         // Fetch next recipe
         Task {
             isLoading = true
-            await fetchNewRecipe()
+            if isOnboarding == false {
+                await fetchNewRecipe()
+            }
             resetCardPosition()
             isLoading = false
         }
@@ -285,6 +296,12 @@ struct MainView: View {
 
     private func fetchNewRecipe() async {
         isLoading = true
+        guard isOnboarding == false else {
+            // If onboarding is active, set current recipe to empty and stop loading
+            currentRecipe = Recipe.empty
+            isLoading = false
+            return
+        }
         do {
             let newRecipe = try await fetchRandomRecipe(using: filterModel)
             if let decodedData = try? JSONEncoder().encode(newRecipe) {
