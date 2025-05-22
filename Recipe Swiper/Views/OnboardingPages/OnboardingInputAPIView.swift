@@ -11,7 +11,7 @@ struct OnboardingInputAPIView: View {
     @State private var apiKey: String = Secrets.apiKey == "No Build API Key" ? "" : Secrets.apiKey
     @Binding var selectedTab: Int
     let spoonacularDashboardURL = URL(
-        string: "https://spoonacular.com/food-api/console#Dashboard"
+        string: "https://spoonacular.com/food-api/console#Profile"
     )!
     var body: some View {
             VStack(spacing: 25) {
