@@ -11,6 +11,7 @@ import SwiftUI
 struct OnboardingView: View {
     @State private var selectedTab: Int = 0
     @State private var recipe = loadCakeRecipe()
+    @State private var showFinalTab: Bool = false
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTab) {
@@ -20,10 +21,12 @@ struct OnboardingView: View {
                     .tag(1)
                 OnboardingHowToView(recipe: $recipe, selectedTab: $selectedTab)
                     .tag(2)
-                OnboardingInputAPIView(selectedTab: $selectedTab)
+                OnboardingInputAPIView(selectedTab: $selectedTab, showFinalTab: $showFinalTab)
                     .tag(3)
-                OnboardingGetStartedView()
-                    .tag(4)
+                if showFinalTab {
+                    OnboardingGetStartedView()
+                        .tag(4)
+                }
             }
             .tabViewStyle(.page)
             .indexViewStyle(.page(backgroundDisplayMode: .always)) // Show little dots for amount of tabs

@@ -10,6 +10,7 @@ import SwiftUI
 struct OnboardingInputAPIView: View {
     @State private var apiKey: String = Secrets.apiKey == "No Build API Key" ? "" : Secrets.apiKey
     @Binding var selectedTab: Int
+    @Binding var showFinalTab: Bool
     let spoonacularDashboardURL = URL(
         string: "https://spoonacular.com/food-api/console#Profile"
     )!
@@ -89,6 +90,7 @@ struct OnboardingInputAPIView: View {
 
                 Button(action: {
                     Secrets.setApiKey(apiKey)
+                    showFinalTab = true
                     selectedTab = 4
                 }) {
                     Text("Save & Continue")
@@ -126,10 +128,11 @@ struct Step: View {
                 .fontWeight(.medium)
             Text(text)
                 .font(.callout)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
 
 #Preview {
-    OnboardingInputAPIView(selectedTab: .constant(1))
+    OnboardingInputAPIView(selectedTab: .constant(1), showFinalTab: .constant(false))
 }
