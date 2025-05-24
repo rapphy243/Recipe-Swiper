@@ -13,7 +13,60 @@ struct OnboardingFiltersView: View {
     @Binding var selectedTab: Int
     @Binding var recipe: Recipe
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack(alignment: .topTrailing) {
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("Filters help you personalize your recipes!")
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+
+                    if filterTapped {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("You can:")
+                                .font(.headline)
+                            Text("• Choose a Cuisine – e.g., Italian, Korean")
+                            Text("• Pick a Diet – e.g., Vegan, Keto")
+                            Text("• Avoid Intolerances – e.g., Gluten-Free")
+                            Text("• Select a Meal Type – e.g., Snack, Dessert")
+                        }
+                        .font(.body)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+                        .transition(.scale.combined(with: .opacity))
+                        Button("Next") {
+                            withAnimation {
+                                selectedTab = 2
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.vertical)
+                    }
+
+                    SmallRecipeCard(recipe: recipe)
+                        .padding(.horizontal)
+                    Spacer()
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation(.spring()) {
+                            filterTapped = true
+                        }
+                    } label: {
+                        Image(
+                            systemName: "line.3.horizontal.decrease.circle"
+                        )
+                        .foregroundStyle(.blue)
+                        .font(.title2)
+                        .padding(.horizontal)
+                    }
+                }
+            }
+
             if !filterTapped {
                 VStack(spacing: 4) {
                     Image(systemName: "arrow.up")
@@ -28,61 +81,13 @@ struct OnboardingFiltersView: View {
                         .foregroundColor(.blue)
                         .bold()
                 }
-                .offset(x: 125, y: -5)
+                .padding(.top, 5)
+                .padding(.trailing, 60)
                 .transition(.opacity)
                 .onAppear {
                     isArrowAnimating = true
                 }
             }
-            Text("Filters help you personalize your recipes!")
-                .font(.headline)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-
-            if filterTapped {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("You can:")
-                        .font(.headline)
-                    Text("• Choose a Cuisine – e.g., Italian, Korean")
-                    Text("• Pick a Diet – e.g., Vegan, Keto")
-                    Text("• Avoid Intolerances – e.g., Gluten-Free")
-                    Text("• Select a Meal Type – e.g., Snack, Dessert")
-                }
-                .font(.body)
-                .padding()
-                .background(.ultraThinMaterial)
-                .cornerRadius(12)
-                .padding(.horizontal)
-                .transition(.scale.combined(with: .opacity))
-                Button("Next") {
-                    withAnimation {
-                        selectedTab = 2
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .padding(.vertical)
-            }
-
-            SmallRecipeCard(recipe: recipe)
-                .padding(.horizontal)
-            Spacer()
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            withAnimation(.spring()) {
-                                filterTapped = true
-                            }
-                        } label: {
-                            Image(
-                                systemName: "line.3.horizontal.decrease.circle"
-                            )
-                            .foregroundStyle(.blue)
-                            .font(.title2)
-                            .padding(.horizontal)
-                        }
-                    }
-                }
-            //put filter button in the toolbar cuz thats whrer it actually is
         }
     }
 }
