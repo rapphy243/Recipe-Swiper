@@ -12,41 +12,92 @@ struct SmallCardDetails: View {
     @State var recipe: Recipe
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
-                HStack(spacing: 5) {
-                    // Time to make
-                    Image(systemName: "timer")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("\(recipe.readyInMinutes)min")
+            ViewThatFits {
+                HStack(spacing: 10) {
+                    HStack(spacing: 5) {
+                        // Time to make
+                        Image(systemName: "timer")
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("\(recipe.readyInMinutes)min")
+                                .font(.footnote)
+                            Text("Total")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    // How many servings
+                    HStack(spacing: 2) {
+                        Image(systemName: "person.2.fill")
+                        Text("\(recipe.servings)")
                             .font(.footnote)
-                        Text("Total")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
                     }
                 }
-                // How many servings
-                HStack(spacing: 2) {
-                    Image(systemName: "person.2.fill")
-                    Text("\(recipe.servings)")
-                        .font(.footnote)
+                VStack(alignment: .leading, spacing: 5) { // Fallback VStack
+                    HStack(spacing: 10) { // Keep Timer and Servings in an HStack
+                        HStack(spacing: 5) {
+                            // Time to make
+                            Image(systemName: "timer")
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("\(recipe.readyInMinutes)min")
+                                    .font(.footnote)
+                                Text("Total")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        // How many servings
+                        HStack(spacing: 2) {
+                            Image(systemName: "person.2.fill")
+                            Text("\(recipe.servings)")
+                                .font(.footnote)
+                        }
+                    }
                 }
             }
-            HStack(spacing: 10) {
-                // Source of recipe
-                HStack {
-                    Image(systemName: "book.closed.fill")
-                    if let hosturl = recipe.sourceUrl {
-                        Link(destination: URL(string: hosturl)!) {
-                            Text("\(getHostURL(hosturl))")
+            ViewThatFits {
+                HStack(spacing: 10) {
+                    // Source of recipe
+                    HStack {
+                        Image(systemName: "book.closed.fill")
+                        if let hosturl = recipe.sourceUrl {
+                            Link(destination: URL(string: hosturl)!) {
+                                Text("\(getHostURL(hosturl))")
+                                    .font(.footnote)
+                                    .foregroundColor(
+                                        colorScheme == .dark ? .white : .black
+                                    )
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        } else {
+                            Text("No Source")
                                 .font(.footnote)
-                                .foregroundColor(
-                                    colorScheme == .dark ? .white : .black
-                                )
-                                .fixedSize(horizontal: false, vertical: true)
                         }
-                    } else {
-                        Text("No Source")
-                            .font(.footnote)
+                        // Health score provided by Spoonacular
+                        HStack(spacing: 4) {
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(healthScoreColor)
+                            Text("\(recipe.healthScore)")
+                                .font(.footnote)
+                        }
+                    }
+                }
+                VStack(alignment: .leading, spacing: 5) { // Fallback VStack
+                    // Source of recipe
+                    HStack {
+                        Image(systemName: "book.closed.fill")
+                        if let hosturl = recipe.sourceUrl {
+                            Link(destination: URL(string: hosturl)!) {
+                                Text("\(getHostURL(hosturl))")
+                                    .font(.footnote)
+                                    .foregroundColor(
+                                        colorScheme == .dark ? .white : .black
+                                    )
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        } else {
+                            Text("No Source")
+                                .font(.footnote)
+                        }
                     }
                     // Health score provided by Spoonacular
                     HStack(spacing: 4) {
@@ -57,54 +108,111 @@ struct SmallCardDetails: View {
                     }
                 }
             }
-            HStack(spacing: 10) {
-                // Show cuisine recipe is from and if it is vegan or gluten free
-                if !recipe.cuisines.isEmpty {
-                    HStack(spacing: 5) {
-                        Image(systemName: "globe")
-                        Text(recipe.cuisines[0].capitalized)
-                            .font(.footnote)
+            ViewThatFits {
+                HStack(spacing: 10) {
+                    // Show cuisine recipe is from and if it is vegan or gluten free
+                    if !recipe.cuisines.isEmpty {
+                        HStack(spacing: 5) {
+                            Image(systemName: "globe")
+                            Text(recipe.cuisines[0].capitalized)
+                                .font(.footnote)
+                        }
+                        if recipe.vegan {
+                            Text("VG")
+                                .font(.caption)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(.green.opacity(0.2))
+                                .cornerRadius(4)
+                        }
+                        if recipe.glutenFree {
+                            Text("GF")
+                                .font(.caption)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(.green.opacity(0.2))
+                                .cornerRadius(4)
+                        }
+                    } else {  // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
+                        if recipe.vegan {
+                            Text("VG")
+                                .font(.caption)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(.green.opacity(0.2))
+                                .cornerRadius(4)
+                        }
+                        if recipe.glutenFree {
+                            Text("GF")
+                                .font(.caption)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(.brown.opacity(0.4))
+                                .cornerRadius(4)
+                        }
+                        if recipe.dairyFree {
+                            Text("DF")
+                                .font(.caption)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(.blue.opacity(0.2))
+                                .cornerRadius(4)
+                        }
                     }
-                    if recipe.vegan {
-                        Text("VG")
-                            .font(.caption)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 2)
-                            .background(.green.opacity(0.2))
-                            .cornerRadius(4)
-                    }
-                    if recipe.glutenFree {
-                        Text("GF")
-                            .font(.caption)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 2)
-                            .background(.green.opacity(0.2))
-                            .cornerRadius(4)
-                    }
-                } else {  // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
-                    if recipe.vegan {
-                        Text("VG")
-                            .font(.caption)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 2)
-                            .background(.green.opacity(0.2))
-                            .cornerRadius(4)
-                    }
-                    if recipe.glutenFree {
-                        Text("GF")
-                            .font(.caption)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 2)
-                            .background(.brown.opacity(0.4))
-                            .cornerRadius(4)
-                    }
-                    if recipe.dairyFree {
-                        Text("DF")
-                            .font(.caption)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 2)
-                            .background(.blue.opacity(0.2))
-                            .cornerRadius(4)
+                }
+                VStack(alignment: .leading, spacing: 5) { // Fallback VStack
+                    // Show cuisine recipe is from and if it is vegan or gluten free
+                    if !recipe.cuisines.isEmpty {
+                        HStack(spacing: 5) {
+                            Image(systemName: "globe")
+                            Text(recipe.cuisines[0].capitalized)
+                                .font(.footnote)
+                        }
+                        HStack { // Group VG and GF for vertical stacking
+                            if recipe.vegan {
+                                Text("VG")
+                                    .font(.caption)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 2)
+                                    .background(.green.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                            if recipe.glutenFree {
+                                Text("GF")
+                                    .font(.caption)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 2)
+                                    .background(.green.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                        }
+                    } else {  // if cusisine doesn't exist show vegan, gluten free, or dairy free (width)
+                        HStack { // Group VG, GF, DF for vertical stacking
+                            if recipe.vegan {
+                                Text("VG")
+                                    .font(.caption)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 2)
+                                    .background(.green.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                            if recipe.glutenFree {
+                                Text("GF")
+                                    .font(.caption)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 2)
+                                    .background(.brown.opacity(0.4))
+                                    .cornerRadius(4)
+                            }
+                            if recipe.dairyFree {
+                                Text("DF")
+                                    .font(.caption)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 2)
+                                    .background(.blue.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                        }
                     }
                 }
             }
@@ -150,5 +258,8 @@ struct SmallCardDetails: View {
 }
 
 #Preview {
-    SmallCardDetails(recipe: loadCakeRecipe())
+    SmallCardDetails(recipe: loadSaladRecipe())
+}
+#Preview {
+    SmallRecipeCard(recipe: loadSaladRecipe())
 }

@@ -28,8 +28,7 @@ struct OnboardingView: View {
                         .tag(4)
                 }
             }
-            .tabViewStyle(.page)
-            .indexViewStyle(.page(backgroundDisplayMode: .always)) // Show little dots for amount of tabs
+            .tabViewStyle(.page(indexDisplayMode: .never)) // Remove tabbview dots
             .animation(.easeOut(duration: 0.2), value: selectedTab)  // https://stackoverflow.com/questions/61827496/swiftui-how-to-animate-a-tabview-selection
         }
     }
