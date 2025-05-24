@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct OnboardingInputAPIView: View {
-    @State private var apiKey: String = Secrets.apiKey == "No Build API Key" ? "" : Secrets.apiKey
+    @State private var apiKey: String =
+        Secrets.apiKey == "No Build API Key" ? "" : Secrets.apiKey
     @Binding var selectedTab: Int
     @Binding var showFinalTab: Bool
     let spoonacularDashboardURL = URL(
         string: "https://spoonacular.com/food-api/console#Profile"
     )!
     var body: some View {
-            VStack(spacing: 25) {
-                Spacer().frame(height: 20)
-
+        ScrollView {
+            VStack(spacing: 10) {
                 Image(
                     systemName: "key.fill"
                 )
@@ -37,6 +37,7 @@ struct OnboardingInputAPIView: View {
                 )
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
 
@@ -48,7 +49,7 @@ struct OnboardingInputAPIView: View {
 
                     Step(
                         number: "1",
-                        text: "Go to the Spoonacular API Dashboard."
+                        text: "Go to the Spoonacular API Dashboard and sign up for a free account."
                     )
                     Link(
                         destination: spoonacularDashboardURL,
@@ -58,19 +59,16 @@ struct OnboardingInputAPIView: View {
                                 .multilineTextAlignment(.leading)
                         }
                     )
-                    .padding(.leading, 30) // Indent the link
-
+                    .padding(.leading, 25)  // Indent the link
                     Step(
                         number: "2",
-                        text: "Sign up for a free account."
+                        text:
+                            "Once logged in, you'll find your API Key under \"Profile & API Key\"."
                     )
                     Step(
                         number: "3",
-                        text: "Once logged in, you'll find your API Key under \"Profile & API Key\"."
-                    )
-                    Step(
-                        number: "4",
-                        text: "Copy the API Key and paste it into the field below."
+                        text:
+                            "Tap \"Show API Key\" then copy and paste it into the field below."
                     )
                 }
                 .padding()
@@ -114,8 +112,23 @@ struct OnboardingInputAPIView: View {
 
                 Spacer()
             }
-            .padding(.bottom, 20)
         }
+        .padding(.bottom, 20)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    withAnimation(.spring()) {
+                    }
+                } label: {
+                    EmptyView()
+                        .foregroundStyle(.blue)
+                        .font(.title2)
+                        .padding(.horizontal)
+                }
+            }
+        }
+        .toolbarBackground(.hidden, for: .navigationBar)
+    }
 }
 
 //Instruction steps
@@ -134,5 +147,8 @@ struct Step: View {
 }
 
 #Preview {
-    OnboardingInputAPIView(selectedTab: .constant(1), showFinalTab: .constant(false))
+    OnboardingInputAPIView(
+        selectedTab: .constant(1),
+        showFinalTab: .constant(false)
+    )
 }

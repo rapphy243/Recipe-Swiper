@@ -26,13 +26,13 @@ struct SmallRecipeCard: View {
                             image
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: geometry.size.width * 0.5, height: 300)
+                                .frame(width: geometry.size.width * 0.5, height: 260)
                                 .clipped()
                                 .cornerRadius(10)
                         } placeholder: {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.gray.opacity(0.3))
-                                .frame(width: geometry.size.width * 0.5, height: 300)
+                                .frame(width: geometry.size.width * 0.5, height: 260)
                         }
                         VStack {
                             SmallCardDetails(recipe: recipe)
@@ -43,13 +43,13 @@ struct SmallRecipeCard: View {
                                     .font(.caption2)
                                     .padding()
                             }
-                            .frame(height: 125)
+                            .frame(height: 100)
                         }
                     }
                 }
                 .padding(.top)
             }
-            .frame(height: 400)
+            .frame(height: 380)
             .padding(.vertical)
         }
     }

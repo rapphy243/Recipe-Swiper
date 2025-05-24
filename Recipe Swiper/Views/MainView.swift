@@ -34,56 +34,63 @@ struct MainView: View {
                     .zIndex(-1)
 
                 VStack {
-                    if isLoading {
-                        ProgressView()
-                            .scaleEffect(1.5)
-                            .padding()
-                    } else {
-                        SmallRecipeCard(recipe: currentRecipe)
-                            .offset(cardOffset)
-                            .rotationEffect(.degrees(cardRotation))
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { gesture in
-                                        cardOffset = gesture.translation
-                                        // Add slight rotation based on horizontal movement
-                                        cardRotation = Double(
-                                            gesture.translation.width / 15
-                                        )
+                    GeometryReader { proxy in
+                        VStack {
+                            if isLoading {
+                                ProgressView()
+                                    .scaleEffect(1.5)
+                                    .padding()
+                            } else {
+                                SmallRecipeCard(recipe: currentRecipe)
+                                    .offset(cardOffset)
+                                    .rotationEffect(.degrees(cardRotation))
+                                    .gesture(
+                                        DragGesture()
+                                            .onChanged { gesture in
+                                                cardOffset = gesture.translation
+                                                // Add slight rotation based on horizontal movement
+                                                cardRotation = Double(
+                                                    gesture.translation.width / 15
+                                                )
+                                            }
+                                            .onEnded { gesture in
+                                                handleSwipe(gesture)
+                                            }
+                                    )
+                                    .overlay(alignment: .trailing) {
+                                        if cardOffset.width > 50 {
+                                            Image(systemName: "heart.fill")
+                                                .foregroundColor(.green)
+                                                .font(.largeTitle)
+                                                .padding(.trailing, 30)
+                                                .opacity(
+                                                    Double(cardOffset.width)
+                                                        / swipeThreshold
+                                                )
+                                        }
                                     }
-                                    .onEnded { gesture in
-                                        handleSwipe(gesture)
+                                    .overlay(alignment: .leading) {
+                                        if cardOffset.width < -50 {
+                                            Image(systemName: "xmark")
+                                                .foregroundColor(.red)
+                                                .font(.largeTitle)
+                                                .padding(.leading, 30)
+                                                .opacity(
+                                                    Double(-cardOffset.width)
+                                                        / swipeThreshold
+                                                )
+                                        }
                                     }
-                            )
-                            .overlay(alignment: .trailing) {
-                                if cardOffset.width > 50 {
-                                    Image(systemName: "heart.fill")
-                                        .foregroundColor(.green)
-                                        .font(.largeTitle)
-                                        .padding(.trailing, 30)
-                                        .opacity(
-                                            Double(cardOffset.width)
-                                                / swipeThreshold
-                                        )
+                                    .animation(
+                                        .spring(response: 0.3),
+                                        value: cardOffset
+                                    )
+                                if proxy.size.width > 400 {
+                                    QuoteViewComponent()
                                 }
                             }
-                            .overlay(alignment: .leading) {
-                                if cardOffset.width < -50 {
-                                    Image(systemName: "xmark")
-                                        .foregroundColor(.red)
-                                        .font(.largeTitle)
-                                        .padding(.leading, 30)
-                                        .opacity(
-                                            Double(-cardOffset.width)
-                                                / swipeThreshold
-                                        )
-                                }
-                            }
-                            .animation(
-                                .spring(response: 0.3),
-                                value: cardOffset
-                            )
-                        QuoteViewComponent()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
                 .toolbar {

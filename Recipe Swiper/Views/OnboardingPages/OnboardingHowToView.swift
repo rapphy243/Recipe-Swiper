@@ -15,104 +15,121 @@ struct OnboardingHowToView: View {
     @Binding var selectedTab: Int
 
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            Text(instructionText)
-                .font(.headline)
-                .multilineTextAlignment(.center)
-                .padding()
-                .id(step)  // Add ID to force text update animation
-                .transition(.opacity)
+        ScrollView {
+            VStack(spacing: 0) {
+                Text(instructionText)
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding([.horizontal, .top])
+                    .id(step)  // Add ID to force text update animation
+                    .transition(.opacity)
 
-            SmallRecipeCard(recipe: recipe)
-                .offset(offset)
-                .rotationEffect(.degrees(Double(offset.width / 20)))
-                .gesture(
-                    DragGesture()
-                        .onChanged { gesture in
-                            // Prevent dragging while the card is resetting
-                            guard !isAnimatingReset else { return }
-                            // Only allow dragging in the relevant steps
-                            if step == 2 || step == 3 {
-                                offset = gesture.translation
+                SmallRecipeCard(recipe: recipe)
+                    .offset(offset)
+                    .rotationEffect(.degrees(Double(offset.width / 20)))
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                // Prevent dragging while the card is resetting
+                                guard !isAnimatingReset else { return }
+                                // Only allow dragging in the relevant steps
+                                if step == 2 || step == 3 {
+                                    offset = gesture.translation
+                                }
                             }
-                        }
-                        .onEnded { gesture in
-                            // Prevent new actions while the card is resetting
-                            guard !isAnimatingReset else { return }
+                            .onEnded { gesture in
+                                // Prevent new actions while the card is resetting
+                                guard !isAnimatingReset else { return }
 
-                            let screenWidth = UIScreen.main.bounds.width
-                            let swipeThreshold: CGFloat = 50  // Min distance for a swipe
+                                let screenWidth = UIScreen.main.bounds.width
+                                let swipeThreshold: CGFloat = 50  // Min distance for a swipe
 
-                            if step == 2 && offset.width < -swipeThreshold {
-                                // Swipe Left Success
-                                isAnimatingReset = true  // Disable gesture
-                                let impact = UIImpactFeedbackGenerator(style: .soft)
-                                impact.impactOccurred()
-                                withAnimation(.spring()) {
-                                    // Animate far off-screen left
-                                    offset = CGSize(
-                                        width: -screenWidth,
-                                        height: 0
+                                if step == 2 && offset.width < -swipeThreshold {
+                                    // Swipe Left Success
+                                    isAnimatingReset = true  // Disable gesture
+                                    let impact = UIImpactFeedbackGenerator(
+                                        style: .soft
                                     )
-                                }
-                                // Schedule reset after 1 second
-                                DispatchQueue.main.asyncAfter(
-                                    deadline: .now() + 1.0
-                                ) {
-                                    step += 1  // Move to next instruction
-                                    // Reset offset (will animate back due to .animation modifier)
-                                    offset = .zero
-                                    isAnimatingReset = false  // Re-enable gesture
-                                }
-                            } else if step == 3 && offset.width > swipeThreshold
-                            {
-                                // Swipe Right Success
-                                isAnimatingReset = true  // Disable gesture
-                                let impact = UIImpactFeedbackGenerator(style: .medium)
-                                impact.impactOccurred()
-                                withAnimation(.spring()) {
-                                    // Animate far off-screen right
-                                    offset = CGSize(
-                                        width: screenWidth,
-                                        height: 0
-                                    )
-                                }
-                                // Schedule reset after 1 second
-                                DispatchQueue.main.asyncAfter(
-                                    deadline: .now() + 1.0
-                                ) {
-                                    step += 1  // Move to next instruction
-                                    // Reset offset (will animate back)
-                                    offset = .zero
-                                    isAnimatingReset = false  // Re-enable gesture
-                                }
-                            } else {
-                                // If swipe wasn't decisive or wrong direction for the step,
-                                // snap back to center. Only animate if actually moved.
-                                if offset != .zero {
+                                    impact.impactOccurred()
                                     withAnimation(.spring()) {
+                                        // Animate far off-screen left
+                                        offset = CGSize(
+                                            width: -screenWidth,
+                                            height: 0
+                                        )
+                                    }
+                                    // Schedule reset after 1 second
+                                    DispatchQueue.main.asyncAfter(
+                                        deadline: .now() + 1.0
+                                    ) {
+                                        step += 1  // Move to next instruction
+                                        // Reset offset (will animate back due to .animation modifier)
                                         offset = .zero
+                                        isAnimatingReset = false  // Re-enable gesture
+                                    }
+                                } else if step == 3
+                                    && offset.width > swipeThreshold
+                                {
+                                    // Swipe Right Success
+                                    isAnimatingReset = true  // Disable gesture
+                                    let impact = UIImpactFeedbackGenerator(
+                                        style: .medium
+                                    )
+                                    impact.impactOccurred()
+                                    withAnimation(.spring()) {
+                                        // Animate far off-screen right
+                                        offset = CGSize(
+                                            width: screenWidth,
+                                            height: 0
+                                        )
+                                    }
+                                    // Schedule reset after 1 second
+                                    DispatchQueue.main.asyncAfter(
+                                        deadline: .now() + 1.0
+                                    ) {
+                                        step += 1  // Move to next instruction
+                                        // Reset offset (will animate back)
+                                        offset = .zero
+                                        isAnimatingReset = false  // Re-enable gesture
+                                    }
+                                } else {
+                                    // If swipe wasn't decisive or wrong direction for the step,
+                                    // snap back to center. Only animate if actually moved.
+                                    if offset != .zero {
+                                        withAnimation(.spring()) {
+                                            offset = .zero
+                                        }
                                     }
                                 }
                             }
-                        }
-                )
-                // Apply the animation modifier to the view affected by offset changes
-                .animation(.spring(), value: offset)
-            // Show "Next" button only for step 0 and 1
-            if step == 0 || step == 1 {
-                Button("Next") {
-                    step += 1
-                }
-                .buttonStyle(.borderedProminent)
-                .padding(.top)
-                .transition(.scale.combined(with: .opacity))  // Add transition
-            }
+                    )
+                    // Apply the animation modifier to the view affected by offset changes
+                    .animation(.spring(), value: offset)
 
-            Spacer()
+                // Show "Next" button only for step 0 and 1
+                if step == 0 || step == 1 {
+                    Button("Next") {
+                        step += 1
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .transition(.scale.combined(with: .opacity))  // Add transition
+                }
+            }
         }
-        .navigationTitle("How It Works")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    withAnimation(.spring()) {
+                    }
+                } label: {
+                    EmptyView()
+                    .foregroundStyle(.blue)
+                    .font(.title2)
+                    .padding(.horizontal)
+                }
+            }
+        }
         .animation(.easeInOut, value: step)
         .onChange(of: step) { _, newStep in
             if newStep == 4 {
