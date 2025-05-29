@@ -122,6 +122,7 @@ struct MainView: View {
                             Button("Settings", systemImage: "gear") {
                                 showSettings = true
                             }
+                            NavigationLink("About", destination: AboutView())
                         } label: {
                             Image(systemName: "ellipsis")
                                 .foregroundStyle(.white)
