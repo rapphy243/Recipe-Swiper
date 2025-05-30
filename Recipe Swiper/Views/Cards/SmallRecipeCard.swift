@@ -26,13 +26,13 @@ struct SmallRecipeCard: View {
                             image
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: geometry.size.width * 0.5, height: 260)
+                                .frame(width: geometry.size.width * 0.5, height: 275)
                                 .clipped()
                                 .cornerRadius(10)
                         } placeholder: {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.gray.opacity(0.3))
-                                .frame(width: geometry.size.width * 0.5, height: 260)
+                                .frame(width: geometry.size.width * 0.5, height: 275)
                         }
                         VStack {
                             SmallCardDetails(recipe: recipe)
