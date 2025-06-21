@@ -62,6 +62,7 @@ struct FilterSheetView: View {
                             model.includeDiet = ""
                             model.includeMealType = ""
                             model.selectedIntolerances = []
+                            UserDefaults.standard.set(Array(model.selectedIntolerances), forKey: "selectedIntolerances")
                         }
                     }
                 }
