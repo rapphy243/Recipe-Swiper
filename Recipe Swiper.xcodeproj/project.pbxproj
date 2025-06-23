@@ -15,22 +15,9 @@
 		DA10D0D32DAC3D4D00CC8D10 /* Recipe Swiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recipe Swiper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		9A341E6A2DB14A4200F4AA61 /* Exceptions for "Recipe Swiper" folder in "Recipe Swiper" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Environment/SecretsExample.xcconfig,
-			);
-			target = D93E0B742DA9781500F72C0A /* Recipe Swiper */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D93E0B772DA9781500F72C0A /* Recipe Swiper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				9A341E6A2DB14A4200F4AA61 /* Exceptions for "Recipe Swiper" folder in "Recipe Swiper" target */,
-			);
 			path = "Recipe Swiper";
 			sourceTree = "<group>";
 		};
