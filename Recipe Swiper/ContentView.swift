@@ -11,27 +11,30 @@ struct ContentView: View {
     @State private var selection = 1
     @AppStorage("isOnboarding") var isOnboarding: Bool = true
     var body: some View {
-        TabView(selection: $selection) {
-            Tab("Groceries", systemImage: "checklist", value: 0) {
-                GroceryView()
+        NavigationStack {
+            TabView(selection: $selection) {
+                Tab("Groceries", systemImage: "checklist", value: 0) {
+                    GroceryView()
+                }
+                Tab("Home", systemImage: "house", value: 1) {
+                    MainView()
+                }
+                Tab("Cookbook", systemImage: "book.closed", value: 2) {
+                    SavedRecipesView()
+                }
+                Tab("Search", systemImage: "magnifyingglass", value: 3, role: .search) {
+                    // Likely used for cookbook searching
+                }
             }
-            Tab("Home", systemImage: "house", value: 1) {
-                MainView()
+            .tabViewBottomAccessory {
+                if selection == 1 {
+                    // Random quotes
+                    Text("Keep cooking!")
+                }
             }
-            Tab("Cookbook", systemImage: "book.closed", value: 2) {
-                SavedRecipesView()
+            .fullScreenCover(isPresented: $isOnboarding) {
+                OnboardingView()
             }
-            Tab("Search", systemImage: "magnifyingglass", value: 3, role: .search) {
-                FiltersView()
-            }
-
-        }
-        .tabViewBottomAccessory {
-            // Probably inspirational quote
-            Text("Keep cooking!")
-        }
-        .fullScreenCover(isPresented: $isOnboarding) {
-            OnboardingView()
         }
     }
 }
