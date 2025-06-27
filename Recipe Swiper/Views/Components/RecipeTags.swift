@@ -41,8 +41,9 @@ struct SourceTag: View {
             Image(systemName: "book.closed.fill")
             if let source = source {
                 if let host = source.host {
+                    let displayHost = host.hasPrefix("www.") ? String(host.dropFirst(4)) : host
                     Link(destination: source) {
-                        Text(host)
+                        Text(displayHost)
                             .font(.footnote)
                             .foregroundColor(
                                 colorScheme == .dark ? .white : .black
@@ -82,6 +83,17 @@ struct HealthTag: View {
         }
     }
 }
+struct VegetarianTag: View {
+    var body: some View {
+        Text("VE")
+            .font(.caption)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
+            .background(Color.green.opacity(0.15))
+            .cornerRadius(4)
+    }
+}
+
 struct VeganTag: View {
     var body: some View {
         Text("VG")
@@ -136,15 +148,18 @@ struct CusineTags: View {
 }
 
 #Preview {
-    TimeTag(minutes: 10)
-    ServingsTag(servings: 5)
-    HealthTag(healthScore: 100)
-    SourceTag(source: URL(string: "https://www.example.com"))
-    VeganTag()
-    GlutenFreeTag()
-    DairyFreeTag()
-    CusineTags(
-        cuisines: ["Chinese", "Italian", "Indian", "American"],
-        showAll: true
-    )
+    VStack {
+        TimeTag(minutes: 10)
+        ServingsTag(servings: 5)
+        HealthTag(healthScore: 100)
+        SourceTag(source: URL(string: "https://www.example.com"))
+        VegetarianTag()
+        VeganTag()
+        GlutenFreeTag()
+        DairyFreeTag()
+        CusineTags(
+            cuisines: ["Chinese", "Italian", "Indian", "American"],
+            showAll: true
+        )
+    }
 }
