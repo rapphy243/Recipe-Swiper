@@ -15,9 +15,9 @@ struct MainView: View {
 
     var body: some View {
         NavigationStack {
-            RecipeCard()
-            Spacer()
-                .navigationTitle("Home")
+            SwipableRecipeCard()
+                .offset(y: -50) 
+                .navigationBarTitle("Snack Swipe", displayMode: .inline) // Scroll View in Recipe card messes up the title, so this is fix. :/
                 .toolbar {
                     MainToolBar()
                 }
