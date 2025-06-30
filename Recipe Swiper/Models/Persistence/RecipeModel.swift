@@ -19,14 +19,14 @@ final class RecipeModel {
     var dateModified: Date  // sort by date added/modified
     //
 
-    var rating: Double
+    var rating: Double //
     
     @Attribute(.unique)
     var id: Int
     var image: String
 
     @Attribute(.externalStorage)
-    var imageData: Data?
+    var imageData: Data? //
 
     var imageType: String?
     var title: String
@@ -56,7 +56,7 @@ final class RecipeModel {
     var extendedIngredients: [ExtendedIngredientModel]
     var summary: String
     // These String arrays cause "Could not materialize Objective-C class named "Array" from declared attribute value type "Array<String>" of attribute named"
-    // SwiftData/CoreData doest not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
+    // SwiftData/CoreData doesn't not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
     @Attribute(.externalStorage)
     private var cuisinesData: Data?
     @Attribute(.externalStorage)
@@ -153,28 +153,14 @@ final class RecipeModel {
         if self.image == "" {
             return nil
         }
-
-        let imageUrl = URL(string: self.image)
-
-        do {
-            let (data, response) = try await URLSession.shared.data(
-                from: imageUrl!
-            )
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                httpResponse.statusCode == 200
-            else {
-                print("Error: Invalid response for image URL: \(self.image)")
-                return nil
-            }
-
-            // Store data in the model
-            self.imageData = data
-            return UIImage(data: data)
-        } catch {
-            print("Error downloading image: \(error.localizedDescription)")
+        
+        await fetchImage()
+        
+        guard let imageData = self.imageData else {
             return nil
         }
+        
+        return UIImage(data: imageData)
     }
 
     final func fetchImage() async {
