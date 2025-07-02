@@ -9,20 +9,41 @@
 
 import SwiftUI
 
-struct MainView: View {
-    @AppStorage("isOnboarding") var isOnboarding: Bool?
-    @State private var showFilters: Bool = false
+class MainViewModel: ObservableObject {
+    @Published var isOnboarding: Bool?
+    @Published var showFilters: Bool
+    @Published var recipe: Recipe
 
+    init() {
+        self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
+        self.showFilters = false
+        guard let recipe = UserDefaults.standard.data(forKey: "recipe") else {
+            recipe = Recipe.empty
+            return
+        }
+        self.recipe = try! JSONDecoder().decode(Recipe.self, from: recipe)
+    }
+
+    init(recipe: Recipe) {
+        self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
+        self.showFilters = false
+        self.recipe = recipe
+    }
+}
+
+struct MainView: View {
+    @StateObject var model = MainViewModel()
     var body: some View {
         NavigationStack {
-            SwipableRecipeCard()
-                .offset(y: -50) 
-                .navigationBarTitle("Snack Swipe", displayMode: .inline) // Scroll View in Recipe card messes up the title, so this is fix. :/
+            SwipableRecipeCard(recipe: model.recipe)
+                .offset(y: -50)
+                .navigationBarTitle("Snack Swipe", displayMode: .inline)  // Scroll View in Recipe card messes up the title, so this is fix. :/
                 .toolbar {
                     MainToolBar()
                 }
         }
-        .sheet(isPresented: $showFilters) {
+        .environmentObject(model)
+        .sheet(isPresented: $model.showFilters) {
             FiltersView()
         }
     }

@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct SwipableRecipeCard: View {
+    @Binding var recipe: Recipe
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
-    
+
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
     var body: some View {
-        RecipeCard()
+        RecipeCard(recipe: recipe)
             .offset(cardOffset)
             .rotationEffect(.degrees(cardRotation))
             .gesture(
@@ -98,5 +99,5 @@ struct SwipableRecipeCard: View {
 }
 
 #Preview {
-    SwipableRecipeCard()
+    SwipableRecipeCard(recipe: .constant(Recipe.Cake))
 }

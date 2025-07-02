@@ -8,31 +8,39 @@
 import SwiftUI
 
 struct RecipeCardDetails: View {
+    @State var recipe: Recipe
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
-                TimeTag(minutes: 45)
-                ServingsTag(servings: 4)
+                TimeTag(minutes: recipe.readyInMinutes)
+                ServingsTag(servings: recipe.servings)
             }
-            
+
             HStack {
-                SourceTag(source: URL(string: "https://www.allrecipes.com"))
+                SourceTag(source: recipe.sourceUrl ?? "")
             }
-            
+
             HStack(spacing: 8) {
                 CusineTags(
-                    cuisines: ["Italian", "Mediterranean"],
+                    cuisines: recipe.cuisines,
                     showAll: false
                 )
             }
-            
-            HStack(spacing: 8) {
-                VegetarianTag()
-                VeganTag()
-                GlutenFreeTag()
-                DairyFreeTag()
-            }
 
+            HStack(spacing: 8) {
+                if recipe.vegetarian {
+                    VegetarianTag()
+                }
+                if recipe.vegan {
+                    VeganTag()
+                }
+                if recipe.glutenFree {
+                    GlutenFreeTag()
+                }
+                if recipe.dairyFree {
+                    DairyFreeTag()
+                }
+            }
         }
         .padding(.horizontal, 4)
         .padding(.vertical, 2)
@@ -40,5 +48,5 @@ struct RecipeCardDetails: View {
 }
 
 #Preview {
-    RecipeCardDetails()
+    RecipeCardDetails(recipe: Recipe.Cake)
 }

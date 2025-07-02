@@ -35,14 +35,22 @@ struct ServingsTag: View {
 }
 struct SourceTag: View {
     @Environment(\.colorScheme) private var colorScheme
-    var source: URL?
+    var source: String
     var body: some View {
         HStack {
             Image(systemName: "book.closed.fill")
-            if let source = source {
-                if let host = source.host {
-                    let displayHost = host.hasPrefix("www.") ? String(host.dropFirst(4)) : host
-                    Link(destination: source) {
+            if source == "" {
+                Text("No Source")
+                    .font(.footnote)
+                    .foregroundColor(
+                        colorScheme == .dark ? .white : .black
+                    )
+            } else {
+                if let url = URL(string: source), let host = url.host {
+                    let displayHost =
+                        host.hasPrefix("www.")
+                        ? String(host.dropFirst(4)) : host
+                    Link(destination: url) {
                         Text(displayHost)
                             .font(.footnote)
                             .foregroundColor(
@@ -50,14 +58,10 @@ struct SourceTag: View {
                             )
                     }
                 } else {
-                    Text("No Source")
+                    Text("Invalid Source")
                         .font(.footnote)
-                        .foregroundColor(
-                            colorScheme == .dark ? .white : .black
-                        )
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
                 }
-            } else {
-                EmptyView()
             }
         }
     }
@@ -152,7 +156,7 @@ struct CusineTags: View {
         TimeTag(minutes: 10)
         ServingsTag(servings: 5)
         HealthTag(healthScore: 100)
-        SourceTag(source: URL(string: "https://www.example.com"))
+        SourceTag(source: "https://www.example.com")
         VegetarianTag()
         VeganTag()
         GlutenFreeTag()
