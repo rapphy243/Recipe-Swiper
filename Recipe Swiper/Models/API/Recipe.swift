@@ -54,10 +54,55 @@ struct Recipe: Codable, Hashable, Equatable {
     let originalId: Int?
     let spoonacularScore: Double
     let spoonacularSourceUrl: String?
-    
+
+    static let Cake = Recipe(
+        id: 653836,
+        image: "https://img.spoonacular.com/recipes/653836-556x370.jpg",
+        imageType: "jpg",
+        title: "Orange Chocolate Cake",
+        readyInMinutes: 45,
+        servings: 12,
+        sourceUrl:
+            "https://www.foodista.com/recipe/6RW2HBQM/orange-chocolate-cake",
+        vegetarian: false,
+        vegan: false,
+        glutenFree: false,
+        dairyFree: false,
+        veryHealthy: false,
+        cheap: false,
+        veryPopular: false,
+        sustainable: false,
+        lowFodmap: false,
+        weightWatcherSmartPoints: 10,
+        gaps: "no",
+        preparationMinutes: nil,
+        cookingMinutes: nil,
+        aggregateLikes: 95,
+        healthScore: 1,
+        creditsText:
+            "Foodista.com – The Cooking Encyclopedia Everyone Can Edit",
+        license: "CC BY 3.0",
+        sourceName: "Foodista",
+        pricePerServing: 43.19,
+        extendedIngredients: [],
+        summary:
+            "Orange Chocolate Cake requires approximately 45 minutes from start to finish. This recipe makes 12 servings with 247 calories, 4g of protein, and 14g of fat each. For <b>43 cents per serving</b>, this recipe <b>covers 5%</b> of your daily requirements of vitamins and minerals. 95 people have made this recipe and would make it again. A mixture of semi-sweet chocolate, baking soda, flour, and a handful of other ingredients are all it takes to make this recipe so tasty. A few people really liked this dessert. It is brought to you by Foodista. Overall, this recipe earns a <b>rather bad spoonacular score of 25%</b>. If you like this recipe, take a look at these similar recipes: <a href=\"https://spoonacular.com/recipes/orange-scented-bittersweet-chocolate-cake-with-candied-blood-orange-compote-51335\">Orange-Scented Bittersweet Chocolate Cake with Candied Blood Orange Compote</a>, <a href=\"https://spoonacular.com/recipes/wacky-chocolate-orange-cake-with-orange-frosting-131847\">Wacky Chocolate-Orange Cake with Orange Frosting</a>, and <a href=\"https://spoonacular.com/recipes/chocolate-orange-protein-cake-with-chocolate-icing-558609\">Chocolate Orange Protein Cake with Chocolate Icing</a>.",
+        cuisines: [],
+        dishTypes: ["dessert"],
+        diets: [],
+        occasions: [],
+        instructions:
+            "<ol><li>Preheat oven at 175C, Grease a 9\" bundt pan, and dust flour or spray non-stick spray in pan.</li><li>Beat butter for a while and add in sugar, continue to beat butter until creamy.</li><li>Add eggs one at a time and mix well. Add orange rind, orange juice and vanilla extract, beat at low speed till well combined.</li><li>Split ingredient (B) into 4 portions and sour cream into 3 portions. Pour in one portion of flour and sour cream alternately, beat well after each addition.</li><li>Take half of the mixture and gently mix with melted chocolate (do not over mix).</li><li>Scoop plain and chocolate batter alternately into pan, till all the batters are used up and gently shake the pan a little.</li><li>Bake for 50-60 minutes or skewer comes out clean.</li><li>Remove cake from oven and set to cool for 20 minutes then unmould, leave to cool completely.</li></ol>",
+        analyzedInstructions: [],
+        originalId: nil,
+        spoonacularScore: 33.852783203125,
+        spoonacularSourceUrl:
+            "https://spoonacular.com/orange-chocolate-cake-653836"
+    )
+
     static let empty = Recipe(
         id: -1,
-        image: "https://picsum.photos/200/300", // Returns a random image, used to make sure Persistence Model doesn't try to get a null image
+        image: "https://picsum.photos/200/300",  // Returns a random image, used to make sure Persistence Model doesn't try to get a null image
         imageType: "",
         title: "Not Found",
         readyInMinutes: 0,
@@ -94,4 +139,5 @@ struct Recipe: Codable, Hashable, Equatable {
         spoonacularScore: 0.0,
         spoonacularSourceUrl: nil
     )
+
 }

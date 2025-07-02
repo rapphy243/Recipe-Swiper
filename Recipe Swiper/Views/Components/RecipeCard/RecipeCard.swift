@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct RecipeCard: View {
+    @State var recipe: Recipe
     var body: some View {
         VStack {
             Card {
                 VStack(spacing: 5) {
-                    Text("Title of Recipe")
+                    Text(recipe.title)
                         .font(.title)
                         .bold()
                         .multilineTextAlignment(.center)
@@ -29,7 +30,7 @@ struct RecipeCard: View {
                             AsyncImage(
                                 url: URL(
                                     string:
-                                        "https://img.spoonacular.com/recipes/653836-556x370.jpg"
+                                        recipe.image ?? ""
                                 )
                             ) { image in
                                 image
@@ -56,7 +57,7 @@ struct RecipeCard: View {
                                     )
                             }
                             VStack {
-                                RecipeCardDetails()
+                                RecipeCardDetails(recipe: recipe)
                                     .containerRelativeFrame(
                                         .horizontal,
                                         { width, _ in
@@ -70,10 +71,10 @@ struct RecipeCard: View {
                                             return width * 0.3
                                         }
                                     )
-                                
+
                                 ScrollView {
                                     // This would be a perfect spot to use new AI features.
-                                    Text("blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. blah blah blah cool recipe details. ")
+                                    Text(recipe.summary)
                                         .font(.caption)
                                 }
                                 // TODO: Fix size to image wsize
@@ -89,19 +90,18 @@ struct RecipeCard: View {
                                         return width * 0.30
                                     }
                                 )
-                                
-                                
+
                             }
                         }
                         .padding(.top)
                     }
                 }
-                
+
             }
         }
     }
 }
 
 #Preview {
-    RecipeCard()
+    RecipeCard(recipe: Recipe.Cake)
 }

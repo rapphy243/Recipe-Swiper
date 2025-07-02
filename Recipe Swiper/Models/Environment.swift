@@ -9,8 +9,8 @@ import Foundation
 
 struct Env {
     static var apiKey: String {
-        guard let savedAPIKey = UserDefaults.standard.string(forKey: "apiKey") else {
-            UserDefaults.standard.set("", forKey: "apiKey")
+        guard let savedAPIKey = UserDefaults.standard.string(forKey: "apiKey")
+        else {
             print("No API key saved.")
             return ""
         }

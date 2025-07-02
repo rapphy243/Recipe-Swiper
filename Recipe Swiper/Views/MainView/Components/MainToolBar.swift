@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MainToolBar: ToolbarContent {
+    @EnvironmentObject var model: MainViewModel
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .topBarTrailing) {
             Button {
+                model.showFilters = true
 
             } label: {
                 Image(
@@ -18,8 +20,7 @@ struct MainToolBar: ToolbarContent {
                 )
             }
             Menu {
-                Button("Refresh Recipe", systemImage: "arrow.clockwise")
-                {
+                Button("Refresh Recipe", systemImage: "arrow.clockwise") {
 
                 }
                 Button("Settings", systemImage: "gear") {
@@ -37,4 +38,5 @@ struct MainToolBar: ToolbarContent {
 
 #Preview {
     MainView()
+        .environmentObject(MainViewModel())
 }

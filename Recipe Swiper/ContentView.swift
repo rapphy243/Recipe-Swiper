@@ -32,12 +32,12 @@ struct ContentView: View {
         }
         // There is a problem with the accessory pushing mainView up, so not enabled for now.
         // Might fall back to original implementation...
-//        .tabViewBottomAccessory {
-//            if selection == 1 {
-//                // Random quotes
-//            
-//            }
-//        }
+        //            .tabViewBottomAccessory {
+        //                if selection == 1 {
+        //                    // Random quotes
+        //
+        //                }
+        //            }
         .fullScreenCover(isPresented: $isOnboarding) {
             OnboardingView()
         }
@@ -48,7 +48,10 @@ struct ContentView: View {
 #Preview {
     let previewUserDefaults = UserDefaults(suiteName: "Preview")!
     previewUserDefaults.set(false, forKey: "isOnboarding")
-
     return ContentView()
         .defaultAppStorage(previewUserDefaults)
+}
+
+#Preview {
+    ContentView()
 }
