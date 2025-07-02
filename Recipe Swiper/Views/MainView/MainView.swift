@@ -35,7 +35,7 @@ struct MainView: View {
     @StateObject var model = MainViewModel()
     var body: some View {
         NavigationStack {
-            SwipableRecipeCard(recipe: model.recipe)
+            SwipableRecipeCard(recipe: $model.recipe)
                 .offset(y: -50)
                 .navigationBarTitle("Snack Swipe", displayMode: .inline)  // Scroll View in Recipe card messes up the title, so this is fix. :/
                 .toolbar {
