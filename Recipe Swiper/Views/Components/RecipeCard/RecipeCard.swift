@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeCard: View {
-    @State var recipe: Recipe
+    @Binding var recipe: Recipe
     var body: some View {
         VStack {
             Card {
@@ -57,7 +57,7 @@ struct RecipeCard: View {
                                     )
                             }
                             VStack {
-                                RecipeCardDetails(recipe: recipe)
+                                RecipeCardDetails(recipe: $recipe)
                                     .containerRelativeFrame(
                                         .horizontal,
                                         { width, _ in
@@ -103,5 +103,5 @@ struct RecipeCard: View {
 }
 
 #Preview {
-    RecipeCard(recipe: Recipe.Cake)
+    RecipeCard(recipe: .constant(Recipe.Cake))
 }

@@ -17,8 +17,6 @@ class APIQuota: ObservableObject {
     @AppStorage("quotaUsed") private(set) var quotaUsed: Double = 0  // Total points used today
     @AppStorage("quotaLeft") private(set) var quotaLeft: Double = 0  // Points remaining today
 
-    private init() {}  // Private initializer for singleton
-
     func updateQuota(from headers: [AnyHashable: Any]) {
         if let requestQuota = headers["x-api-quota-request"] as? String,
             let requestValue = Double(requestQuota)

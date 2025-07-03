@@ -5,18 +5,18 @@
 //  Created by Raphael Abano on 6/22/25.
 //
 
-// TODO: Implement MVVM, to also pass variables to toolbar
 
 import SwiftUI
 
+// Implemented MVVM?
 class MainViewModel: ObservableObject {
-    @Published var isOnboarding: Bool?
     @Published var showFilters: Bool
+    @Published var showSettings: Bool
     @Published var recipe: Recipe
 
     init() {
-        self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
         self.showFilters = false
+        self.showSettings = false
         guard let recipe = UserDefaults.standard.data(forKey: "recipe") else {
             recipe = Recipe.empty
             return
@@ -25,8 +25,8 @@ class MainViewModel: ObservableObject {
     }
 
     init(recipe: Recipe) {
-        self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
         self.showFilters = false
+        self.showSettings = false
         self.recipe = recipe
     }
 }
@@ -45,6 +45,9 @@ struct MainView: View {
         .environmentObject(model)
         .sheet(isPresented: $model.showFilters) {
             FiltersView()
+        }
+        .sheet(isPresented: $model.showSettings) {
+            SettingsView()
         }
     }
 }

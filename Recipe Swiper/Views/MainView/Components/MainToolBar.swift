@@ -13,7 +13,6 @@ struct MainToolBar: ToolbarContent {
         ToolbarItemGroup(placement: .topBarTrailing) {
             Button {
                 model.showFilters = true
-
             } label: {
                 Image(
                     systemName: "line.3.horizontal.decrease.circle"
@@ -21,12 +20,15 @@ struct MainToolBar: ToolbarContent {
             }
             Menu {
                 Button("Refresh Recipe", systemImage: "arrow.clockwise") {
-
+                    Task {
+                        let newRecipe = try await fetchRandomRecipe()
+                        model.recipe = newRecipe
+                    }
                 }
                 Button("Settings", systemImage: "gear") {
-
+                    model.showSettings = true
                 }
-                NavigationLink(destination: EmptyView()) {
+                NavigationLink(destination: AboutView()) {
                     Label("About", systemImage: "info.circle")
                 }
             } label: {
