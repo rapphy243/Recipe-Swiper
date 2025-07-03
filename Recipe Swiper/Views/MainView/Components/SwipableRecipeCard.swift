@@ -15,7 +15,7 @@ struct SwipableRecipeCard: View {
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
     var body: some View {
-        RecipeCard(recipe: recipe)
+        RecipeCard(recipe: $recipe)
             .offset(cardOffset)
             .rotationEffect(.degrees(cardRotation))
             .gesture(
