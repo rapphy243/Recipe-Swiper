@@ -11,9 +11,19 @@ struct SwipableRecipeCard: View {
     @Binding var recipe: Recipe
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
-
+    
+    let onSwipeLeft: (() async -> Void)?
+    let onSwipeRight: (() async -> Void)?
+    
     // Swipe threshold to trigger action
     private let swipeThreshold: CGFloat = 200
+    
+    init(recipe: Binding<Recipe>, onSwipeLeft: (() -> Void)? = nil, onSwipeRight: (() -> Void)? = nil) {
+        self._recipe = recipe
+        self.onSwipeLeft = onSwipeLeft
+        self.onSwipeRight = onSwipeRight
+    }
+    
     var body: some View {
         RecipeCard(recipe: $recipe)
             .offset(cardOffset)
@@ -60,16 +70,17 @@ struct SwipableRecipeCard: View {
                 value: cardOffset
             )
     }
-
+    
     private func handleSwipe(_ gesture: DragGesture.Value) {
         let horizontalMovement = gesture.translation.width
-
+        
         // Right swipe (save)
         if horizontalMovement > swipeThreshold {
             let impactMed = UIImpactFeedbackGenerator(style: .medium)
             impactMed.impactOccurred()
             Task {
-                try! await Task.sleep(nanoseconds: 1_000_000_000)
+                await onSwipeRight?()
+                try! await Task.sleep(nanoseconds: 500_000_000)
                 resetCardPosition()
             }
         }
@@ -78,7 +89,8 @@ struct SwipableRecipeCard: View {
             let impactLight = UIImpactFeedbackGenerator(style: .light)
             impactLight.impactOccurred()
             Task {
-                try! await Task.sleep(nanoseconds: 1_000_000_000)
+                await onSwipeLeft?()
+                try! await Task.sleep(nanoseconds: 500_000_000)
                 resetCardPosition()
             }
         }
@@ -89,7 +101,7 @@ struct SwipableRecipeCard: View {
             impactMed.impactOccurred()
         }
     }
-
+    
     private func resetCardPosition() {
         withAnimation(.spring(response: 0.3)) {
             cardOffset = .zero
@@ -99,5 +111,9 @@ struct SwipableRecipeCard: View {
 }
 
 #Preview {
-    SwipableRecipeCard(recipe: .constant(Recipe.Cake))
+    SwipableRecipeCard(
+        recipe: .constant(Recipe.Cake),
+        onSwipeLeft: { print("Swiped Left") },
+        onSwipeRight: { print("Swiped Right") }
+    )
 }
