@@ -35,10 +35,12 @@ class MainViewModel: ObservableObject {
         await fetchNewRecipe()
 
     }
+    
     func discardRecipe() async {
         print("Discarded: \(self.recipe.title)")
         await fetchNewRecipe()
     }
+    
     func fetchNewRecipe() async {
         Task {
             self.recipe = try await fetchRandomRecipe()

@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var apiKey: String = ""
+    @ObservedObject private var settings = AppSettings.shared
     @ObservedObject private var quota = APIQuota.shared
 
     var body: some View {
         NavigationStack {
             List {
+                // API Usage Section
                 Section("API Usage") {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -33,27 +34,107 @@ struct SettingsView: View {
                         }
                     }
                 }
-                Section(header: Text("Other")) {
+
+                // API Configuration
+                Section("API Configuration") {
                     HStack {
-                        Text("Spoonacular API Key:")
+                        Text("Spoonacular API Key")
                             .lineLimit(1)
                             .fixedSize()
                         Spacer()
-                        TextField(Env.apiKey, text: $apiKey)
-                            .onChange(of: apiKey) {
-                                UserDefaults.standard.set(apiKey, forKey: "apiKey")
-                            }
+                        SecureField("Enter API Key", text: $settings.apiKey)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                 }
-                Button("Restart Onboarding") {
-                    UserDefaults.standard.set(true, forKey: "isOnboarding")
+
+                // AI Features Section
+                Section("AI Features") {
+                    Toggle(
+                        "Enable AI Features",
+                        isOn: $settings.enableAIFeatures
+                    )
+
+                    if settings.enableAIFeatures {
+                        HStack {
+                            Text("AI Status")
+                            Spacer()
+                            Text(ModelHelper.availabilityDescription)
+                                .foregroundColor(
+                                    ModelHelper.isAvailable
+                                        ? .green : .secondary
+                                )
+                        }
+                        Toggle(
+                            "AI Recipe Summary",
+                            isOn: $settings.aiRecipeSummary
+                        )
+                        .disabled(!ModelHelper.isAvailable)
+                    }
                 }
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .center)
+
+                Section("App Behavior") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Swipe Sensitivity")
+                            Spacer()
+                            Text(sensitivityLabel)
+                        }
+                        Slider(
+                            value: $settings.swipeSensitivity,
+                            in: 50...200,
+                            step: 25
+                        )
+                    }
+
+                    Toggle(
+                        "Haptic Feedback",
+                        isOn: $settings.hapticFeedbackEnabled
+                    )
+                }
+
+                // App Actions
+                Section("App Actions") {
+                    Button("Restart Onboarding") {
+                        UserDefaults.standard.set(true, forKey: "isOnboarding")
+                    }
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                    Button("Reset All Settings") {
+                        resetAllSettings()
+                    }
+                    .font(.headline)
+                    .foregroundColor(.red)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                }
             }
             .navigationTitle("Settings")
         }
+    }
 
+    private var sensitivityLabel: String {
+        switch settings.swipeSensitivity {
+        case 50:
+            return "Low"
+        case 75:
+            return "Medium-Low"
+        case 100:
+            return "Medium"
+        case 125:
+            return "Medium-High"
+        case 150...200:
+            return "High"
+        default:
+            return "Custom"
+        }
+    }
+
+    private func resetAllSettings() {
+        settings.apiKey = ""
+        settings.swipeSensitivity = 100.0
+        settings.enableAIFeatures = true
+        settings.aiRecipeSummary = true
+        settings.hapticFeedbackEnabled = true
     }
 }
 

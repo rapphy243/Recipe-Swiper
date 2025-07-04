@@ -11,12 +11,15 @@ struct SwipableRecipeCard: View {
     @Binding var recipe: Recipe
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
+    @ObservedObject private var settings = AppSettings.shared
     
     let onSwipeLeft: (() async -> Void)?
     let onSwipeRight: (() async -> Void)?
     
-    // Swipe threshold to trigger action
-    private let swipeThreshold: CGFloat = 200
+    // Swipe threshold based on user settings
+    private var swipeThreshold: CGFloat {
+        CGFloat(settings.swipeSensitivity)
+    }
     
     init(recipe: Binding<Recipe>, onSwipeLeft: (() -> Void)? = nil, onSwipeRight: (() -> Void)? = nil) {
         self._recipe = recipe
@@ -76,8 +79,10 @@ struct SwipableRecipeCard: View {
         
         // Right swipe (save)
         if horizontalMovement > swipeThreshold {
-            let impactMed = UIImpactFeedbackGenerator(style: .medium)
-            impactMed.impactOccurred()
+            if settings.hapticFeedbackEnabled {
+                let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
+            }
             Task {
                 await onSwipeRight?()
                 try! await Task.sleep(nanoseconds: 500_000_000)
@@ -86,8 +91,10 @@ struct SwipableRecipeCard: View {
         }
         // Left swipe (skip)
         else if horizontalMovement < -swipeThreshold {
-            let impactLight = UIImpactFeedbackGenerator(style: .light)
-            impactLight.impactOccurred()
+            if settings.hapticFeedbackEnabled {
+                let impactLight = UIImpactFeedbackGenerator(style: .light)
+                impactLight.impactOccurred()
+            }
             Task {
                 await onSwipeLeft?()
                 try! await Task.sleep(nanoseconds: 500_000_000)
@@ -97,8 +104,10 @@ struct SwipableRecipeCard: View {
         // Not enough movement - reset position
         else {
             resetCardPosition()
-            let impactMed = UIImpactFeedbackGenerator(style: .heavy)
-            impactMed.impactOccurred()
+            if settings.hapticFeedbackEnabled {
+                let impactMed = UIImpactFeedbackGenerator(style: .heavy)
+                impactMed.impactOccurred()
+            }
         }
     }
     
