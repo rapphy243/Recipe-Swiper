@@ -8,6 +8,7 @@
 import SwiftUI
 
 // Implemented MVVM?
+@MainActor
 class MainViewModel: ObservableObject {
     @Published var showFilters: Bool
     @Published var showSettings: Bool
@@ -35,12 +36,12 @@ class MainViewModel: ObservableObject {
         await fetchNewRecipe()
 
     }
-    
+
     func discardRecipe() async {
         print("Discarded: \(self.recipe.title)")
         await fetchNewRecipe()
     }
-    
+
     func fetchNewRecipe() async {
         Task {
             self.recipe = try await fetchRandomRecipe()
@@ -57,11 +58,11 @@ struct MainView: View {
                 onSwipeLeft: { Task { await model.discardRecipe() } },
                 onSwipeRight: { Task { await model.saveRecipe() } }
             )
-                .offset(y: -50)
-                .navigationBarTitle("Snack Swipe", displayMode: .inline)  // Scroll View in Recipe card messes up the title, so this is fix. :/
-                .toolbar {
-                    MainToolBar()
-                }
+            .offset(y: -50)
+            .navigationBarTitle("Snack Swipe", displayMode: .inline)  // Scroll View in Recipe card messes up the title, so this is fix. :/
+            .toolbar {
+                MainToolBar()
+            }
         }
         .environmentObject(model)
         .sheet(isPresented: $model.showFilters) {
