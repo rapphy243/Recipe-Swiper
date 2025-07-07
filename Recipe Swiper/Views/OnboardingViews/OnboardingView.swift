@@ -12,13 +12,13 @@ class OnboardingViewModel: ObservableObject {
     @Published var currentTab: Int
     @Published var showFinalTab: Bool
     @Published var recipe: Recipe
-    
+
     init() {
         self.currentTab = 0
         self.showFinalTab = false
         self.recipe = Recipe.Cake
     }
-    
+
     init(recipe: Recipe) {
         self.currentTab = 0
         self.showFinalTab = false
@@ -33,10 +33,19 @@ struct OnboardingView: View {
             TabView(selection: $model.currentTab) {
                 OnboardingAboutView()
                     .tag(0)
+                OnboardingHowToView()
+                    .tag(1)
+                OnboardingFiltersView()
+                    .tag(2)
+                OnboardingInputAPI()
+                    .tag(3)
+                OnboardingGetStartedView()
+                    .tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .environmentObject(model)
         }
+
     }
 }
 

@@ -1,33 +1,30 @@
 //
-//  OnboardingAboutView.swift
+//  OnboardingInputAPI.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 7/5/25.
+//  Created by Raphael Abano on 7/6/25.
 //
 
 import SwiftUI
 
-struct OnboardingAboutView: View {
+struct OnboardingInputAPI: View {
     @EnvironmentObject var model: OnboardingViewModel
     @State private var isAnimating = false
-
-    let features:
-        [(systemName: String, title: String, color: Color, delay: Double)] = [
-            ("hand.tap", "Simple", .blue, 1.0),
-            ("magnifyingglass", "Discover", .purple, 1.4),
-            ("bookmark.fill", "Save", .green, 1.8),
-        ]
+    @State private var apiKey: String =
+        UserDefaults.standard.string(forKey: "apiKey") ?? ""
+    @State private var showFootnote = false
 
     var body: some View {
         VStack(spacing: 30) {
-            Image(systemName: "fork.knife.circle.fill")
+            Image(systemName: "key.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120, height: 120)
                 .symbolEffect(.bounce, value: isAnimating)
                 .foregroundColor(.orange)
+
             VStack(spacing: 15) {
-                Text("Discover Your Next Meal")
+                Text("Spoonacular API Key")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
@@ -39,7 +36,7 @@ struct OnboardingAboutView: View {
                     )
 
                 Text(
-                    "Swipe right on recipes you love, swipe left on those you don't. It's the easiest way to build your personal cookbook!"
+                    "To fetch delicious recipes, Recipe Swiper needs access to the Spoonacular API. Please enter your API key below."
                 )
                 .font(.headline)
                 .multilineTextAlignment(.center)
@@ -50,34 +47,40 @@ struct OnboardingAboutView: View {
                     .easeOut(duration: 0.5).delay(0.4),
                     value: isAnimating
                 )
+                TextField("Paste your API Key here", text: $apiKey)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .textContentType(
+                        .oneTimeCode
+                    )
+
+                DisclosureGroup(
+                    "How do I get an API key?",
+                    isExpanded: $showFootnote
+                ) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(
+                            "1. Go to the [Spoonacular API Dashboard](https://spoonacular.com/food-api/console#Profile) and sign up for a free account."
+                        )
+                        Text(
+                            "2. Once logged in, you'll find your API Key under \"Profile & API Key\""
+                        )
+                        Text(
+                            "3. Tap \"Show API Key\" then copy and paste it into the field above."
+                        )
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .padding([.top, .horizontal])
+                }
             }
             .padding(.horizontal)
 
-            HStack(spacing: 40) {
-                ForEach(Array(features.enumerated()), id: \.offset) {
-                    index,
-                    feature in
-                    FeatureItem(
-                        systemName: feature.systemName,
-                        title: feature.title,
-                        color: feature.color,
-                        delay: feature.delay
-                    )
-                    .scaleEffect(isAnimating ? 1 : 0.8)
-                    .opacity(isAnimating ? 1 : 0)
-                    .animation(
-                        .spring(response: 0.6, dampingFraction: 0.8).delay(
-                            1.0 + Double(index) * 0.2
-                        ),
-                        value: isAnimating
-                    )
-                }
-            }
-            .offset(y: isAnimating ? 0 : 20)
-
             Button {
                 withAnimation {
-                    model.currentTab = 1
+                    model.currentTab = 4
                 }
             } label: {
                 HStack {
@@ -85,6 +88,7 @@ struct OnboardingAboutView: View {
                     Image(systemName: "arrow.right")
                 }
             }
+            .disabled(apiKey == "")
             .buttonStyle(.borderedProminent)
             .clipShape(.rect(cornerRadius: 16))
             .sensoryFeedback(.impact, trigger: model.currentTab)
@@ -95,11 +99,9 @@ struct OnboardingAboutView: View {
             isAnimating = true
         }
     }
-
 }
 
 #Preview {
-    OnboardingAboutView()
+    OnboardingInputAPI()
         .environmentObject(OnboardingViewModel())
-
 }

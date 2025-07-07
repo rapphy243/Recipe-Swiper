@@ -18,16 +18,8 @@ struct ContentView: View {
             Tab("Home", systemImage: "house", value: 1) {
                 MainView()
             }
-            Tab("Cookbook", systemImage: "book.closed", value: 2) {
+            Tab("Cookbook", systemImage: "book.closed", value: 2, role: .search) {
                 SavedRecipesView()
-            }
-            Tab(
-                "Search",
-                systemImage: "magnifyingglass",
-                value: 3,
-                role: .search
-            ) {
-                // Likely used for cookbook searching
             }
         }
         // There is a problem with the accessory pushing mainView up, so not enabled for now.
