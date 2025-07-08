@@ -10,24 +10,22 @@ import SwiftUI
 
 class OnboardingViewModel: ObservableObject {
     @Published var currentTab: Int
-    @Published var showFinalTab: Bool
     @Published var recipe: Recipe
 
     init() {
         self.currentTab = 0
-        self.showFinalTab = false
         self.recipe = Recipe.Cake
     }
 
     init(recipe: Recipe) {
         self.currentTab = 0
-        self.showFinalTab = false
         self.recipe = recipe
     }
 }
 
 struct OnboardingView: View {
     @StateObject var model = OnboardingViewModel()
+    @EnvironmentObject var mainViewModel: MainViewModel
     var body: some View {
         NavigationStack {
             TabView(selection: $model.currentTab) {
@@ -37,10 +35,12 @@ struct OnboardingView: View {
                     .tag(1)
                 OnboardingFiltersView()
                     .tag(2)
+                // TODO: Create view that allows user to actually input filters
                 OnboardingInputAPI()
                     .tag(3)
                 OnboardingGetStartedView()
                     .tag(4)
+                    .environmentObject(mainViewModel)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .environmentObject(model)
@@ -51,4 +51,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
+        .environmentObject(MainViewModel())
 }

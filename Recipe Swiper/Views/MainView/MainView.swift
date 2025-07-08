@@ -13,21 +13,29 @@ class MainViewModel: ObservableObject {
     @Published var showFilters: Bool
     @Published var showSettings: Bool
     @Published var recipe: Recipe
+    @Published var isOnboarding: Bool
 
     init() {
         self.showFilters = false
         self.showSettings = false
-        guard let recipe = UserDefaults.standard.data(forKey: "recipe") else {
-            recipe = Recipe.empty
-            return
+        self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
+        if let recipeData = UserDefaults.standard.data(forKey: "recipe"),
+            let decodedRecipe = try? JSONDecoder().decode(
+                Recipe.self,
+                from: recipeData
+            )
+        {
+            self.recipe = decodedRecipe
+        } else {
+            self.recipe = Recipe.empty
         }
-        self.recipe = try! JSONDecoder().decode(Recipe.self, from: recipe)
     }
 
     init(recipe: Recipe) {
         self.showFilters = false
         self.showSettings = false
         self.recipe = recipe
+        self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
     }
 
     func saveRecipe() async {
@@ -50,7 +58,7 @@ class MainViewModel: ObservableObject {
 }
 
 struct MainView: View {
-    @StateObject var model = MainViewModel()
+    @EnvironmentObject var model: MainViewModel
     var body: some View {
         NavigationStack {
             SwipableRecipeCard(
@@ -76,4 +84,5 @@ struct MainView: View {
 
 #Preview {
     MainView()
+        .environmentObject(MainViewModel())
 }

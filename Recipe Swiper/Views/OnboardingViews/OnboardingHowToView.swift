@@ -29,11 +29,15 @@ struct OnboardingHowToView: View {
         if step > 1 {
             if step == 2 && isLeft {
                 try! await Task.sleep(nanoseconds: 750_000_000)
-                step += 1
+                withAnimation {
+                    step += 1
+                }
             } else {
                 if step == 3 && !isLeft {
                     try! await Task.sleep(nanoseconds: 750_000_000)
-                    step += 1
+                    withAnimation {
+                        step += 1
+                    }
                     try! await Task.sleep(nanoseconds: 500_000_000)
                     withAnimation {
                         model.currentTab = 2

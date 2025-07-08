@@ -20,7 +20,6 @@ struct OnboardingInputAPI: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120, height: 120)
-                .symbolEffect(.bounce, value: isAnimating)
                 .foregroundColor(.orange)
 
             VStack(spacing: 15) {
@@ -28,12 +27,6 @@ struct OnboardingInputAPI: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
-                    .opacity(isAnimating ? 1 : 0)
-                    .offset(y: isAnimating ? 0 : 20)
-                    .animation(
-                        .easeOut(duration: 0.5).delay(0.2),
-                        value: isAnimating
-                    )
 
                 Text(
                     "To fetch delicious recipes, Recipe Swiper needs access to the Spoonacular API. Please enter your API key below."
@@ -41,12 +34,7 @@ struct OnboardingInputAPI: View {
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
-                .opacity(isAnimating ? 1 : 0)
-                .offset(y: isAnimating ? 0 : 20)
-                .animation(
-                    .easeOut(duration: 0.5).delay(0.4),
-                    value: isAnimating
-                )
+
                 TextField("Paste your API Key here", text: $apiKey)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
@@ -55,6 +43,9 @@ struct OnboardingInputAPI: View {
                     .textContentType(
                         .oneTimeCode
                     )
+                    .onChange(of: apiKey) {
+                        UserDefaults.standard.set(apiKey, forKey: "apiKey")
+                    }
 
                 DisclosureGroup(
                     "How do I get an API key?",
@@ -95,9 +86,6 @@ struct OnboardingInputAPI: View {
             .padding(.bottom)
         }
         .padding(.top)
-        .onAppear {
-            isAnimating = true
-        }
     }
 }
 
