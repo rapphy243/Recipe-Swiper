@@ -7,19 +7,33 @@
 
 import SwiftUI
 
+@MainActor
+class ContentViewModel: ObservableObject {
+    @Published var selection: Int
+    @Published var mainViewModel: MainViewModel
+    
+    init() {
+        self.selection = 1
+        self.mainViewModel = MainViewModel()
+    }
+}
+
 struct ContentView: View {
-    @State private var selection = 1
+    @ObservedObject var model = ContentViewModel()
     @AppStorage("isOnboarding") var isOnboarding: Bool = true
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
-        TabView(selection: $selection) {
+        TabView(selection: $model.selection) {
             Tab("Groceries", systemImage: "checklist", value: 0) {
                 GroceryView()
             }
             Tab("Home", systemImage: "house", value: 1) {
                 MainView()
+                    .environmentObject(model.mainViewModel)
             }
             Tab("Cookbook", systemImage: "book.closed", value: 2, role: .search) {
                 SavedRecipesView()
+                    .environmentObject(model.mainViewModel)
             }
         }
         // There is a problem with the accessory pushing mainView up, so not enabled for now.
@@ -32,6 +46,8 @@ struct ContentView: View {
         //            }
         .fullScreenCover(isPresented: $isOnboarding) {
             OnboardingView()
+                .environmentObject(model.mainViewModel)
+                .presentationBackground(colorScheme == .dark ? .ultraThickMaterial : .ultraThinMaterial)
         }
 
     }

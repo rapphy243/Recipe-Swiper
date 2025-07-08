@@ -10,6 +10,7 @@ import SwiftUI
 
 struct OnboardingGetStartedView: View {
     @EnvironmentObject var model: OnboardingViewModel
+    @EnvironmentObject var mainViewModel: MainViewModel
     @State private var isAnimating = false
     @State private var isButtonPressed = false
     @State private var showConfetti = false
@@ -55,6 +56,9 @@ struct OnboardingGetStartedView: View {
                     withAnimation(.spring()) {
                         isButtonPressed = true
                         showConfetti = true
+                    }
+                    Task {
+                        await mainViewModel.fetchNewRecipe()
                     }
                     // Add slight delay before dismissing onboarding
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -125,4 +129,5 @@ struct ConfettiModifier: ViewModifier {
 #Preview {
     OnboardingGetStartedView()
         .environmentObject(OnboardingViewModel())
+        .environmentObject(MainViewModel())
 }
