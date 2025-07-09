@@ -9,6 +9,19 @@
 import Foundation
 import SwiftUI
 
+extension String {
+    var htmlStripped: String {
+        guard let data = self.data(using: .utf8) else { return self }
+        if let attributed = try? NSAttributedString(data: data, options: [
+            .documentType: NSAttributedString.DocumentType.html,
+            .characterEncoding: String.Encoding.utf8.rawValue
+        ], documentAttributes: nil) {
+            return attributed.string
+        }
+        return self
+    }
+}
+
 // Claude 3.5 Prompt: "I want to know how many api requests I have left. This is from the documentation..."
 class APIQuota: ObservableObject {
     static let shared = APIQuota()  // Singleton instance
@@ -120,7 +133,45 @@ func fetchRandomRecipe() async throws -> Recipe {
         guard let recipe = recipeResponse.recipes.first else {
             throw RecipeError.noRecipeFound
         }
-        return recipe
+        return Recipe(
+            id: recipe.id,
+            image: recipe.image,
+            imageType: recipe.imageType,
+            title: recipe.title,
+            readyInMinutes: recipe.readyInMinutes,
+            servings: recipe.servings,
+            sourceUrl: recipe.sourceUrl,
+            vegetarian: recipe.vegetarian,
+            vegan: recipe.vegan,
+            glutenFree: recipe.glutenFree,
+            dairyFree: recipe.dairyFree,
+            veryHealthy: recipe.veryHealthy,
+            cheap: recipe.cheap,
+            veryPopular: recipe.veryPopular,
+            sustainable: recipe.sustainable,
+            lowFodmap: recipe.lowFodmap,
+            weightWatcherSmartPoints: recipe.weightWatcherSmartPoints,
+            gaps: recipe.gaps,
+            preparationMinutes: recipe.preparationMinutes,
+            cookingMinutes: recipe.cookingMinutes,
+            aggregateLikes: recipe.aggregateLikes,
+            healthScore: recipe.healthScore,
+            creditsText: recipe.creditsText,
+            license: recipe.license,
+            sourceName: recipe.sourceName,
+            pricePerServing: recipe.pricePerServing,
+            extendedIngredients: recipe.extendedIngredients,
+            summary: recipe.summary.htmlStripped,
+            cuisines: recipe.cuisines,
+            dishTypes: recipe.dishTypes,
+            diets: recipe.diets,
+            occasions: recipe.occasions,
+            instructions: recipe.instructions,
+            analyzedInstructions: recipe.analyzedInstructions,
+            originalId: recipe.originalId,
+            spoonacularScore: recipe.spoonacularScore,
+            spoonacularSourceUrl: recipe.spoonacularSourceUrl
+        )
 
     } catch let error as DecodingError {
         // Catch specific decoding errors for better debugging
