@@ -10,6 +10,7 @@ import SwiftUI
 struct OnboardingHowToView: View {
     @EnvironmentObject var model: OnboardingViewModel
     @State private var step = 0
+    @State private var isNextButtonDisabled = false
 
     var instructionText: String {
         switch step {
@@ -63,8 +64,13 @@ struct OnboardingHowToView: View {
             )
             if step < 2 {
                 Button {
+                    isNextButtonDisabled = true
                     withAnimation {
                         step += 1
+                    }
+                    Task {
+                        try? await Task.sleep(nanoseconds: 500_000_000)
+                        isNextButtonDisabled = false
                     }
                 } label: {
                     HStack {
@@ -76,6 +82,7 @@ struct OnboardingHowToView: View {
                 .clipShape(.rect(cornerRadius: 16))
                 .sensoryFeedback(.impact, trigger: model.currentTab)
                 .padding(.bottom)
+                .disabled(isNextButtonDisabled)
             }
         }
     }
