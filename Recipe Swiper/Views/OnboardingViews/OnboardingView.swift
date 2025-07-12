@@ -1,0 +1,55 @@
+//
+//  OnboardingView.swift
+//  Recipe Swiper
+//
+//  Created by Raphael Abano on 4/11/25.
+//
+// Implementation slightly refrenced from https://medium.com/@sharma17krups/onboarding-view-with-swiftui-b26096049be3
+
+import SwiftUI
+
+class OnboardingViewModel: ObservableObject {
+    @Published var currentTab: Int
+    @Published var recipe: Recipe
+
+    init() {
+        self.currentTab = 0
+        self.recipe = Recipe.Cake
+    }
+
+    init(recipe: Recipe) {
+        self.currentTab = 0
+        self.recipe = recipe
+    }
+}
+
+struct OnboardingView: View {
+    @StateObject var model = OnboardingViewModel()
+    @EnvironmentObject var mainViewModel: MainViewModel
+    var body: some View {
+        NavigationStack {
+            TabView(selection: $model.currentTab) {
+                OnboardingAboutView()
+                    .tag(0)
+                OnboardingHowToView()
+                    .tag(1)
+                OnboardingFiltersView()
+                    .tag(2)
+                // TODO: Create view that allows user to actually input filters
+                OnboardingInputAPI()
+                    .tag(3)
+                OnboardingGetStartedView()
+                    .tag(4)
+                    .environmentObject(mainViewModel)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .environmentObject(model)
+        }
+
+    }
+}
+
+#Preview {
+    OnboardingView()
+        .environmentObject(MainViewModel())
+}

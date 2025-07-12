@@ -17,8 +17,6 @@ class APIQuota: ObservableObject {
     @AppStorage("quotaUsed") private(set) var quotaUsed: Double = 0  // Total points used today
     @AppStorage("quotaLeft") private(set) var quotaLeft: Double = 0  // Points remaining today
 
-    private init() {}  // Private initializer for singleton
-
     func updateQuota(from headers: [AnyHashable: Any]) {
         if let requestQuota = headers["x-api-quota-request"] as? String,
             let requestValue = Double(requestQuota)
@@ -38,8 +36,9 @@ class APIQuota: ObservableObject {
             quotaLeft = leftValue
         }
 
-        // Debug print to verify values are updating
-        //        print("Updated quota - Request: \(quotaRequest), Used: \(quotaUsed), Left: \(quotaLeft)")
+        print(
+            "Updated quota - Request: \(quotaRequest), Used: \(quotaUsed), Left: \(quotaLeft)"
+        )
     }
 }
 
@@ -68,12 +67,16 @@ enum RecipeError: Error, LocalizedError {
     }
 }
 
-func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
+func fetchRandomRecipe() async throws -> Recipe {
 
     var components = URLComponents(
         string: "https://api.spoonacular.com/recipes/random"
     )!
-    components.queryItems = filterModel.queryItems(apiKey: Secrets.apiKey)
+
+    components.queryItems = [
+        URLQueryItem(name: "apiKey", value: UserDefaults.standard.string(forKey: "apiKey"))
+    ]
+
     guard let url = components.url else {
         throw RecipeError.invalidURL
     }
@@ -93,12 +96,6 @@ func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
                 )
             )
         }
-
-        // Debug print to see all headers
-        //        print("All response headers:")
-        //        httpResponse.allHeaderFields.forEach { key, value in
-        //            print("\(key): \(value)")
-        //        }
 
         // Update quota information from response headers
         APIQuota.shared.updateQuota(from: httpResponse.allHeaderFields)
@@ -136,55 +133,4 @@ func fetchRandomRecipe(using filterModel: FilterModel) async throws -> Recipe {
         // Catch any other unexpected errors
         throw RecipeError.unknown(error)
     }
-}
-
-// Recipe.summary sometime has html tags, so we should get rid of them
-func removeHTMLTagsRegex(from htmlString: String) -> String {
-    // The regular expression pattern "<.*?>" matches:
-    // <   : The opening angle bracket
-    // .   : Any character (except newline)
-    // *   : Zero or more times
-    // ?   : Makes the '*' non-greedy (matches the shortest possible sequence)
-    // >   : The closing angle bracket
-    let pattern = "<.*?>"
-
-    // Use String's built-in method for replacing regex matches
-    return htmlString.replacingOccurrences(
-        of: pattern,
-        with: "",
-        options: [.regularExpression],
-        range: nil  // Apply to the entire string
-    )
-}
-
-func getPrefixBefore(phrase: String, in originalString: String) -> String {
-    // Handle empty phrase: return the original string as there's nothing to stop at.
-    guard !phrase.isEmpty else {
-        return originalString
-    }
-
-    // Find the range (location) of the first occurrence of the phrase.
-    // This is case-sensitive by default.
-    if let range = originalString.range(of: phrase) {
-        // If the phrase is found, get the part of the string *before*
-        // the phrase starts (up to its lowerBound).
-        let prefix = originalString[..<range.lowerBound]
-        return String(prefix)  // Convert the Substring slice back to a String
-    } else {
-        // If the phrase is not found, return the whole original string.
-        return originalString
-    }
-}
-
-func simplifySummary(_ summary: String) -> String {
-    var strippedSummary = removeHTMLTagsRegex(from: summary)
-    strippedSummary = getPrefixBefore(
-        phrase: "It is brought to ",
-        in: strippedSummary
-    )
-    strippedSummary = getPrefixBefore(
-        phrase: "If you like this ",
-        in: strippedSummary
-    )
-    return strippedSummary
 }

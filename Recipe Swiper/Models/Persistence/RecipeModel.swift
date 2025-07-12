@@ -7,7 +7,9 @@
 //  Generated with Claude 3.5 Sonnet
 
 import Foundation
+
 import SwiftData
+
 import SwiftUI
 
 @Model
@@ -16,25 +18,35 @@ final class RecipeModel {
     var isDiscarded: Bool  // if saved show in savedItems, if not show in discardedItems
     var dateModified: Date  // sort by date added/modified
     //
-    var rating: Double
+
+    var rating: Double //
+    
     @Attribute(.unique)
     var id: Int
     var image: String
+
     @Attribute(.externalStorage)
-    var imageData: Data?
+    var imageData: Data? //
+
     var imageType: String?
     var title: String
     var readyInMinutes: Int
     var servings: Int
-    var sourceUrl: String
+    var sourceUrl: String?
     var vegetarian: Bool
     var vegan: Bool
     var glutenFree: Bool
     var dairyFree: Bool
     var veryHealthy: Bool
     var cheap: Bool
-    var preparationMinutes: Int
-    var cookingMinutes: Int
+    var veryPopular: Bool
+    var sustainable: Bool
+    var lowFodmap: Bool
+    var weightWatcherSmartPoints: Int
+    var gaps: String
+    var preparationMinutes: Int?
+    var cookingMinutes: Int?
+    var aggregateLikes: Int
     var healthScore: Int
     var creditsText: String
     var license: String?
@@ -44,7 +56,7 @@ final class RecipeModel {
     var extendedIngredients: [ExtendedIngredientModel]
     var summary: String
     // These String arrays cause "Could not materialize Objective-C class named "Array" from declared attribute value type "Array<String>" of attribute named"
-    // SwiftData/CoreData doest not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
+    // SwiftData/CoreData doesn't not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
     @Attribute(.externalStorage)
     private var cuisinesData: Data?
     @Attribute(.externalStorage)
@@ -83,7 +95,7 @@ final class RecipeModel {
         self.isDiscarded = isDiscarded
         self.dateModified = Date()
         //
-        self.rating = 0.0  // Initialize as Double
+        self.rating = 0.0
         self.id = recipe.id
         self.image = recipe.image ?? ""
         self.imageData = nil
@@ -98,8 +110,14 @@ final class RecipeModel {
         self.dairyFree = recipe.dairyFree
         self.veryHealthy = recipe.veryHealthy
         self.cheap = recipe.cheap
+        self.veryPopular = recipe.veryPopular
+        self.sustainable = recipe.sustainable
+        self.lowFodmap = recipe.lowFodmap
+        self.weightWatcherSmartPoints = recipe.weightWatcherSmartPoints
+        self.gaps = recipe.gaps
         self.preparationMinutes = recipe.preparationMinutes ?? 0
         self.cookingMinutes = recipe.cookingMinutes ?? 0
+        self.aggregateLikes = recipe.aggregateLikes
         self.healthScore = recipe.healthScore
         self.creditsText = recipe.creditsText
         self.license = recipe.license
@@ -108,7 +126,7 @@ final class RecipeModel {
         self.extendedIngredients = recipe.extendedIngredients.map(
             ExtendedIngredientModel.init
         )
-        self.summary = simplifySummary(recipe.summary)
+        self.summary = recipe.summary
         self.cuisinesData = try? JSONEncoder().encode(recipe.cuisines)
         self.dishTypesData = try? JSONEncoder().encode(recipe.dishTypes)
         self.dietsData = try? JSONEncoder().encode(recipe.diets)
@@ -135,30 +153,16 @@ final class RecipeModel {
         if self.image == "" {
             return nil
         }
-
-        let imageUrl = URL(string: self.image)
-
-        do {
-            let (data, response) = try await URLSession.shared.data(
-                from: imageUrl!
-            )
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                httpResponse.statusCode == 200
-            else {
-                print("Error: Invalid response for image URL: \(self.image)")
-                return nil
-            }
-
-            // Store data in the model
-            self.imageData = data
-            return UIImage(data: data)
-        } catch {
-            print("Error downloading image: \(error.localizedDescription)")
+        
+        await fetchImage()
+        
+        guard let imageData = self.imageData else {
             return nil
         }
+        
+        return UIImage(data: imageData)
     }
-    
+
     final func fetchImage() async {
         let imageUrl = URL(string: self.image)
         do {
