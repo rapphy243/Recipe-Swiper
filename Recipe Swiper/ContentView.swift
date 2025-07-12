@@ -10,16 +10,14 @@ import SwiftUI
 @MainActor
 class ContentViewModel: ObservableObject {
     @Published var selection: Int
-    @Published var mainViewModel: MainViewModel
     
     init() {
         self.selection = 1
-        self.mainViewModel = MainViewModel()
     }
 }
 
 struct ContentView: View {
-    @ObservedObject var model = ContentViewModel()
+    @StateObject var model = ContentViewModel()
     @AppStorage("isOnboarding") var isOnboarding: Bool = true
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
@@ -29,11 +27,9 @@ struct ContentView: View {
             }
             Tab("Home", systemImage: "house", value: 1) {
                 MainView()
-                    .environmentObject(model.mainViewModel)
             }
             Tab("Cookbook", systemImage: "book.closed", value: 2, role: .search) {
                 SavedRecipesView()
-                    .environmentObject(model.mainViewModel)
             }
         }
         // There is a problem with the accessory pushing mainView up, so not enabled for now.
@@ -46,7 +42,6 @@ struct ContentView: View {
         //            }
         .fullScreenCover(isPresented: $isOnboarding) {
             OnboardingView()
-                .environmentObject(model.mainViewModel)
                 .presentationBackground(colorScheme == .dark ? .ultraThickMaterial : .ultraThinMaterial)
         }
 
@@ -58,6 +53,7 @@ struct ContentView: View {
     previewUserDefaults.set(false, forKey: "isOnboarding")
     return ContentView()
         .defaultAppStorage(previewUserDefaults)
+        .environmentObject(AppData())
 }
 
 #Preview {
@@ -65,4 +61,5 @@ struct ContentView: View {
     previewUserDefaults.set(true, forKey: "isOnboarding")
     return ContentView()
         .defaultAppStorage(previewUserDefaults)
+        .environmentObject(AppData())
 }

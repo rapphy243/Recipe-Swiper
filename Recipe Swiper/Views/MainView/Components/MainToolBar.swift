@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainToolBar: ToolbarContent {
     @EnvironmentObject var model: MainViewModel
+    @EnvironmentObject var appData: AppData
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .topBarTrailing) {
             Button {
@@ -21,8 +22,7 @@ struct MainToolBar: ToolbarContent {
             Menu {
                 Button("Refresh Recipe", systemImage: "arrow.clockwise") {
                     Task {
-                        let newRecipe = try await fetchRandomRecipe()
-                        model.recipe = newRecipe
+                        await appData.fetchNewRecipe()
                     }
                 }
                 Button("Settings", systemImage: "gear") {
@@ -41,4 +41,5 @@ struct MainToolBar: ToolbarContent {
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
+        .environmentObject(AppData())
 }

@@ -25,7 +25,6 @@ class OnboardingViewModel: ObservableObject {
 
 struct OnboardingView: View {
     @StateObject var model = OnboardingViewModel()
-    @EnvironmentObject var mainViewModel: MainViewModel
     var body: some View {
         NavigationStack {
             TabView(selection: $model.currentTab) {
@@ -40,7 +39,6 @@ struct OnboardingView: View {
                     .tag(3)
                 OnboardingGetStartedView()
                     .tag(4)
-                    .environmentObject(mainViewModel)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .environmentObject(model)
@@ -51,5 +49,4 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
-        .environmentObject(MainViewModel())
 }
