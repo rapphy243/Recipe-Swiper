@@ -5,9 +5,9 @@
 //  Created by Raphael Abano on 6/22/25.
 //
 
+import SwiftData
 import SwiftUI
 
-// Implemented MVVM?
 class MainViewModel: ObservableObject {
     @Published var showFilters: Bool
     @Published var showSettings: Bool
@@ -21,8 +21,9 @@ class MainViewModel: ObservableObject {
 }
 
 struct MainView: View {
+    @Environment(\.modelContext) var modelContext
     @StateObject var model = MainViewModel()
-    @EnvironmentObject var appData: AppData // Where the recipe is stored
+    @EnvironmentObject var appData: AppData  // Where the shown recipe is stored
     var body: some View {
         NavigationStack {
             ZStack {
@@ -31,8 +32,8 @@ struct MainView: View {
                     .transition(.opacity)
                 SwipableRecipeCard(
                     recipe: $appData.recipe,
-                    onSwipeLeft: { Task { await saveRecipe() } },
-                    onSwipeRight: { Task { await appData.fetchNewRecipe() } }
+                    onSwipeLeft: { Task { await appData.fetchNewRecipe() } },
+                    onSwipeRight: { Task { await  saveRecipe() } }
                 )
                 .offset(y: -50)
                 .opacity(appData.isLoading ? 0 : 1)
@@ -53,9 +54,27 @@ struct MainView: View {
             SettingsView()
         }
     }
-    
+
     private func saveRecipe() async {
+        // Check if the recipe already exists in the model container
+        let recipeID = appData.recipe.id
+        let fetchDescriptor = FetchDescriptor<RecipeModel>(
+            predicate: #Predicate {
+                $0.id == recipeID
+            }
+        )
+        let existingRecipes: [RecipeModel] = try! modelContext.fetch(fetchDescriptor)
+        guard existingRecipes.isEmpty else {
+            print("Recipe already exists in container, skipping save.")
+            Task {
+                await appData.fetchNewRecipe()
+            }
+            return  // Exit if the recipe exists
+        }
+        
         let savedRecipe = RecipeModel(from: appData.recipe)
+        modelContext.insert(savedRecipe)
+
         print("Saved: \(savedRecipe.title)")
         await appData.fetchNewRecipe()
     }
