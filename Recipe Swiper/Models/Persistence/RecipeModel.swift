@@ -13,12 +13,10 @@ import SwiftData
 import SwiftUI
 
 @Model
-final class RecipeModel {
+class RecipeModel {
     // Used for sorting
-    var isDiscarded: Bool  // if saved show in savedItems, if not show in discardedItems
     var dateModified: Date  // sort by date added/modified
     //
-
     var rating: Double //
     
     @Attribute(.unique)
@@ -90,9 +88,8 @@ final class RecipeModel {
     var spoonacularScore: Double
     var spoonacularSourceUrl: String?
 
-    init(from recipe: Recipe, isDiscarded: Bool = false) {
+    init(from recipe: Recipe) {
         //
-        self.isDiscarded = isDiscarded
         self.dateModified = Date()
         //
         self.rating = 0.0
