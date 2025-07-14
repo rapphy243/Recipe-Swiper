@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D96653542E24F0420016D379 /* Snack Swipe.icon in Resources */ = {isa = PBXBuildFile; fileRef = D96653532E24F0420016D379 /* Snack Swipe.icon */; };
 		D96A24C22DDF71C800B16EF1 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D96A24C12DDF71C800B16EF1 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D96653532E24F0420016D379 /* Snack Swipe.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "Snack Swipe.icon"; sourceTree = "<group>"; };
 		D96A24C12DDF71C800B16EF1 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		DA10D0D32DAC3D4D00CC8D10 /* Recipe Swiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recipe Swiper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -40,6 +42,7 @@
 				D96A24C12DDF71C800B16EF1 /* Launch Screen.storyboard */,
 				D93E0B772DA9781500F72C0A /* Recipe Swiper */,
 				DA10D0D32DAC3D4D00CC8D10 /* Recipe Swiper.app */,
+				D96653532E24F0420016D379 /* Snack Swipe.icon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +110,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D96653542E24F0420016D379 /* Snack Swipe.icon in Resources */,
 				D96A24C22DDF71C800B16EF1 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -250,7 +254,7 @@
 		D93E0B842DA9781700F72C0A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Snack Swipe";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -289,7 +293,7 @@
 		D93E0B852DA9781700F72C0A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Snack Swipe";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
