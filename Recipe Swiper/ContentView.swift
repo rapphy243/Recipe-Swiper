@@ -22,9 +22,9 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         TabView(selection: $model.selection) {
-            Tab("Groceries", systemImage: "checklist", value: 0) {
-                GroceryView()
-            }
+//            Tab("Groceries", systemImage: "checklist", value: 0) {
+//                GroceryView()
+//            }
             Tab("Home", systemImage: "house", value: 1) {
                 MainView()
             }
@@ -32,14 +32,6 @@ struct ContentView: View {
                 SavedRecipesView()
             }
         }
-        // There is a problem with the accessory pushing mainView up, so not enabled for now.
-        // Might fall back to original implementation...
-        //            .tabViewBottomAccessory {
-        //                if selection == 1 {
-        //                    // Random quotes
-        //
-        //                }
-        //            }
         .fullScreenCover(isPresented: $isOnboarding) {
             OnboardingView()
                 .presentationBackground(colorScheme == .dark ? .ultraThickMaterial : .ultraThinMaterial)

@@ -30,7 +30,7 @@ struct Card<Content: View>: View {
                 ? .black.opacity(0.3) : .gray.opacity(0.3),
             radius: 5
         )
-        .frame(maxWidth: UIScreen.main.bounds.width * 0.8)
+        .frame(maxWidth: (UIScreen.current?.bounds.width)! * 0.8)
         .padding()  // Padding around the entire card for spacing
     }
 }
@@ -66,5 +66,25 @@ struct Card<Content: View>: View {
                     .font(.subheadline)
             }
         }
+    }
+}
+
+// https://stackoverflow.com/questions/74458971/correct-way-to-get-the-screen-size-on-ios-after-uiscreen-main-deprecation
+extension UIWindow {
+    static var current: UIWindow? {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+            for window in windowScene.windows {
+                if window.isKeyWindow { return window }
+            }
+        }
+        return nil
+    }
+}
+
+
+extension UIScreen {
+    static var current: UIScreen? {
+        UIWindow.current?.screen
     }
 }
