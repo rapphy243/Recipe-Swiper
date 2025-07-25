@@ -17,7 +17,7 @@ class RecipeModel {
     // Used for sorting
     var dateModified: Date  // sort by date added/modified
     //
-    var rating: Double //
+    var rating: Int //
     
     @Attribute(.unique)
     var id: Int
@@ -92,7 +92,7 @@ class RecipeModel {
         //
         self.dateModified = Date()
         //
-        self.rating = 0.0
+        self.rating = 0
         self.id = recipe.id
         self.image = recipe.image ?? ""
         self.imageData = nil

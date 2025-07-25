@@ -172,7 +172,6 @@ func fetchRandomRecipe() async throws -> Recipe {
             spoonacularScore: recipe.spoonacularScore,
             spoonacularSourceUrl: recipe.spoonacularSourceUrl
         )
-
     } catch let error as DecodingError {
         // Catch specific decoding errors for better debugging
         print("Decoding Error Details: \(error)")

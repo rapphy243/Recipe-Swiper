@@ -40,7 +40,9 @@ struct RecipeListItem: View {
                     ServingsTag(servings: recipe.servings)
                 }
                 .font(.caption)
-                //TODO: Add rating component
+                if recipe.rating > 0 { // Checking for a rating
+                    //TODO: Add rating component
+                }
                 Spacer()
             }
             Spacer()
