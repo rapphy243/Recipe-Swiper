@@ -58,7 +58,7 @@ struct OnboardingHowToView: View {
                 .id(step)
                 .transition(.opacity)
             SwipableRecipeCard(
-                recipe: $model.recipe,
+                recipe: model.recipe,
                 onSwipeLeft: { Task { await handleSwipe(isLeft: true) } },
                 onSwipeRight: { Task { await handleSwipe(isLeft: false) } }
             )

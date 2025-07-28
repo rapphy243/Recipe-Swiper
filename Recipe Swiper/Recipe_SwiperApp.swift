@@ -41,6 +41,7 @@ class AppData: ObservableObject {
                 forKey: "recipe"
             )
             isLoading = false
+            try! await self.recipe.generateSummary()
         }
     }
 }

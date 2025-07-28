@@ -31,7 +31,7 @@ struct MainView: View {
                     .opacity(appData.isLoading ? 1 : 0)
                     .transition(.opacity)
                 SwipableRecipeCard(
-                    recipe: $appData.recipe,
+                    recipe: appData.recipe,
                     onSwipeLeft: { Task { await appData.fetchNewRecipe() } },
                     onSwipeRight: { Task { await  saveRecipe() } }
                 )

@@ -162,6 +162,7 @@ func fetchRandomRecipe() async throws -> Recipe {
             pricePerServing: recipe.pricePerServing,
             extendedIngredients: recipe.extendedIngredients,
             summary: recipe.summary.htmlStripped,
+            generatedSummary: nil,
             cuisines: recipe.cuisines,
             dishTypes: recipe.dishTypes,
             diets: recipe.diets,
