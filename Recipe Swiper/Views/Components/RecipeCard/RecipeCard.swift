@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeCard: View {
-    @Binding var recipe: Recipe
+    @ObservedObject var recipe: Recipe
     var body: some View {
         VStack {
             Card {
@@ -56,8 +56,8 @@ struct RecipeCard: View {
                                         }
                                     )
                             }
-                            VStack {
-                                RecipeCardDetails(recipe: $recipe)
+                            VStack(alignment: .center) {
+                                RecipeCardDetails(recipe: recipe)
                                     .containerRelativeFrame(
                                         .horizontal,
                                         { width, _ in
@@ -73,24 +73,28 @@ struct RecipeCard: View {
                                     )
 
                                 ScrollView {
-                                    // This would be a perfect spot to use new AI features.
-                                    Text(recipe.summary)
-                                        .font(.caption)
+                                    if let generatedSummary = recipe.generatedSummary {
+                                        Text(generatedSummary)
+                                            .font(.caption)
+                                    }
+                                    else {
+                                        Text(recipe.summary)
+                                            .font(.caption)
+                                    }
                                 }
                                 // TODO: Fix size to image wsize
                                 .containerRelativeFrame(
                                     .vertical,
                                     { height, _ in
-                                        return height * 0.2
+                                        return height * 0.26
                                     }
                                 )
                                 .containerRelativeFrame(
                                     .horizontal,
                                     { width, _ in
-                                        return width * 0.30
+                                        return width * 0.31
                                     }
                                 )
-
                             }
                         }
                         .padding(.top)
@@ -103,5 +107,5 @@ struct RecipeCard: View {
 }
 
 #Preview {
-    RecipeCard(recipe: .constant(Recipe.Cake))
+    RecipeCard(recipe: Recipe.Cake)
 }

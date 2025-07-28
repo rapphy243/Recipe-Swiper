@@ -123,7 +123,14 @@ class RecipeModel {
         self.extendedIngredients = recipe.extendedIngredients.map(
             ExtendedIngredientModel.init
         )
-        self.summary = recipe.summary
+        
+        if let generatedSummary = recipe.generatedSummary {
+            self.summary = generatedSummary
+        }
+        else {
+            self.summary = recipe.summary
+        }
+        
         self.cuisinesData = try? JSONEncoder().encode(recipe.cuisines)
         self.dishTypesData = try? JSONEncoder().encode(recipe.dishTypes)
         self.dietsData = try? JSONEncoder().encode(recipe.diets)

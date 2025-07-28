@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SwipableRecipeCard: View {
-    @Binding var recipe: Recipe
+    @ObservedObject var recipe: Recipe
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
     @ObservedObject private var settings = AppSettings.shared
@@ -21,14 +21,8 @@ struct SwipableRecipeCard: View {
         CGFloat(settings.swipeSensitivity)
     }
     
-    init(recipe: Binding<Recipe>, onSwipeLeft: (() -> Void)? = nil, onSwipeRight: (() -> Void)? = nil) {
-        self._recipe = recipe
-        self.onSwipeLeft = onSwipeLeft
-        self.onSwipeRight = onSwipeRight
-    }
-    
     var body: some View {
-        RecipeCard(recipe: $recipe)
+        RecipeCard(recipe: recipe)
             .offset(cardOffset)
             .rotationEffect(.degrees(cardRotation))
             .gesture(
@@ -121,7 +115,7 @@ struct SwipableRecipeCard: View {
 
 #Preview {
     SwipableRecipeCard(
-        recipe: .constant(Recipe.Cake),
+        recipe: Recipe.Cake,
         onSwipeLeft: { print("Swiped Left") },
         onSwipeRight: { print("Swiped Right") }
     )

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeCardDetails: View {
-    @Binding var recipe: Recipe
+    @ObservedObject var recipe: Recipe
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
@@ -48,5 +48,5 @@ struct RecipeCardDetails: View {
 }
 
 #Preview {
-    RecipeCardDetails(recipe: .constant(Recipe.Cake))
+    RecipeCardDetails(recipe: Recipe.Cake)
 }
