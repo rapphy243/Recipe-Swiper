@@ -131,7 +131,7 @@ struct DairyFreeTag: View {
     }
 }
 
-struct CusineTags: View {
+struct CuisineTags: View {
     let cuisines: [String]
     let showAll: Bool?
     var body: some View {
@@ -161,7 +161,7 @@ struct CusineTags: View {
         VeganTag()
         GlutenFreeTag()
         DairyFreeTag()
-        CusineTags(
+        CuisineTags(
             cuisines: ["Chinese", "Italian", "Indian", "American"],
             showAll: true
         )

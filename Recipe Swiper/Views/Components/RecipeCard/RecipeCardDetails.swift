@@ -21,7 +21,7 @@ struct RecipeCardDetails: View {
             }
 
             HStack(spacing: 8) {
-                CusineTags(
+                CuisineTags(
                     cuisines: recipe.cuisines,
                     showAll: false
                 )
