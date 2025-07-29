@@ -10,9 +10,11 @@ import SwiftUI
 @MainActor
 class ContentViewModel: ObservableObject {
     @Published var selection: Int
-    
+    @Published var searchText: String
+
     init() {
         self.selection = 1
+        self.searchText = ""
     }
 }
 
@@ -22,19 +24,24 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         TabView(selection: $model.selection) {
-//            Tab("Groceries", systemImage: "checklist", value: 0) {
-//                GroceryView()
-//            }
+            //            Tab("Groceries", systemImage: "checklist", value: 0) {
+            //                GroceryView()
+            //            }
             Tab("Home", systemImage: "house", value: 1) {
                 MainView()
             }
-            Tab("Cookbook", systemImage: "book.closed", value: 2, role: .search) {
-                SavedRecipesView()
+            Tab("Cookbook", systemImage: "book.closed", value: 2, role: .search)
+            {
+                SavedRecipesView(SearchText: $model.searchText)
+                    .searchable(text: $model.searchText)
             }
         }
         .fullScreenCover(isPresented: $isOnboarding) {
             OnboardingView()
-                .presentationBackground(colorScheme == .dark ? .ultraThickMaterial : .ultraThinMaterial)
+                .presentationBackground(
+                    colorScheme == .dark
+                        ? .ultraThickMaterial : .ultraThinMaterial
+                )
         }
 
     }

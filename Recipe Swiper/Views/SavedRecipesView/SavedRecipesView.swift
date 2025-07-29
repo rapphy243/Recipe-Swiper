@@ -10,13 +10,23 @@ import SwiftUI
 
 struct SavedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
+    @Binding var SearchText: String
     @State private var sortBy: SortBy = .name
     @State private var filter: RecipeFilter = .all
     @State private var recipeList: [RecipeModel] = []
+    private var filteredRecipes: [RecipeModel] {
+        guard !SearchText.isEmpty else {
+            return recipeList
+        }
+        return recipeList.filter {
+            $0.title.lowercased().contains(SearchText.lowercased())
+        }
+    }
+
     var body: some View {
         NavigationStack {
             List {
-                ForEach(recipeList, id: \.self) { recipe in
+                ForEach(filteredRecipes, id: \.self) { recipe in
                     RecipeListItem(recipe: recipe)
                 }
             }
@@ -52,12 +62,15 @@ struct SavedRecipesView: View {
             fetchRecipes()
         }
     }
-    
+
     private func fetchRecipes() {
         let descriptor = sortBy.sortDescriptor
         let predicate = filter.predicate
 
-        let fetchDescriptor = FetchDescriptor<RecipeModel>(predicate: predicate, sortBy: [descriptor])
+        let fetchDescriptor = FetchDescriptor<RecipeModel>(
+            predicate: predicate,
+            sortBy: [descriptor]
+        )
         do {
             recipeList = try modelContext.fetch(fetchDescriptor)
         } catch {
@@ -89,7 +102,7 @@ enum RecipeFilter {
     var predicate: Predicate<RecipeModel>? {
         switch self {
         case .all:
-            return nil // No filter
+            return nil  // No filter
         case .hasRating:
             return #Predicate { $0.rating > 0 }
         }
@@ -105,6 +118,6 @@ enum RecipeFilter {
     let recipe1 = RecipeModel(from: Recipe.Cake)
     container.mainContext.insert(recipe1)
 
-    return SavedRecipesView()
+    return SavedRecipesView(SearchText: .constant(""))
         .modelContainer(container)
 }
