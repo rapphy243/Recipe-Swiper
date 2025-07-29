@@ -9,22 +9,22 @@ import SwiftData
 import SwiftUI
 
 struct RecipeListItem: View {
-    @State var recipe: RecipeModel
+    @StateObject var recipe: RecipeModel
     var body: some View {
-        HStack {
+        HStack(spacing: 15) {
             if let imageData = recipe.imageData {
                 if let image = UIImage(data: imageData) {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 60, height: 60)
+                        .frame(width: 75, height: 75)
                         .clipped()
                         .cornerRadius(10)
                 }
             } else {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.gray.opacity(0.3))
-                    .frame(width: 60, height: 60)
+                    .frame(width: 70, height: 75)
                     .onAppear {
                         Task {
                             await recipe.getImage()
@@ -40,8 +40,29 @@ struct RecipeListItem: View {
                     ServingsTag(servings: recipe.servings)
                 }
                 .font(.caption)
-                if recipe.rating > 0 { // Checking for a rating
+                if recipe.rating > 0 {  // Checking for a rating
                     //TODO: Add rating component
+                } else if recipe.dairyFree || recipe.glutenFree || recipe.vegan
+                    || recipe.vegetarian
+                {
+                    HStack {
+                        if recipe.vegetarian {
+                            VegetarianTag()
+                        }
+                        if recipe.vegan {
+                            VeganTag()
+                        }
+                        if recipe.glutenFree {
+                            GlutenFreeTag()
+                        }
+                        if recipe.dairyFree {
+                            DairyFreeTag()
+                        }
+                    }
+                } else {
+                    CusineTags(cuisines: recipe.cuisines, showAll: true)
+                        .font(.caption)
+                        .lineLimit(1)
                 }
                 Spacer()
             }
@@ -57,9 +78,12 @@ struct RecipeListItem: View {
         configurations: config
     )
     let recipe1 = RecipeModel(from: Recipe.Cake)
+    recipe1.glutenFree = true
+    recipe1.vegan = true
+    recipe1.dairyFree = true
+    recipe1.vegetarian = true
     container.mainContext.insert(recipe1)
-    
-    return SavedRecipesView()
+
+    return SavedRecipesView(SearchText: .constant(""))
         .modelContainer(container)
 }
-

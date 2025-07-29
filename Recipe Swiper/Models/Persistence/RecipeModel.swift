@@ -13,7 +13,7 @@ import SwiftData
 import SwiftUI
 
 @Model
-class RecipeModel {
+class RecipeModel: ObservableObject {
     // Used for sorting
     var dateModified: Date  // sort by date added/modified
     //
