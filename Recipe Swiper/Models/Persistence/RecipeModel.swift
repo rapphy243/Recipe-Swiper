@@ -54,7 +54,7 @@ class RecipeModel: ObservableObject {
     var extendedIngredients: [ExtendedIngredientModel]
     var summary: String
     // These String arrays cause "Could not materialize Objective-C class named "Array" from declared attribute value type "Array<String>" of attribute named"
-    // SwiftData/CoreData doesn't not support arrays of strings, but it converts it to data to store it and then decodes it back to an array of strings.
+    // SwiftData/CoreData doesn't support arrays of strings, but it converts them to data to store them and then decodes them back to an array of strings.
     @Attribute(.externalStorage)
     private var cuisinesData: Data?
     @Attribute(.externalStorage)

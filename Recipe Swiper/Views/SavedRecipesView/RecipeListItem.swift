@@ -60,7 +60,7 @@ struct RecipeListItem: View {
                         }
                     }
                 } else {
-                    CusineTags(cuisines: recipe.cuisines, showAll: true)
+                    CuisineTags(cuisines: recipe.cuisines, showAll: true)
                         .font(.caption)
                         .lineLimit(1)
                 }

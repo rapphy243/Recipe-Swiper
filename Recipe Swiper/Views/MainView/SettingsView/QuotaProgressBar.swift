@@ -10,7 +10,7 @@ import SwiftUI
 struct QuotaProgressBar: View {
     @EnvironmentObject var quota: APIQuota
     var body: some View {
-        GeometryReader { geometry in  // allows us toaccess and manipulate size and position of view
+        GeometryReader { geometry in  // allows us to access and manipulate size and position of view
             ZStack(alignment: .leading) {
                 // Empty progress bar
                 Rectangle()
