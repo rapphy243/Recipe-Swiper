@@ -14,13 +14,13 @@ struct ModelHelper {
     static var availabilityDescription: String {
         switch self.model.availability {
         case .available:
-            return "Intelligence available."
+            return "Device Eligible"
         case .unavailable(.deviceNotEligible):
-            return "Device not eligible."
+            return "Device not Eligible"
         case .unavailable(.appleIntelligenceNotEnabled):
-            return "Apple Intelligence not enabled."
+            return "Apple Intelligence not enabled"
         case .unavailable(.modelNotReady):
-            return "Model not ready."
+            return "Model not ready"
         case .unavailable(let other):
             return "Unavailable for an unknown reason: \(other)"
         }
