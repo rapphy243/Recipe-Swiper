@@ -15,7 +15,7 @@ class AppSettings: ObservableObject {
     @AppStorage("apiKey") var apiKey: String = ""
 
     // User Preferences
-    @AppStorage("swipeSensitivity") var swipeSensitivity: Double = 100.0
+    @AppStorage("swipeSensitivity") var swipeSensitivity: Double = 200.0
 
     // AI Features
     @AppStorage("enableAIFeatures") var enableAIFeatures: Bool = true

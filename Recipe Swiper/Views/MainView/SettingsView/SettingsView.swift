@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject private var settings = AppSettings.shared
     @ObservedObject private var quota = APIQuota.shared
-
+    @State private var showResetDialog = false
     var body: some View {
         NavigationStack {
             List {
@@ -42,7 +42,7 @@ struct SettingsView: View {
                             .lineLimit(1)
                             .fixedSize()
                         Spacer()
-                        SecureField("Enter API Key", text: $settings.apiKey)
+                        TextField("Enter API Key", text: $settings.apiKey)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                 }
@@ -75,15 +75,20 @@ struct SettingsView: View {
                 Section("App Behavior") {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("Swipe Sensitivity")
-                            Spacer()
-                            Text(sensitivityLabel)
+                            Text("Card Activation Threshold")
                         }
-                        Slider(
-                            value: $settings.swipeSensitivity,
-                            in: 50...200,
-                            step: 25
-                        )
+                        Picker(
+                            "Sensitivity",
+                            selection: $settings.swipeSensitivity
+                        ) {
+                            Text("Low")
+                                .tag(100.0)
+                            Text("Medium")
+                                .tag(200.0)
+                            Text("High")
+                                .tag(300.0)
+                        }
+                        .pickerStyle(.palette)
                     }
 
                     Toggle(
@@ -101,31 +106,27 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
 
                     Button("Reset All Settings") {
-                        resetAllSettings()
+                        showResetDialog = true
                     }
                     .font(.headline)
                     .foregroundColor(.red)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .confirmationDialog(
+                        "Reset Settings",
+                        isPresented: $showResetDialog,
+                        titleVisibility: .visible
+                    ) {
+                        Button(role: .destructive) {
+                            resetAllSettings()
+                        } label: {
+                            Text("Reset")
+                        }
+                    } message: {
+                        Text("Are you sure you want to reset all settings?")
+                    }
                 }
             }
             .navigationTitle("Settings")
-        }
-    }
-
-    private var sensitivityLabel: String {
-        switch settings.swipeSensitivity {
-        case 50:
-            return "Low"
-        case 75:
-            return "Medium-Low"
-        case 100:
-            return "Medium"
-        case 125:
-            return "Medium-High"
-        case 150...200:
-            return "High"
-        default:
-            return "Custom"
         }
     }
 
