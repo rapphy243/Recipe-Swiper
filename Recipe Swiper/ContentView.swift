@@ -2,53 +2,63 @@
 //  ContentView.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 4/11/25.
+//  Created by Raphael Abano on 6/22/25.
 //
 
-// https://www.hackingwithswift.com/quick-start/swiftui/adding-tabview-and-tabitem
-// https://stackoverflow.com/questions/57802440/how-to-set-a-default-tab-in-swiftuis-tabview
-// https://www.swiftyplace.com/blog/tabview-in-swiftui-styling-navigation-and-more
-// https://stackoverflow.com/a/76287539
-
-import SwiftData
 import SwiftUI
 
+@MainActor
+class ContentViewModel: ObservableObject {
+    @Published var selection: Int
+    @Published var searchText: String
+
+    init() {
+        self.selection = 1
+        self.searchText = ""
+    }
+}
+
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var selection = 1  // Show MainView
-    @StateObject private var filterModel = FilterModel()
-    @AppStorage("isOnboarding") var isOnboarding: Bool = true  // if "isOnboarding" doesn't exist, sets it to true
+    @StateObject var model = ContentViewModel()
+    @AppStorage("isOnboarding") var isOnboarding: Bool = true
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
-        TabView(selection: $selection) {
-            Group {
-                DiscardedRecipesView()  // View to go to
-                    .tabItem {
-                        Label("Discarded Recipes", systemImage: "trash")  // Icon & Label on tab
-                    }
-                    .tag(0)
-                MainView(filterModel: filterModel)
-                    .tabItem {
-                        Label("Home", systemImage: "house")
-                    }
-                    .tag(1)
-                SavedRecipesView()
-                    .tabItem {
-                        Label("Cookbook", systemImage: "book.closed")
-                    }
-                    .tag(3)
+        TabView(selection: $model.selection) {
+            //            Tab("Groceries", systemImage: "checklist", value: 0) {
+            //                GroceryView()
+            //            }
+            Tab("Home", systemImage: "house", value: 1) {
+                MainView()
             }
-            .toolbarBackground(.indigo, for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
-            .toolbarColorScheme(.dark, for: .tabBar)
+            Tab("Cookbook", systemImage: "book.closed", value: 2, role: .search)
+            {
+                SavedRecipesView(SearchText: $model.searchText)
+                    .searchable(text: $model.searchText)
+            }
         }
-        .fullScreenCover(isPresented: $isOnboarding) { // Overlay OnboardingView if isOnboarding is true
+        .fullScreenCover(isPresented: $isOnboarding) {
             OnboardingView()
+                .presentationBackground(
+                    colorScheme == .dark
+                        ? .ultraThickMaterial : .ultraThinMaterial
+                )
         }
+
     }
 }
 
 #Preview {
-    @Previewable @AppStorage("isOnboarding") var isOnboarding = false  // To ignore onboarding in preview window
-    ContentView()
-        .modelContainer(for: RecipeModel.self, inMemory: true)
+    let previewUserDefaults = UserDefaults(suiteName: "Preview")!
+    previewUserDefaults.set(false, forKey: "isOnboarding")
+    return ContentView()
+        .defaultAppStorage(previewUserDefaults)
+        .environmentObject(AppData())
+}
+
+#Preview {
+    let previewUserDefaults = UserDefaults(suiteName: "Preview")!
+    previewUserDefaults.set(true, forKey: "isOnboarding")
+    return ContentView()
+        .defaultAppStorage(previewUserDefaults)
+        .environmentObject(AppData())
 }
