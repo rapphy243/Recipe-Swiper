@@ -9,10 +9,14 @@
     {
       "blend-mode-specializations" : [
         {
+          "value" : "normal"
+        },
+        {
           "appearance" : "dark",
           "value" : "lighten"
         }
       ],
+      "blur-material" : 0.5,
       "layers" : [
         {
           "glass" : true,
@@ -20,12 +24,19 @@
           "name" : "3_Circle"
         }
       ],
+      "lighting" : "individual",
       "shadow" : {
-        "kind" : "neutral",
+        "kind" : "layer-color",
         "opacity" : 0.5
       },
       "specular" : true,
       "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0.5
+          }
+        },
         {
           "appearance" : "dark",
           "value" : {
@@ -45,20 +56,23 @@
           "value" : "lighten"
         }
       ],
+      "blur-material" : null,
       "layers" : [
         {
           "image-name" : "2_Inner Meat.svg",
           "name" : "2_Inner Meat"
         }
       ],
+      "lighting" : "combined",
+      "name" : "Group",
       "shadow" : {
-        "kind" : "neutral",
+        "kind" : "none",
         "opacity" : 0.5
       },
-      "specular" : false,
+      "specular" : true,
       "translucency" : {
-        "enabled" : false,
-        "value" : 0.25
+        "enabled" : true,
+        "value" : 0.5
       }
     },
     {
@@ -138,7 +152,7 @@
       ],
       "specular-specializations" : [
         {
-          "value" : false
+          "value" : true
         },
         {
           "appearance" : "dark",
@@ -162,7 +176,17 @@
       ]
     },
     {
-      "blur-material" : 0.5,
+      "blend-mode-specializations" : [
+        {
+          "appearance" : "dark",
+          "value" : "plus-lighter"
+        },
+        {
+          "appearance" : "tinted",
+          "value" : "overlay"
+        }
+      ],
+      "blur-material" : null,
       "hidden" : false,
       "layers" : [
         {
@@ -183,8 +207,14 @@
         }
       ],
       "lighting" : "combined",
+      "opacity-specializations" : [
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
       "shadow" : {
-        "kind" : "layer-color",
+        "kind" : "neutral",
         "opacity" : 0.5
       },
       "specular" : true,

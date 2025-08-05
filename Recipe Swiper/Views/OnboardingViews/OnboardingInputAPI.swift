@@ -37,6 +37,7 @@ struct OnboardingInputAPI: View {
 
                 TextField("Paste your API Key here", text: $apiKey)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.alphabet)
                     .padding(.horizontal)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)

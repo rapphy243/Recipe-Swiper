@@ -151,6 +151,26 @@ struct CuisineTags: View {
     }
 }
 
+struct RatingTag: View {
+    let rating: Int
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<5) { index in
+                if rating / 2 > index {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                } else if rating / 2 == index && rating % 2 == 1 {
+                    Image(systemName: "star.leadinghalf.filled")
+                        .foregroundColor(.yellow)
+                } else {
+                    Image(systemName: "star")
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+    }
+}
+
 #Preview {
     VStack {
         TimeTag(minutes: 10)
@@ -165,5 +185,7 @@ struct CuisineTags: View {
             cuisines: ["Chinese", "Italian", "Indian", "American"],
             showAll: true
         )
+        RatingTag(rating: 10)
     }
 }
+
