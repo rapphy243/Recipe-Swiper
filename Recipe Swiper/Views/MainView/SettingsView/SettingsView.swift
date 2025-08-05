@@ -44,6 +44,9 @@ struct SettingsView: View {
                         Spacer()
                         TextField("Enter API Key", text: $settings.apiKey)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.alphabet)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
                     }
                 }
 
@@ -131,8 +134,7 @@ struct SettingsView: View {
     }
 
     private func resetAllSettings() {
-        settings.apiKey = ""
-        settings.swipeSensitivity = 100.0
+        settings.swipeSensitivity = 200.0
         settings.enableAIFeatures = true
         settings.aiRecipeSummary = true
         settings.hapticFeedbackEnabled = true

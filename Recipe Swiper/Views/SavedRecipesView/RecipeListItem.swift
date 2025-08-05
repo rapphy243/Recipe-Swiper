@@ -41,7 +41,7 @@ struct RecipeListItem: View {
                 }
                 .font(.caption)
                 if recipe.rating > 0 {  // Checking for a rating
-                    //TODO: Add rating component
+                    RatingTag(rating: recipe.rating)
                 } else if recipe.dairyFree || recipe.glutenFree || recipe.vegan
                     || recipe.vegetarian
                 {
@@ -82,6 +82,7 @@ struct RecipeListItem: View {
     recipe1.vegan = true
     recipe1.dairyFree = true
     recipe1.vegetarian = true
+    recipe1.rating = 5
     container.mainContext.insert(recipe1)
 
     return SavedRecipesView(SearchText: .constant(""))

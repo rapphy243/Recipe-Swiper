@@ -24,9 +24,6 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         TabView(selection: $model.selection) {
-            //            Tab("Groceries", systemImage: "checklist", value: 0) {
-            //                GroceryView()
-            //            }
             Tab("Home", systemImage: "house", value: 1) {
                 MainView()
             }
