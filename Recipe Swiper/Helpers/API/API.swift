@@ -87,7 +87,7 @@ func fetchRandomRecipe() async throws -> Recipe {
     )!
 
     components.queryItems = [
-        URLQueryItem(name: "apiKey", value: UserDefaults.standard.string(forKey: "apiKey"))
+        URLQueryItem(name: "apiKey", value: AppSettings.shared.apiKey)
     ]
 
     guard let url = components.url else {

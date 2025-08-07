@@ -11,6 +11,7 @@ struct SettingsView: View {
     @ObservedObject private var settings = AppSettings.shared
     @ObservedObject private var quota = APIQuota.shared
     @State private var showResetDialog = false
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         NavigationStack {
             List {
@@ -98,6 +99,39 @@ struct SettingsView: View {
                         "Haptic Feedback",
                         isOn: $settings.hapticFeedbackEnabled
                     )
+                    
+                }
+                
+                Section("Background Gradient") {
+                    if colorScheme == .light {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Light Mode")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            ColorPicker(
+                                "Top Color",
+                                selection: $settings.backgroundColor1
+                            )
+                            ColorPicker(
+                                "Bottom Color",
+                                selection: $settings.backgroundColor2
+                            )
+                        }
+                    } else {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Dark Mode")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            ColorPicker(
+                                "Top Color",
+                                selection: $settings.backgroundDarkColor1
+                            )
+                            ColorPicker(
+                                "Bottom Color",
+                                selection: $settings.backgroundDarkColor2
+                            )
+                        }
+                    }
                 }
 
                 // App Actions
