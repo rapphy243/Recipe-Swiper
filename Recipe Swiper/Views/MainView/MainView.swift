@@ -27,6 +27,7 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                MainViewBackground()
                 ProgressView()
                     .opacity(appData.isLoading ? 1 : 0)
                     .transition(.opacity)
