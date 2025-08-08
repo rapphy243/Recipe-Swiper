@@ -28,11 +28,16 @@ Snack Swipe helps you discover and save recipes. Using a Tinder-like swipe inter
   - Edit recipe details
   - View your recipe history
 
+## TestFlight (Beta Versions)
+
+Get early access to new features by joining our [TestFlight Public Beta](https://testflight.apple.com/join/2Gfp8Zmx)
+
 ## Technical Details
 
 ### Frameworks Used
 - SwiftUI
 - SwiftData
+- FoundationModels
 
 ## Getting Started
 
@@ -40,9 +45,7 @@ Snack Swipe helps you discover and save recipes. Using a Tinder-like swipe inter
 ```bash
 https://github.com/rapphy243/Recipe-Swiper.git
 ```
-2. In the Environment folder, create a copy of `SecretsExample.xcconfig`, rename it to `Secrets.xcconfig`, then replace Spoonacular API key
-
-3. Build and run the project in Xcode.
+2. Build and run the project in Xcode.
 
 ## License
 
@@ -50,3 +53,4 @@ https://github.com/rapphy243/Recipe-Swiper.git
 ## Acknowledgments
 - Tinder for the inspiration
 - Recipe data provided by Spoonacular API
+
