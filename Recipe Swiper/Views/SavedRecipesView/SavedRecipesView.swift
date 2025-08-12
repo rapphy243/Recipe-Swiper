@@ -27,8 +27,21 @@ struct SavedRecipesView: View {
         NavigationStack {
             List {
                 ForEach(filteredRecipes, id: \.self) { recipe in
-                    RecipeListItem(recipe: recipe)
+                    NavigationLink(destination: RecipePageView(recipe: recipe)){
+                        RecipeListItem(recipe: recipe)
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    withAnimation {
+                                        recipe.rating = 0
+                                    }
+                                } label: {
+                                    Label("Clear Rating", systemImage: "star.slash")
+                                }
+                                .tint(.orange)
+                            }
+                    }
                 }
+                .onDelete(perform: deleteRecipe)
             }
             .navigationTitle("Saved Recipes")
             .toolbar {
@@ -60,6 +73,16 @@ struct SavedRecipesView: View {
         }
         .onChange(of: filter) { _, _ in
             fetchRecipes()
+        }
+    }
+
+    private func deleteRecipe(at offsets: IndexSet) {
+        for offset in offsets {
+            // find this recipe in our query
+            let recipe = recipeList[offset]
+
+            // delete it from the context
+            modelContext.delete(recipe)
         }
     }
 

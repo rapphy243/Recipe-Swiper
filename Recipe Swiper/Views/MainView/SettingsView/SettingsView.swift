@@ -12,6 +12,7 @@ struct SettingsView: View {
     @ObservedObject private var quota = APIQuota.shared
     @State private var showResetDialog = false
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         NavigationStack {
             List {
@@ -164,6 +165,17 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(
+                            systemName: "xmark"
+                        )
+                    }
+                }
+            }
         }
     }
 
