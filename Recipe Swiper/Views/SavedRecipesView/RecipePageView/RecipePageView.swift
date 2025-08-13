@@ -78,6 +78,15 @@ struct RecipePageView: View {
 
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        EditableRecipePageView(recipe: recipe)
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                    }
+                }
+            }
         }
     }
 }
