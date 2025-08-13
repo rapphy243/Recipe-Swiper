@@ -11,11 +11,13 @@ import SwiftData
 
 @Model
 final class AnalyzedInstructionModel {
+    @Attribute(.unique) var id: UUID
     var name: String
     @Relationship(deleteRule: .cascade)
     var steps: [InstructionStepModel]
 
     init(from instruction: AnalyzedInstruction) {
+        self.id = UUID()
         self.name = instruction.name
         self.steps = instruction.steps.map(InstructionStepModel.init)
     }

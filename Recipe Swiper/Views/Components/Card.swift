@@ -20,10 +20,7 @@ struct Card<Content: View>: View {
             content
                 .padding()
         }
-        .background(
-            colorScheme == .dark
-                ? Color(.systemGray6).opacity(0.8) : .white.opacity(0.8)
-        )
+        .background(.ultraThickMaterial)
         .cornerRadius(10)
         .shadow(
             color: colorScheme == .dark
