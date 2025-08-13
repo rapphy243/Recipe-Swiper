@@ -31,6 +31,8 @@ struct MainView: View {
                 ProgressView()
                     .opacity(appData.isLoading ? 1 : 0)
                     .transition(.opacity)
+                QuoteCard()
+                    .offset(y: 210)
                 SwipableRecipeCard(
                     recipe: appData.recipe,
                     onSwipeLeft: { Task { await appData.fetchNewRecipe() } },
