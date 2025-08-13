@@ -82,7 +82,6 @@ struct RecipeCard: View {
                                         .font(.caption)
                                 }
                             }
-                            // TODO: Fix size to image wsize
                             .containerRelativeFrame(
                                 .vertical,
                                 { height, _ in
