@@ -11,10 +11,36 @@ import SwiftUI
 struct RecipeListToolBar: ToolbarContent {
     @Binding var sortBy: SortBy
     @Binding var filter: RecipeFilter
-
+    @Binding var selection: Set<RecipeModel>
+    var onDeleteSelected: () -> Void
+    @Environment(\.editMode) private var editMode
     var body: some ToolbarContent {
+        ToolbarItemGroup(placement: .topBarLeading) {
+            if (editMode?.wrappedValue.isEditing ?? false) {
+                Button(role: .destructive) {
+                    onDeleteSelected()
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                .disabled(selection.isEmpty)
+            }
+        }
         ToolbarItemGroup(placement: .topBarTrailing) {
             Menu {
+                // Toggle Edit Mode inside the menu
+                Button(action: {
+                    withAnimation {
+                        if editMode?.wrappedValue.isEditing == true {
+                            editMode?.wrappedValue = .inactive
+                            selection.removeAll()
+                        } else {
+                            editMode?.wrappedValue = .active
+                        }
+                    }
+                }) {
+                    Label(editMode?.wrappedValue.isEditing == true ? "Done" : "Edit", systemImage: editMode?.wrappedValue.isEditing == true ? "checkmark.circle" : "pencil")
+                }
+                Divider()
                 Picker(
                     selection: $sortBy,
                     content: {
