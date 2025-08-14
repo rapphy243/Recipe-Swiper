@@ -13,7 +13,7 @@ import SwiftData
 import SwiftUI
 
 @Model
-class RecipeModel: ObservableObject {
+class RecipeModel: ObservableObject, Hashable {
     // Used for sorting
     var dateModified: Date  // sort by date added/modified
     //
@@ -195,5 +195,13 @@ class RecipeModel: ObservableObject {
             return nil
         }
         return try? JSONDecoder().decode([String].self, from: data)
+    }
+    
+    static func == (lhs: RecipeModel, rhs: RecipeModel) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

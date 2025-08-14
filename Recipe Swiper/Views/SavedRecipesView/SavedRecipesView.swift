@@ -10,10 +10,12 @@ import SwiftUI
 
 struct SavedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.editMode) private var editMode
     @Binding var SearchText: String
     @State private var sortBy: SortBy = .name
     @State private var filter: RecipeFilter = .all
     @State private var recipeList: [RecipeModel] = []
+    @State private var selection: Set<RecipeModel> = []
     private var filteredRecipes: [RecipeModel] {
         guard !SearchText.isEmpty else {
             return recipeList
@@ -25,7 +27,7 @@ struct SavedRecipesView: View {
 
     var body: some View {
         NavigationStack {
-            List {
+            List(selection: $selection) {
                 ForEach(filteredRecipes, id: \.self) { recipe in
                     NavigationLink(destination: RecipePageView(recipe: recipe)){
                         RecipeListItem(recipe: recipe)
@@ -45,7 +47,12 @@ struct SavedRecipesView: View {
             }
             .navigationTitle("Saved Recipes")
             .toolbar {
-                RecipeListToolBar(sortBy: $sortBy, filter: $filter)
+                RecipeListToolBar(
+                    sortBy: $sortBy,
+                    filter: $filter,
+                    selection: $selection,
+                    onDeleteSelected: deleteSelected
+                )
             }
             .overlay {
                 if recipeList.isEmpty {
@@ -77,13 +84,21 @@ struct SavedRecipesView: View {
     }
 
     private func deleteRecipe(at offsets: IndexSet) {
+        // Offsets are based on filteredRecipes, not recipeList
         for offset in offsets {
-            // find this recipe in our query
-            let recipe = recipeList[offset]
-
-            // delete it from the context
+            let recipe = filteredRecipes[offset]
             modelContext.delete(recipe)
         }
+        fetchRecipes()
+    }
+
+    private func deleteSelected() {
+        guard !selection.isEmpty else { return }
+        for recipe in selection {
+            modelContext.delete(recipe)
+        }
+        selection.removeAll()
+        fetchRecipes()
     }
 
     private func fetchRecipes() {
