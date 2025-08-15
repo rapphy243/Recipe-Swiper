@@ -11,7 +11,7 @@ struct MainToolBar: ToolbarContent {
     @EnvironmentObject var model: MainViewModel
     @EnvironmentObject var appData: AppData
     var body: some ToolbarContent {
-        ToolbarItemGroup(placement: .topBarTrailing) {
+        ToolbarItemGroup(placement: .primaryAction) {
             Button {
                 model.showFilters = true
             } label: {
@@ -19,6 +19,8 @@ struct MainToolBar: ToolbarContent {
                     systemName: "line.3.horizontal.decrease.circle"
                 )
             }
+        }
+        ToolbarItemGroup(placement: .confirmationAction) {
             Menu {
                 Button("Refresh Recipe", systemImage: "arrow.clockwise") {
                     Task {

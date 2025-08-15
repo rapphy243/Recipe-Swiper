@@ -34,7 +34,8 @@ struct RecipeListItem: View {
             VStack(alignment: .leading) {
                 Text(recipe.title)
                     .font(.headline)
-                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(2)
                 HStack {
                     SourceTag(source: recipe.sourceUrl ?? "")
                     ServingsTag(servings: recipe.servings)
