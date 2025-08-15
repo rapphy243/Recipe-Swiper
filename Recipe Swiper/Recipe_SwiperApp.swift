@@ -2,7 +2,7 @@
 //  Recipe_SwiperApp.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 6/22/25.
+//  Created by Snack Swipe Team (Zane, Tyler, Rapphy) on 4/11/25.
 //
 
 import SwiftData

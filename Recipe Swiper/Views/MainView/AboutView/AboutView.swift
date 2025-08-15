@@ -2,7 +2,7 @@
 //  AboutView.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 5/28/25.
+//  Created by Snack Swipe Team (Zane, Tyler, Rapphy) on 5/28/25.
 //
 
 import SwiftUI

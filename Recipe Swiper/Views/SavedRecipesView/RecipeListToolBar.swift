@@ -2,7 +2,7 @@
 //  RecipeListToolBar.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 7/23/25.
+//  Created by Snack Swipe Team (Zane, Tyler, Rapphy) on 7/23/25.
 //
 
 import SwiftData

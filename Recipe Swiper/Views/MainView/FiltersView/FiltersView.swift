@@ -2,7 +2,7 @@
 //  FiltersView.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 6/22/25.
+//  Created by Zane Matarieh on 4/22/25.
 //
 
 import SwiftUI

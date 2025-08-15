@@ -2,7 +2,7 @@
 //  FoundationModels.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano on 7/3/25.
+//  Created by Snack Swipe Team (Zane, Tyler, Rapphy) on 7/3/25.
 //
 
 import Foundation
