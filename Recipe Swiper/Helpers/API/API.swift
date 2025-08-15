@@ -67,7 +67,28 @@ enum RecipeError: Error, LocalizedError {
         case .invalidURL:
             return "The provided API endpoint URL was invalid."
         case .requestFailed(let statusCode):
-            return "The network request failed with status code: \(statusCode)."
+            switch statusCode {
+            case 400:
+                return "Bad request. Try adjusting your filters and try again."
+            case 401:
+                return "Missing or invalid API key. Add your Spoonacular API key in Settings."
+            case 402:
+                return "Payment required or quota exceeded. Check your API plan or daily quota."
+            case 403:
+                return "Forbidden. Your API key is not allowed to access this resource."
+            case 404:
+                return "No recipe found. Try different filters."
+            case 422:
+                return "The server couldn't process the request. Try different filters."
+            case 429:
+                return "You've hit the rate limit. Please wait a bit and try again."
+            case 500:
+                return "Server error. Please try again later."
+            case 503:
+                return "Service unavailable. Please try again shortly."
+            default:
+                return "Request failed with status code: \(statusCode)."
+            }
         case .decodingFailed(let underlyingError):
             return
                 "Failed to decode the JSON response: \(underlyingError.localizedDescription)"
@@ -81,13 +102,18 @@ enum RecipeError: Error, LocalizedError {
 }
 
 func fetchRandomRecipe() async throws -> Recipe {
+    // Ensure API key is present before making the request
+    let storedApiKey = UserDefaults.standard.string(forKey: "apiKey")?.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard let apiKey = storedApiKey, !apiKey.isEmpty else {
+        throw RecipeError.requestFailed(statusCode: 401)
+    }
 
     var components = URLComponents(
         string: "https://api.spoonacular.com/recipes/random"
     )!
 
     components.queryItems = [
-        URLQueryItem(name: "apiKey", value: UserDefaults.standard.string(forKey: "apiKey")),
+        URLQueryItem(name: "apiKey", value: apiKey),
         URLQueryItem(name: "include-tags", value: FiltersModel.shared.selectedIncludeFilters().joined(separator: ",")),
         URLQueryItem(name: "exclude-tags", value: FiltersModel.shared.selectedExcludeFilters().joined(separator: ","))
     ]

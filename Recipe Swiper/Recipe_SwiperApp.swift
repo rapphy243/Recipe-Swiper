@@ -33,15 +33,20 @@ class AppData: ObservableObject {
     }
 
     func fetchNewRecipe() async {
-        Task {
-            isLoading = true
-            self.recipe = try await fetchRandomRecipe()
+        isLoading = true
+        recipeError = nil
+        do {
+            let fetched = try await fetchRandomRecipe()
+            self.recipe = fetched
             UserDefaults.standard.set(
-                try? JSONEncoder().encode(self.recipe),
+                try? JSONEncoder().encode(fetched),
                 forKey: "recipe"
             )
             isLoading = false
-            try! await self.recipe.generateSummary()
+            try? await self.recipe.generateSummary()
+        } catch {
+            isLoading = false
+            recipeError = error
         }
     }
 }
