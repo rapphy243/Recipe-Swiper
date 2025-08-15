@@ -2,7 +2,7 @@
 //  OnboardingHowGetStartedView.swift
 //  Recipe Swiper
 //
-//  Created by Raphael Abano & Zane on 4/11/25.
+//  Created by Raphael Abano & Zane Matarieh on 4/11/25.
 //
 //  Partially edited by Claude 2.5
 
