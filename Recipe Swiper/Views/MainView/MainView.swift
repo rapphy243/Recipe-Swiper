@@ -26,6 +26,7 @@ struct MainView: View {
     @Environment(\.modelContext) var modelContext
     @StateObject var model = MainViewModel()
     @EnvironmentObject var appData: AppData  // Where the shown recipe is stored
+    @State private var showErrorAlert: Bool = false
     var body: some View {
         NavigationStack {
             ZStack {
@@ -49,6 +50,48 @@ struct MainView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 MainToolBar()
+            }
+            .onReceive(appData.$recipeError) { newValue in
+                showErrorAlert = newValue != nil
+            }
+            .alert(isPresented: $showErrorAlert) {
+                let errorMessage: String
+                if let error = appData.recipeError as? LocalizedError, let description = error.errorDescription {
+                    errorMessage = description
+                } else {
+                    errorMessage = appData.recipeError?.localizedDescription ?? "An error occurred."
+                }
+                let isAPIKeyIssue: Bool = {
+                    if let recipeError = appData.recipeError as? RecipeError {
+                        switch recipeError {
+                        case .requestFailed(let statusCode):
+                            return statusCode == 401
+                        default:
+                            return false
+                        }
+                    }
+                    return false
+                }()
+                if isAPIKeyIssue {
+                    return Alert(
+                        title: Text("Unable to Load Recipe"),
+                        message: Text(errorMessage),
+                        primaryButton: .default(Text("Open Settings")) {
+                            model.showSettings = true
+                        },
+                        secondaryButton: .cancel(Text("Cancel")) {
+                            appData.recipeError = nil
+                        }
+                    )
+                } else {
+                    return Alert(
+                        title: Text("Unable to Load Recipe"),
+                        message: Text(errorMessage),
+                        dismissButton: .default(Text("OK")) {
+                            appData.recipeError = nil
+                        }
+                    )
+                }
             }
         }
         .environmentObject(model)
