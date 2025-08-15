@@ -100,8 +100,15 @@ class Recipe: ObservableObject, Codable, Hashable, Equatable {
         spoonacularSourceUrl: String?
     ) {
         self.id = id
-        self.image = image
-        self.imageType = imageType
+        // Sometimes spoonacular api does not end the image with the image type, so we have to manually add it
+        if let imageString = image, let imageTypeString = imageType, !imageString.contains(imageTypeString) {
+            self.image = imageString + imageString
+            self.imageType = imageString
+        }
+        else {
+            self.image = image
+            self.imageType = imageType
+        }
         self.title = title
         self.readyInMinutes = readyInMinutes
         self.servings = servings

@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+// Random color generator for confetti
+
+// Confetti animation modifier
+
 struct OnboardingGetStartedView: View {
     @EnvironmentObject var model: OnboardingViewModel
     @EnvironmentObject var appData: AppData
@@ -51,7 +55,7 @@ struct OnboardingGetStartedView: View {
                     )
                 }
                 .padding(.horizontal)
-                
+
                 Button {
                     withAnimation(.spring()) {
                         isButtonPressed = true
@@ -77,7 +81,6 @@ struct OnboardingGetStartedView: View {
             }
             .padding(.top)
 
-
             // Confetti effect when button is pressed
             if showConfetti {
                 ForEach(0..<40) { _ in
@@ -95,8 +98,6 @@ struct OnboardingGetStartedView: View {
         }
     }
 }
-
-// Random color generator for confetti
 extension Color {
     static var random: Color {
         Color(
@@ -106,8 +107,6 @@ extension Color {
         )
     }
 }
-
-// Confetti animation modifier
 struct ConfettiModifier: ViewModifier {
     @State private var isAnimating = false
 
@@ -125,7 +124,6 @@ struct ConfettiModifier: ViewModifier {
             }
     }
 }
-
 #Preview {
     OnboardingGetStartedView()
         .environmentObject(OnboardingViewModel())

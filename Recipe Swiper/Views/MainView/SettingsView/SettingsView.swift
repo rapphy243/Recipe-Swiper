@@ -100,9 +100,9 @@ struct SettingsView: View {
                         "Haptic Feedback",
                         isOn: $settings.hapticFeedbackEnabled
                     )
-                    
+
                 }
-                
+
                 Section("Background Gradient") {
                     if colorScheme == .light {
                         VStack(alignment: .leading, spacing: 8) {

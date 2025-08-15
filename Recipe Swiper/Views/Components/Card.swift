@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// https://stackoverflow.com/questions/74458971/correct-way-to-get-the-screen-size-on-ios-after-uiscreen-main-deprecation
+
 struct Card<Content: View>: View {
     @Environment(\.colorScheme) private var colorScheme
     let content: Content
@@ -31,7 +33,6 @@ struct Card<Content: View>: View {
         .padding()  // Padding around the entire card for spacing
     }
 }
-
 #Preview {
     VStack {
         // Example 1: Card with a simple Text view
@@ -65,8 +66,6 @@ struct Card<Content: View>: View {
         }
     }
 }
-
-// https://stackoverflow.com/questions/74458971/correct-way-to-get-the-screen-size-on-ios-after-uiscreen-main-deprecation
 extension UIWindow {
     static var current: UIWindow? {
         for scene in UIApplication.shared.connectedScenes {
@@ -78,8 +77,6 @@ extension UIWindow {
         return nil
     }
 }
-
-
 extension UIScreen {
     static var current: UIScreen? {
         UIWindow.current?.screen

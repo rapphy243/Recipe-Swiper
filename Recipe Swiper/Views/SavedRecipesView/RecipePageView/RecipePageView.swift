@@ -14,11 +14,6 @@ struct RecipePageView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .center, spacing: 20) {
-                    Text(recipe.title)
-                        .font(.largeTitle)
-                        .bold()
-                        .multilineTextAlignment(.center)
-
                     if let imageData = recipe.imageData,
                         let uiImage = UIImage(data: imageData)
                     {
@@ -27,7 +22,7 @@ struct RecipePageView: View {
                             .scaledToFit()
                             .cornerRadius(10)
                             .padding()
-                    } else {
+                    } else { // Show placeholder
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.gray.opacity(0.3))
                             .frame(height: 300)
@@ -78,6 +73,7 @@ struct RecipePageView: View {
 
                 }
             }
+            .navigationTitle(recipe.title)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {

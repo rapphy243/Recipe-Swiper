@@ -12,15 +12,15 @@ struct SwipableRecipeCard: View {
     @State private var cardOffset: CGSize = .zero
     @State private var cardRotation: Double = 0
     @ObservedObject private var settings = AppSettings.shared
-    
+
     let onSwipeLeft: (() async -> Void)?
     let onSwipeRight: (() async -> Void)?
-    
+
     // Swipe threshold based on user settings
     private var swipeThreshold: CGFloat {
         CGFloat(settings.swipeSensitivity)
     }
-    
+
     var body: some View {
         RecipeCard(recipe: recipe)
             .offset(cardOffset)
@@ -67,10 +67,10 @@ struct SwipableRecipeCard: View {
                 value: cardOffset
             )
     }
-    
+
     private func handleSwipe(_ gesture: DragGesture.Value) {
         let horizontalMovement = gesture.translation.width
-        
+
         // Right swipe (save)
         if horizontalMovement > swipeThreshold {
             if settings.hapticFeedbackEnabled {
@@ -104,7 +104,7 @@ struct SwipableRecipeCard: View {
             }
         }
     }
-    
+
     private func resetCardPosition() {
         withAnimation(.spring(response: 0.3)) {
             cardOffset = .zero

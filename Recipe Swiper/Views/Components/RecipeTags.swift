@@ -188,4 +188,3 @@ struct RatingTag: View {
         RatingTag(rating: 10)
     }
 }
-
