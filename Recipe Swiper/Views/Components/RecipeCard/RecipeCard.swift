@@ -17,6 +17,7 @@ struct RecipeCard: View {
                     .bold()
                     .multilineTextAlignment(.center)
                     .padding(.bottom)
+                    .minimumScaleFactor(0.5)
                 Divider()
                     .containerRelativeFrame(
                         .horizontal,

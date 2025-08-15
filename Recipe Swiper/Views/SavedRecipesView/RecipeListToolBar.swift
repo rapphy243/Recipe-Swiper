@@ -88,7 +88,7 @@ struct RecipeListToolBar: ToolbarContent {
                     .pickerStyle(.menu)
 
                 } label: {
-                    Image(systemName: "ellipsis")
+                    Label("List Options", systemImage: "ellipsis")
                 }
             }
         }
