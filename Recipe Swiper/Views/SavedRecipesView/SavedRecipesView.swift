@@ -29,7 +29,8 @@ struct SavedRecipesView: View {
         NavigationStack {
             List(selection: $selection) {
                 ForEach(filteredRecipes, id: \.self) { recipe in
-                    NavigationLink(destination: RecipePageView(recipe: recipe)){
+                    NavigationLink(destination: RecipePageView(recipe: recipe))
+                    {
                         RecipeListItem(recipe: recipe)
                             .swipeActions(edge: .leading) {
                                 Button {
@@ -37,13 +38,24 @@ struct SavedRecipesView: View {
                                         recipe.rating = 0
                                     }
                                 } label: {
-                                    Label("Clear Rating", systemImage: "star.slash")
+                                    Label(
+                                        "Clear Rating",
+                                        systemImage: "star.slash"
+                                    )
                                 }
                                 .tint(.orange)
                             }
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    modelContext.delete(recipe)
+                                    fetchRecipes()
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                .tint(.red)
+                            }
                     }
                 }
-                .onDelete(perform: deleteRecipe)
             }
             .navigationTitle("Saved Recipes")
             .toolbar {
@@ -81,15 +93,6 @@ struct SavedRecipesView: View {
         .onChange(of: filter) { _, _ in
             fetchRecipes()
         }
-    }
-
-    private func deleteRecipe(at offsets: IndexSet) {
-        // Offsets are based on filteredRecipes, not recipeList
-        for offset in offsets {
-            let recipe = filteredRecipes[offset]
-            modelContext.delete(recipe)
-        }
-        fetchRecipes()
     }
 
     private func deleteSelected() {
