@@ -5,18 +5,18 @@
 //  Created by Raphael Abano on 8/14/25.
 //
 
-import Foundation
 import SwiftUI
 
-final class FiltersModel: ObservableObject {
+@Observable class FiltersModel {
     static let shared = FiltersModel()
+    
     // Stored selections (single-select)
-    @Published var selectedMealType: String
-    @Published var selectedDiet: String
-    @Published var selectedCuisine: String
+    var selectedMealType: String
+    var selectedDiet: String
+    var selectedCuisine: String
 
     // Stored selections (multi-select)
-    @Published var selectedIntolerances: Set<String>
+    var selectedIntolerances: Set<String>
 
     // Persistence keys
     private let mealTypeKey = "filters.mealType"

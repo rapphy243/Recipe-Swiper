@@ -9,9 +9,10 @@ import SwiftUI
 
 struct AboutView: View {
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+            ?? "Unkown Version"
     }
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -110,7 +111,7 @@ struct AboutView: View {
                             .font(.headline)
                             .fontWeight(.semibold)
                             .padding(.horizontal, 20)
-                        
+
                         VStack(spacing: 12) {
                             // Project Links
                             VStack(alignment: .leading, spacing: 8) {
@@ -119,31 +120,33 @@ struct AboutView: View {
                                     .fontWeight(.medium)
                                     .foregroundColor(.secondary)
                                     .padding(.horizontal, 20)
-                                
+
                                 VStack(spacing: 6) {
                                     LinkRow(
                                         icon: "link.circle",
                                         title: "GitHub Repository",
-                                        url: "https://github.com/rapphy243/Recipe-Swiper"
+                                        url:
+                                            "https://github.com/rapphy243/Recipe-Swiper"
                                     )
-                                    
+
                                     LinkRow(
                                         icon: "doc.text",
                                         title: "Privacy Policy",
-                                        url: "https://raw.githubusercontent.com/rapphy243/Recipe-Swiper/refs/heads/main/Privacy%20Policy"
+                                        url:
+                                            "https://raw.githubusercontent.com/rapphy243/Recipe-Swiper/refs/heads/main/Privacy%20Policy"
                                     )
                                 }
                             }
-                            
+
                             Divider()
                                 .padding(.horizontal, 20)
-                            
+
                             // Copyright
                             HStack {
                                 Image(systemName: "c.circle")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
-                                
+
                                 Text("2025 Snack Swipe")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
@@ -220,7 +223,7 @@ private struct DeveloperProfile: View {
     let name: String
     let githubUsername: String
     let iconName: String
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             // Memoji profile icon
@@ -229,13 +232,13 @@ private struct DeveloperProfile: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 60, height: 60)
                 .clipShape(Circle())
-            
+
             VStack(alignment: .center, spacing: 2) {
                 Text(name)
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .multilineTextAlignment(.center)
-                
+
                 Link(
                     "@\(githubUsername)",
                     destination: URL(
@@ -255,7 +258,7 @@ private struct LinkRow: View {
     let icon: String
     let title: String
     let url: String
-    
+
     var body: some View {
         Link(destination: URL(string: url)!) {
             HStack(spacing: 12) {
@@ -263,14 +266,14 @@ private struct LinkRow: View {
                     .foregroundColor(.blue)
                     .frame(width: 20, height: 20)
                     .font(.system(size: 16))
-                
+
                 Text(title)
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .foregroundColor(.blue)
-                
+
                 Spacer()
-                
+
                 Image(systemName: "arrow.up.right")
                     .font(.caption)
                     .foregroundColor(.blue)

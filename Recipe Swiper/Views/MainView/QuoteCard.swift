@@ -46,7 +46,7 @@ struct QuoteCard: View {
         in: 0..<QuoteCard.quotes.count
     )
     @Binding var refreshQuote: Bool
-    
+
     var body: some View {
         Card {
             Text(QuoteCard.quotes[quoteIndex])
@@ -69,7 +69,8 @@ struct QuoteCard: View {
         // This is so bad...
         .onChange(of: refreshQuote) {
             quoteIndex = Int.random(
-                in: 0..<QuoteCard.quotes.count)
+                in: 0..<QuoteCard.quotes.count
+            )
         }
     }
 }

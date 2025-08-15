@@ -37,8 +37,14 @@ struct MainView: View {
                 VStack(alignment: .center, spacing: 0) {
                     SwipableRecipeCard(
                         recipe: appData.recipe,
-                        onSwipeLeft: { Task { await appData.fetchNewRecipe() }; model.refreshQuote.toggle() },
-                        onSwipeRight: { Task { await saveRecipe() }; model.refreshQuote.toggle() }
+                        onSwipeLeft: {
+                            Task { await appData.fetchNewRecipe() }
+                            model.refreshQuote.toggle()
+                        },
+                        onSwipeRight: {
+                            Task { await saveRecipe() }
+                            model.refreshQuote.toggle()
+                        }
                     )
                     .opacity(appData.isLoading ? 0 : 1)
                     .transition(.opacity)
@@ -56,10 +62,14 @@ struct MainView: View {
             }
             .alert(isPresented: $showErrorAlert) {
                 let errorMessage: String
-                if let error = appData.recipeError as? LocalizedError, let description = error.errorDescription {
+                if let error = appData.recipeError as? LocalizedError,
+                    let description = error.errorDescription
+                {
                     errorMessage = description
                 } else {
-                    errorMessage = appData.recipeError?.localizedDescription ?? "An error occurred."
+                    errorMessage =
+                        appData.recipeError?.localizedDescription
+                        ?? "An error occurred."
                 }
                 let isAPIKeyIssue: Bool = {
                     if let recipeError = appData.recipeError as? RecipeError {

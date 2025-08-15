@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FiltersView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var model = FiltersModel.shared
+    @State private var model = FiltersModel.shared
     let mealTypes = [
         "", "main course", "side dish", "dessert", "appetizer", "salad",
         "bread", "breakfast", "soup", "beverage", "sauce", "marinade",
