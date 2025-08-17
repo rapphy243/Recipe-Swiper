@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingInputAPI: View {
-    @EnvironmentObject var model: OnboardingViewModel
+    @Environment(OnboardingViewModel.self) var model
     @State private var isAnimating = false
     @State private var apiKey: String =
         UserDefaults.standard.string(forKey: "apiKey") ?? ""
@@ -92,5 +92,5 @@ struct OnboardingInputAPI: View {
 
 #Preview {
     OnboardingInputAPI()
-        .environmentObject(OnboardingViewModel())
+        .environment(OnboardingViewModel())
 }

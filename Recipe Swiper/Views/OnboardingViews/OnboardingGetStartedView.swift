@@ -13,7 +13,7 @@ import SwiftUI
 // Confetti animation modifier
 
 struct OnboardingGetStartedView: View {
-    @EnvironmentObject var model: OnboardingViewModel
+    @Environment(OnboardingViewModel.self) var model
     @EnvironmentObject var appData: AppData
     @State private var isAnimating = false
     @State private var isButtonPressed = false
@@ -126,6 +126,6 @@ struct ConfettiModifier: ViewModifier {
 }
 #Preview {
     OnboardingGetStartedView()
-        .environmentObject(OnboardingViewModel())
+        .environment(OnboardingViewModel())
         .environmentObject(AppData())
 }

@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct OnboardingFiltersView: View {
-    @EnvironmentObject var model: OnboardingViewModel
+    @Environment(OnboardingViewModel.self) var model
     @State private var isAnimating = false
 
     private let features:
@@ -103,5 +103,5 @@ struct OnboardingFiltersView: View {
 
 #Preview {
     OnboardingFiltersView()
-        .environmentObject(OnboardingViewModel())
+        .environment(OnboardingViewModel())
 }

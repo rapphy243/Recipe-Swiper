@@ -8,9 +8,9 @@
 
 import SwiftUI
 
-class OnboardingViewModel: ObservableObject {
-    @Published var currentTab: Int
-    @Published var recipe: Recipe
+@Observable class OnboardingViewModel {
+    var currentTab: Int
+    var recipe: Recipe
 
     init() {
         self.currentTab = 0
@@ -24,7 +24,7 @@ class OnboardingViewModel: ObservableObject {
 }
 
 struct OnboardingView: View {
-    @StateObject var model = OnboardingViewModel()
+    @State var model = OnboardingViewModel()
     var body: some View {
         NavigationStack {
             TabView(selection: $model.currentTab) {
@@ -41,7 +41,7 @@ struct OnboardingView: View {
                     .tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .environmentObject(model)
+            .environment(model)
         }
 
     }

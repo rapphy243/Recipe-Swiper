@@ -8,26 +8,37 @@
 import SwiftData
 import SwiftUI
 
+@Observable class SavedRecipesViewModel {
+    var sortBy: SortBy
+    var filter: RecipeFilter
+    var recipeList: [RecipeModel]
+    var selection: Set<RecipeModel>
+
+    init() {
+        self.sortBy = .newest
+        self.filter = .all
+        self.recipeList = []
+        self.selection = []
+    }
+}
+
 struct SavedRecipesView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.editMode) private var editMode
     @Binding var SearchText: String
-    @State private var sortBy: SortBy = .name
-    @State private var filter: RecipeFilter = .all
-    @State private var recipeList: [RecipeModel] = []
-    @State private var selection: Set<RecipeModel> = []
+    @State private var model = SavedRecipesViewModel()
     private var filteredRecipes: [RecipeModel] {
         guard !SearchText.isEmpty else {
-            return recipeList
+            return model.recipeList
         }
-        return recipeList.filter {
+        return model.recipeList.filter {
             $0.title.lowercased().contains(SearchText.lowercased())
         }
     }
 
     var body: some View {
         NavigationStack {
-            List(selection: $selection) {
+            List(selection: $model.selection) {
                 ForEach(filteredRecipes, id: \.self) { recipe in
                     NavigationLink(destination: RecipePageView(recipe: recipe))
                     {
@@ -60,14 +71,12 @@ struct SavedRecipesView: View {
             .navigationTitle("Saved Recipes")
             .toolbar {
                 RecipeListToolBar(
-                    sortBy: $sortBy,
-                    filter: $filter,
-                    selection: $selection,
+                    model: model,
                     onDeleteSelected: deleteSelected
                 )
             }
             .overlay {
-                if recipeList.isEmpty {
+                if model.recipeList.isEmpty {
                     ContentUnavailableView(
                         label: {
                             Label(
@@ -87,35 +96,35 @@ struct SavedRecipesView: View {
         .onAppear {
             fetchRecipes()
         }
-        .onChange(of: sortBy) { _, _ in
+        .onChange(of: model.sortBy) { _, _ in
             fetchRecipes()
         }
-        .onChange(of: filter) { _, _ in
+        .onChange(of: model.filter) { _, _ in
             fetchRecipes()
         }
     }
 
     private func deleteSelected() {
-        guard !selection.isEmpty else { return }
-        for recipe in selection {
+        guard !model.selection.isEmpty else { return }
+        for recipe in model.selection {
             modelContext.delete(recipe)
         }
-        selection.removeAll()
+        model.selection.removeAll()
         fetchRecipes()
     }
 
     private func fetchRecipes() {
-        let descriptor = sortBy.sortDescriptor
-        let predicate = filter.predicate
+        let descriptor = model.sortBy.sortDescriptor
+        let predicate = model.filter.predicate
 
         let fetchDescriptor = FetchDescriptor<RecipeModel>(
             predicate: predicate,
             sortBy: [descriptor]
         )
         do {
-            recipeList = try modelContext.fetch(fetchDescriptor)
+            model.recipeList = try modelContext.fetch(fetchDescriptor)
         } catch {
-            recipeList = []
+            model.recipeList = []
         }
     }
 }

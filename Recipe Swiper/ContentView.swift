@@ -8,9 +8,9 @@
 import SwiftUI
 
 @MainActor
-class ContentViewModel: ObservableObject {
-    @Published var selection: Int
-    @Published var searchText: String
+@Observable class ContentViewModel {
+    var selection: Int
+    var searchText: String
 
     init() {
         self.selection = 1
@@ -19,7 +19,7 @@ class ContentViewModel: ObservableObject {
 }
 
 struct ContentView: View {
-    @StateObject var model = ContentViewModel()
+    @State var model = ContentViewModel()
     @AppStorage("isOnboarding") var isOnboarding: Bool = true
     @Environment(\.colorScheme) private var colorScheme
     var body: some View {

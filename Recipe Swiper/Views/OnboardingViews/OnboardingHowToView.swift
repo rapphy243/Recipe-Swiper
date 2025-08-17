@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingHowToView: View {
-    @EnvironmentObject var model: OnboardingViewModel
+    @Environment(OnboardingViewModel.self) var model
     @State private var step = 0
     @State private var isNextButtonDisabled = false
 
@@ -90,5 +90,5 @@ struct OnboardingHowToView: View {
 
 #Preview {
     OnboardingHowToView()
-        .environmentObject(OnboardingViewModel())
+        .environment(OnboardingViewModel())
 }
