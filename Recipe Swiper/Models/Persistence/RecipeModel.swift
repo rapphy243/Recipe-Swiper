@@ -7,9 +7,7 @@
 //  Generated with Claude 3.5 Sonnet
 
 import Foundation
-
 import SwiftData
-
 import SwiftUI
 
 @Model
@@ -87,7 +85,6 @@ class RecipeModel: ObservableObject, Hashable {
     var originalId: Int?
     var spoonacularScore: Double
     var spoonacularSourceUrl: String?
-
     init(from recipe: Recipe) {
         //
         self.dateModified = Date()
