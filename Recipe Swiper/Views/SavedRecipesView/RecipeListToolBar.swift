@@ -9,9 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct RecipeListToolBar: ToolbarContent {
-    @Binding var sortBy: SortBy
-    @Binding var filter: RecipeFilter
-    @Binding var selection: Set<RecipeModel>
+    @Bindable var model: SavedRecipesViewModel
     var onDeleteSelected: () -> Void
     @Environment(\.editMode) private var editMode
     var body: some ToolbarContent {
@@ -22,7 +20,7 @@ struct RecipeListToolBar: ToolbarContent {
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
-                .disabled(selection.isEmpty)
+                .disabled(model.selection.isEmpty)
             }
         }
         if editMode?.wrappedValue.isEditing == true {
@@ -31,7 +29,7 @@ struct RecipeListToolBar: ToolbarContent {
                     action: {
                         withAnimation {
                             editMode?.wrappedValue = .inactive
-                            selection.removeAll()
+                            model.selection.removeAll()
                         }
                     },
                     label: {
@@ -54,7 +52,7 @@ struct RecipeListToolBar: ToolbarContent {
                     )
                     Divider()
                     Picker(
-                        selection: $sortBy,
+                        selection: $model.sortBy,
                         content: {
                             Text("Newest")
                                 .tag(SortBy.newest)
@@ -74,7 +72,7 @@ struct RecipeListToolBar: ToolbarContent {
                     )
                     .pickerStyle(.menu)
                     Picker(
-                        selection: $filter,
+                        selection: $model.filter,
                         content: {
                             Text("All Recipes")
                                 .tag(RecipeFilter.all)

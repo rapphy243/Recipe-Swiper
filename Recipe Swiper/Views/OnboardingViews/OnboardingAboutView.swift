@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingAboutView: View {
-    @EnvironmentObject var model: OnboardingViewModel
+    @Environment(OnboardingViewModel.self) var model
     @State private var isAnimating = false
 
     private let features:
@@ -100,6 +100,6 @@ struct OnboardingAboutView: View {
 
 #Preview {
     OnboardingAboutView()
-        .environmentObject(OnboardingViewModel())
+        .environment(OnboardingViewModel())
 
 }

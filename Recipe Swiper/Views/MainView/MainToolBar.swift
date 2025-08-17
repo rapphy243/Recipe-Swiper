@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainToolBar: ToolbarContent {
-    @EnvironmentObject var model: MainViewModel
+    @Environment(MainViewModel.self) var model
     @EnvironmentObject var appData: AppData
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .primaryAction) {
@@ -42,6 +42,6 @@ struct MainToolBar: ToolbarContent {
 
 #Preview {
     MainView()
-        .environmentObject(MainViewModel())
+        .environment(MainViewModel())
         .environmentObject(AppData())
 }

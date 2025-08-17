@@ -8,11 +8,11 @@
 import SwiftData
 import SwiftUI
 
-class MainViewModel: ObservableObject {
-    @Published var showFilters: Bool
-    @Published var showSettings: Bool
-    @Published var isOnboarding: Bool
-    @Published var refreshQuote: Bool
+@Observable class MainViewModel {
+    var showFilters: Bool
+    var showSettings: Bool
+    var isOnboarding: Bool
+    var refreshQuote: Bool
 
     init() {
         self.showFilters = false
@@ -24,7 +24,7 @@ class MainViewModel: ObservableObject {
 
 struct MainView: View {
     @Environment(\.modelContext) var modelContext
-    @StateObject var model = MainViewModel()
+    @State var model = MainViewModel()
     @EnvironmentObject var appData: AppData  // Where the shown recipe is stored
     @State private var showErrorAlert: Bool = false
     var body: some View {
@@ -104,7 +104,7 @@ struct MainView: View {
                 }
             }
         }
-        .environmentObject(model)
+        .environment(model)
         .sheet(isPresented: $model.showFilters) {
             FiltersView()
         }
