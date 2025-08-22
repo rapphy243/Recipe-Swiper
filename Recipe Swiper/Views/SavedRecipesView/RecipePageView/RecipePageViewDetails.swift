@@ -39,6 +39,8 @@ struct RecipePageViewDetails: View {
 
                 if recipe.vegetarian {
                     VeganTag()
+                if recipe.vegetarian {
+                    VegetarianTag()
                 }
 
                 if recipe.glutenFree {
