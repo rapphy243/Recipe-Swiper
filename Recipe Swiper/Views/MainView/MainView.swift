@@ -13,16 +13,19 @@ import SwiftUI
     var showSettings: Bool
     var isOnboarding: Bool
     var refreshQuote: Bool
+    var showWhatsNew: Bool
 
     init() {
         self.showFilters = false
         self.showSettings = false
         self.refreshQuote = false
         self.isOnboarding = UserDefaults.standard.bool(forKey: "isOnboarding")
+        self.showWhatsNew = false
     }
 }
 
 struct MainView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) var modelContext
     @State var model = MainViewModel()
     @EnvironmentObject var appData: AppData  // Where the shown recipe is stored
@@ -110,6 +113,13 @@ struct MainView: View {
         }
         .sheet(isPresented: $model.showSettings) {
             SettingsView()
+        }
+        .sheet(isPresented: $model.showWhatsNew) {
+            WhatsNewView()
+                .presentationBackground(
+                    colorScheme == .dark
+                        ? .ultraThickMaterial : .ultraThinMaterial
+                )
         }
     }
 
