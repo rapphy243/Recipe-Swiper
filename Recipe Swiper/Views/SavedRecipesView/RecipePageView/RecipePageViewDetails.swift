@@ -17,11 +17,11 @@ struct RecipePageViewDetails: View {
                 SourceTag(source: recipe.sourceUrl ?? "")
                 Divider()
                     .frame(maxHeight: 30)
-
+                
                 TimeTag(minutes: recipe.readyInMinutes)
                 Divider()
                     .frame(maxHeight: 30)
-
+                
                 ServingsTag(servings: recipe.servings)
                 Divider()
                     .frame(maxHeight: 30)
@@ -32,28 +32,29 @@ struct RecipePageViewDetails: View {
                 if !recipe.cuisines.isEmpty {
                     CuisineTags(cuisines: recipe.cuisines, showAll: true)
                 }
-
+                
                 if recipe.vegan {
                     VeganTag()
                 }
-
+                
                 if recipe.vegetarian {
                     VeganTag()
-                if recipe.vegetarian {
-                    VegetarianTag()
-                }
-
-                if recipe.glutenFree {
-                    GlutenFreeTag()
-                }
-
-                if recipe.dairyFree {
-                    DairyFreeTag()
+                    if recipe.vegetarian {
+                        VegetarianTag()
+                    }
+                    
+                    if recipe.glutenFree {
+                        GlutenFreeTag()
+                    }
+                    
+                    if recipe.dairyFree {
+                        DairyFreeTag()
+                    }
                 }
             }
+            .padding()
+            .cornerRadius(8)
         }
-        .padding()
-        .cornerRadius(8)
     }
 }
 #Preview {
