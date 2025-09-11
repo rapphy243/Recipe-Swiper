@@ -20,6 +20,7 @@ struct MainToolBar: ToolbarContent {
                 )
             }
         }
+
         ToolbarItemGroup(placement: .confirmationAction) {
             Menu {
                 Button("Refresh Recipe", systemImage: "arrow.clockwise") {
@@ -32,6 +33,11 @@ struct MainToolBar: ToolbarContent {
                 }
                 NavigationLink(destination: AboutView()) {
                     Label("About", systemImage: "info.circle")
+                }
+                Button {
+                    model.showWhatsNew = true
+                } label: {
+                    Label("What’s New", systemImage: "sparkles")
                 }
             } label: {
                 Image(systemName: "ellipsis")
