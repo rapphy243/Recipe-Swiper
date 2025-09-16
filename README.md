@@ -3,10 +3,10 @@
 Snack Swipe helps you discover and save recipes. Using a Tinder-like swipe interface, users can easily browse through recipes, saving the ones they love and skipping those they don't.
 ## Screenshots
 <p>
-<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_48_32-MT3hxDa1.png" width="300">
-<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_49_09-BEgvQmsW.png" width="300">
-<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_09_49_19-GlwEu35T.png" width="300">
-<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_16_Pro_2025_05_13_at_11_12_40-HY17VaJd.png" width="300">
+<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_17_Pro_Max_2025_09_10_at_22_24_38-bW7Dvz6q.png" width="300">
+<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_17_Pro_Max_2025_09_10_at_22_24_45-YrYDBhhz.png" width="300">
+<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_17_Pro_Max_2025_09_10_at_22_24_58-i4RAi700.png" width="300">
+<img src="https://i.rap.ph/Simulator_Screenshot_i_Phone_17_Pro_Max_2025_09_10_at_22_25_02-eWYs21bk.png" width="300">
 </p>
 
 ## Features
